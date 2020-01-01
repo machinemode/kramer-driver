@@ -1,0 +1,611 @@
+{
+  "id" : "b715cdde-3c43-45f7-b9a1-93511bd7aaee",
+  "description" : "https://machinemode.gitlab.io/kramer-ext/drivers/extras/",
+  "template" : false,
+  "version" : "1.0.0",
+  "status" : "Production",
+  "attributes" : [ {
+    "key" : "ENABLE_VIRTUAL_STATE",
+    "value" : "true"
+  } ],
+  "categories" : [ {
+    "name" : "Custom",
+    "macros" : [ {
+      "name" : "Initialization",
+      "elements" : [ {
+        "trigger_command" : {
+          "command_id" : "INITIALIZE",
+          "parameters" : [ ],
+          "category_id" : "CUSTOM",
+          "command_name" : "Initialize",
+          "capability_id" : "SYSTEM"
+        }
+      } ],
+      "reference_id" : "INITIALIZATION"
+    } ],
+    "states" : [ {
+      "name" : "Auto Save State",
+      "attributes" : [ ],
+      "constraints" : {
+        "value_default" : "OFF",
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "AUTO_SAVE_STATE",
+      "primitive_type" : "boolean"
+    }, {
+      "name" : "Lua Version",
+      "dynamic" : false,
+      "attributes" : [ ],
+      "constraints" : {
+        "value_default" : "",
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "LUA_VERSION",
+      "primitive_type" : "string"
+    }, {
+      "name" : "OS",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "OS",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Brain",
+      "attributes" : [ ],
+      "constraints" : {
+        "value_default" : "",
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "BRAIN",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Project",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "PROJECT",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Space",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "SPACE",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Formatted Date",
+      "attributes" : [ {
+        "key" : "INSTRUCTIONS",
+        "value" : "https://www.lua.org/pil/22.1.html"
+      } ],
+      "constraints" : {
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "FORMATTED_DATE",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Booleans",
+      "attributes" : [ ],
+      "constraints" : {
+        "value_default" : "OFF",
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "BOOLEANS",
+      "primitive_type" : "boolean_array"
+    }, {
+      "name" : "Numbers",
+      "dynamic" : false,
+      "attributes" : [ ],
+      "constraints" : {
+        "value_default" : "",
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "NUMBERS",
+      "primitive_type" : "number_array"
+    }, {
+      "name" : "Strings",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "STRINGS",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Log Level",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ {
+          "user_value" : "DEBUG",
+          "device_value" : "DEBUG"
+        }, {
+          "user_value" : "INFO",
+          "device_value" : "INFO"
+        }, {
+          "user_value" : "WARN",
+          "device_value" : "WARN"
+        }, {
+          "user_value" : "ERROR",
+          "device_value" : "ERROR"
+        } ]
+      },
+      "log_changes" : false,
+      "reference_id" : "LOG_LEVEL",
+      "primitive_type" : "string"
+    } ],
+    "lua_code" : "do local a=package.searchers or package.loaders;local b=a[2]a[2]=function(c)local d={[\"config\"]=function()local e=\"extras\"local f=require(\"libs.logger\").defaultLogger(e,\"INFO\")local g=require(\"common\")local h=require(\"lunajson\")local i=require(\"device_driver.state\")local j=require(\"libs.beacon\")local k=require(\"libs.brain_api\")local l=require(\"libs.system\")local m=require(\"libs.time_utils\")local n=string.format(\"resources/data/%s/state/\",e)local o={}local p=i.init(\"CUSTOM\")local q={\"HTTP\"}o.initial_states={}o.capabilities={['SYSTEM']=g.common_commands(q,n,p,f),['CLOCK']={['GET_FORMATTED_DATE']={generic_comm_types=q,state_changes=function(r)return{p(\"FORMATTED_DATE\",r['KEY'])(m.get_formatted_time(r['FORMAT']))}end}},['CUSTOM']={['SET_BOOLEAN']={generic_comm_types=q,state_changes=function(r)return{p(\"BOOLEANS\",r['KEY'])(r['VALUE'])}end},['SET_NUMBER']={generic_comm_types=q,state_changes=function(r)return{p(\"NUMBERS\",r['KEY'])(r['VALUE'])}end},['SET_STRING']={generic_comm_types=q,state_changes=function(r)return{p(\"STRINGS\",r['KEY'])(r['VALUE'])}end}},['NETWORK']={['UNICAST_IDENTITY']={generic_comm_types=q,state_changes=function(r)local s=r['DESTINATION_ADDRESS']local t=k.get_brain_data()j.unicast(s,t.udp_port,{beacon_type=\"brain_identify\",brain_version=t.version,port=tonumber(t.tcp_port),space_id=t.space_id})return{}end},['MULTICAST_IDENTITY']={generic_comm_types=q,state_changes=function()local t=k.get_brain_data()j.multicast(t.udp_port,{beacon_type=\"brain_identify\",brain_version=t.version,port=tonumber(t.tcp_port),space_id=t.space_id})return{}end}}}o.capabilities['SYSTEM']['INITIALIZE']={generic_comm_types=q,state_changes=function()local t=k.get_brain_data()local u=k.get_project_data()local v=k.get_space_data()local w={p(\"LOG_LEVEL\")(f.level)}local x=l.restore(n,h.decode)local y={p(\"LUA_VERSION\")(_VERSION),p(\"OS\",\"KERNEL_NAME\")(l.get_kernel_name()),p(\"OS\",\"KERNEL_RELEASE\")(l.get_kernel_release()),p(\"OS\",\"KERNEL_VERSION\")(l.get_kernel_version()),p(\"OS\",\"MACHINE\")(l.get_machine_name()),p(\"OS\",\"OPERATING_SYSTEM\")(l.get_os()),p(\"OS\",\"HOSTNAME\")(l.get_hostname()),p(\"OS\",\"USER\")(l.get_whoami()),p(\"OS\",\"WORKING_DIR\")(l.get_pwd()),p(\"BRAIN\",\"BRAIN_ID\")(t.brain_id),p(\"BRAIN\",\"VERSION\")(t.version),p(\"BRAIN\",\"TCP_PORT\")(tostring(t.tcp_port)),p(\"BRAIN\",\"UDP_PORT\")(tostring(t.udp_port)),p(\"PROJECT\",\"ID\")(u.id),p(\"PROJECT\",\"NAME\")(u.name),p(\"PROJECT\",\"LOCALE\")(u.locale),p(\"PROJECT\",\"LOCATION\")(u.location),p(\"PROJECT\",\"TIMEZONE_ID\")(u.timezone_id),p(\"SPACE\",\"ID\")(v.id),p(\"SPACE\",\"NAME\")(v.name),p(\"SPACE\",\"TYPE\")(v.type)}return i.merge(i.merge(w,x),y)end}o.macros={}local function z()local A=i.find_first(GetStates(),\"AUTO_SAVE_STATE\")return A==nil or i.to_boolean(A.state_value)end;o.on_state_change=function()if z()then l.backup(n,GetStates(),h.encode)end end;function o.initialize()l.init(n)end;return o end,[\"common\"]=function()local h=require(\"lunajson\")local i=require(\"device_driver.state\")local l=require(\"libs.system\")local g={}function g.common_commands(q,B,p,f)return{['INITIALIZE']={generic_comm_types=q,state_changes=function()local x=l.restore(B,h.decode)local w={p(\"LOG_LEVEL\")(f.level)}return i.merge(w,x)end},['SET_LOG_LEVEL']={generic_comm_types=q,state_changes=function(r)local C=r['LOG_LEVEL']f:setLevel(C)local D=\"log level set to \"..C;f:debug(D)f:info(D)f:warn(D)f:error(D)return{p(\"LOG_LEVEL\")(C)}end},['SET_AUTO_SAVE_STATE']={generic_comm_types=q,state_changes=function(r)return{p(\"AUTO_SAVE_STATE\")(r['AUTO_SAVE_STATE'])}end},['SAVE_STATE']={generic_comm_types=q,state_changes=function()l.backup(B,GetStates(),h.encode)return{}end},['CLEAR_STATE_BACKUPS']={generic_comm_types=q,state_changes=function()l.remove_backups(B)return{}end}}end;return g end,[\"lunajson\"]=function()local E=require'lunajson.decoder'local F=require'lunajson.encoder'local G=require'lunajson.sax'return{decode=E(),encode=F(),newparser=G.newparser,newfileparser=G.newfileparser}end,[\"lunajson.decoder\"]=function()local setmetatable,tonumber,tostring=setmetatable,tonumber,tostring;local H,I=math.floor,math.huge;local J,K=math.mininteger or nil,math.tointeger or nil;local L,M,N,O,P,Q=string.byte,string.char,string.find,string.gsub,string.match,string.sub;local function R(S,T)error(\"parse error at \"..S..\": \"..T,2)end;local U;if _VERSION==\"Lua 5.1\"then U='[^\\32-\\255]'else U='[\\0-\\31]'end;local V=nil;local function E()local h,S,W,X,Y;local Z,_;local function a0(T)return R(S,T)end;local function a1()a0('invalid value')end;local function a2()if Q(h,S,S+2)=='ull'then S=S+3;return W end;a0('invalid value')end;local function a3()if Q(h,S,S+3)=='alse'then S=S+4;return false end;a0('invalid value')end;local function a4()if Q(h,S,S+2)=='rue'then S=S+3;return true end;a0('invalid value')end;local a5=P(tostring(0.5),'[^0-9]')local a6=tonumber;if a5~='.'then if N(a5,'%W')then a5='%'..a5 end;a6=function(a7)return tonumber(O(a7,'.',a5))end end;local function a8()return a0('invalid number')end;local function a9(aa)local ab,ac=P(h,'^(%.?[0-9]*)([-+.A-Za-z]?)',S)if ab==''then if ac==''then if aa then return-0.0 end;return 0 end;if ac=='e'or ac=='E'then ab,ac=P(h,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',S)if ac==''then S=S+#ab;if aa then return-0.0 end;return 0.0 end end;a8()end;if L(ab)~=0x2E or L(ab,-1)==0x2E then a8()end;if ac~=''then if ac=='e'or ac=='E'then ab,ac=P(h,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',S)end;if ac~=''then a8()end end;S=S+#ab;ac=a6(ab)if aa then ac=-ac end;return ac end;local function ad(aa)S=S-1;local ab,ac=P(h,'^([0-9]+%.?[0-9]*)([-+.A-Za-z]?)',S)if L(ab,-1)==0x2E then a8()end;if ac~=''then if ac~='e'and ac~='E'then a8()end;ab,ac=P(h,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',S)if not ab or ac~=''then a8()end end;S=S+#ab;ac=a6(ab)if aa then ac=-ac;if ac==J and not N(ab,'[^0-9]')then ac=J end end;return ac end;local function ae()local ac=L(h,S)if ac then S=S+1;if ac>0x30 then if ac<0x3A then return ad(true)end else if ac>0x2F then return a9(true)end end end;a0('invalid number')end;local af={0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,I,I,I,I,I,I,I,0xA,0xB,0xC,0xD,0xE,0xF,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,0xA,0xB,0xC,0xD,0xE,0xF,__index=function()return I end}setmetatable(af,af)local ag={['\"']='\"',['\\\\']='\\\\',['/']='/',['b']='\\b',['f']='\\f',['n']='\\n',['r']='\\r',['t']='\\t',__index=function()a0(\"invalid escape sequence\")end}setmetatable(ag,ag)local function ah()return a0(\"1st surrogate pair byte not continued by 2nd\")end;local ai=0;local function aj(ak,al)if ak=='u'then local am,an,ao,ap,aq=L(al,1,5)al=af[am-47]*0x1000+af[an-47]*0x100+af[ao-47]*0x10+af[ap-47]if al~=I then if al<0x80 then if aq then return M(al,aq)end;return M(al)elseif al<0x800 then am=H(al/0x40)an=al-am*0x40;am=am+0xC0;an=an+0x80;if aq then return M(am,an,aq)end;return M(am,an)elseif al<0xD800 or 0xE000<=al then am=H(al/0x1000)al=al-am*0x1000;an=H(al/0x40)ao=al-an*0x40;am=am+0xE0;an=an+0x80;ao=ao+0x80;if aq then return M(am,an,ao,aq)end;return M(am,an,ao)elseif 0xD800<=al and al<0xDC00 then if ai==0 then ai=al;if not aq then return''end;ah()end;ai=0;ah()else if ai~=0 then al=0x10000+(ai-0xD800)*0x400+al-0xDC00;ai=0;am=H(al/0x40000)al=al-am*0x40000;an=H(al/0x1000)al=al-an*0x1000;ao=H(al/0x40)ap=al-ao*0x40;am=am+0xF0;an=an+0x80;ao=ao+0x80;ap=ap+0x80;if aq then return M(am,an,ao,ap,aq)end;return M(am,an,ao,ap)end;a0(\"2nd surrogate pair byte appeared without 1st\")end end;a0(\"invalid unicode codepoint literal\")end;if ai~=0 then ai=0;ah()end;return ag[ak]..al end;local ar=setmetatable({},{__mode=\"v\"})local function as(at)local au=S;local av,am,an;repeat au=N(h,'\"',au,true)if not au then a0(\"unterminated string\")end;av=au-1;au=au+1;am,an=L(h,av-1,av)if an==0x5C and am==0x5C then repeat av=av-2;am,an=L(h,av-1,av)until an~=0x5C or am~=0x5C;av=au-2 end until an~=0x5C;local aw=Q(h,S,av)S=au;if at then av=ar[aw]if av then return av end;av=aw end;if N(aw,U)then a0(\"unescaped control string\")end;if N(aw,'\\\\',1,true)then aw=O(aw,'\\\\(.)([^\\\\]?[^\\\\]?[^\\\\]?[^\\\\]?[^\\\\]?)',aj)if ai~=0 then ai=0;a0(\"1st surrogate pair byte not continued by 2nd\")end end;if at then ar[av]=aw end;return aw end;local function ax()Y=Y+1;if Y>1000 then a0('too deeply nested json (> 1000)')end;local ay={}S=P(h,'^[ \\n\\r\\t]*()',S)local az=0;if L(h,S)==0x5D then S=S+1 else local au=S;repeat az=az+1;_=Z[L(h,au)]S=au+1;ay[az]=_()au=P(h,'^[ \\n\\r\\t]*,[ \\n\\r\\t]*()',S)until not au;au=P(h,'^[ \\n\\r\\t]*%]()',S)if not au then a0(\"no closing bracket of an array\")end;S=au end;if X then ay[0]=az end;Y=Y-1;return ay end;local function aA()Y=Y+1;if Y>1000 then a0('too deeply nested json (> 1000)')end;local aB={}S=P(h,'^[ \\n\\r\\t]*()',S)if L(h,S)==0x7D then S=S+1 else local au=S;repeat if L(h,au)~=0x22 then a0(\"not key\")end;S=au+1;local aC=as(true)_=a1;local am,an,ao=L(h,S,S+3)if am==0x3A then if an~=0x20 then _=Z[an]au=S+2 else _=Z[ao]au=S+3 end end;if _==a1 then au=P(h,'^[ \\n\\r\\t]*:[ \\n\\r\\t]*()',S)if not au then a0(\"no colon after a key\")end;_=Z[L(h,au)]au=au+1 end;S=au;aB[aC]=_()au=P(h,'^[ \\n\\r\\t]*,[ \\n\\r\\t]*()',S)until not au;au=P(h,'^[ \\n\\r\\t]*}()',S)if not au then a0(\"no closing bracket of an object\")end;S=au end;Y=Y-1;return aB end;Z={[0]=a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,as,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,ae,a1,a1,a9,ad,ad,ad,ad,ad,ad,ad,ad,ad,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,ax,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a3,a1,a1,a1,a1,a1,a1,a1,a2,a1,a1,a1,a1,a1,a4,a1,a1,a1,a1,a1,a1,aA,a1,a1,a1,a1,__index=function()a0(\"unexpected termination\")end}setmetatable(Z,Z)local function aD(aE,aF,aG,aH)h,S,W,X=aE,aF,aG,aH;Y=0;S=P(h,'^[ \\n\\r\\t]*()',S)_=Z[L(h,S)]S=S+1;local aI=_()if aF then return aI,S else _,S=N(h,'^[ \\n\\r\\t]*',S)if S~=#h then a0('json ended')end;return aI end end;return aD end;return E end,[\"lunajson.encoder\"]=function()local error=error;local L,N,aJ,O,P=string.byte,string.find,string.format,string.gsub,string.match;local aK=table.concat;local tostring=tostring;local pairs,type=pairs,type;local setmetatable=setmetatable;local aL,aM=1/0,-1/0;local aN;if _VERSION==\"Lua 5.1\"then aN='[^ -!#-[%]^-\\255]'else aN='[\\0-\\31\"\\\\]'end;local V=nil;local function F()local aI,W;local az,aO,aP;local function aQ(aI)aO[az]=tostring(aI)az=az+1 end;local a5=P(tostring(0.5),'[^0-9]')local aR=P(tostring(12345.12345),'[^0-9'..a5 ..']')if a5=='.'then a5=nil end;local aS;if a5 or aR then aS=true;if a5 and N(a5,'%W')then a5='%'..a5 end;if aR and N(aR,'%W')then aR='%'..aR end end;local aT=function(aU)if aM<aU and aU<aL then local a7=aJ(\"%.17g\",aU)if aS then if aR then a7=O(a7,aR,'')end;if a5 then a7=O(a7,a5,'.')end end;aO[az]=a7;az=az+1;return end;error('invalid number')end;local aV;local aW={['\"']='\\\\\"',['\\\\']='\\\\\\\\',['\\b']='\\\\b',['\\f']='\\\\f',['\\n']='\\\\n',['\\r']='\\\\r',['\\t']='\\\\t',__index=function(aX,ac)return aJ('\\\\u00%02X',L(ac))end}setmetatable(aW,aW)local function aY(a7)aO[az]='\"'if N(a7,aN)then a7=O(a7,aN,aW)end;aO[az+1]=a7;aO[az+2]='\"'az=az+3 end;local function aZ(a_)if aP[a_]then error(\"loop detected\")end;aP[a_]=true;local b0=a_[0]if type(b0)=='number'then aO[az]='['az=az+1;for b1=1,b0 do aV(a_[b1])aO[az]=','az=az+1 end;if b0>0 then az=az-1 end;aO[az]=']'else b0=a_[1]if b0~=nil then aO[az]='['az=az+1;local b1=2;repeat aV(b0)b0=a_[b1]if b0==nil then break end;b1=b1+1;aO[az]=','az=az+1 until false;aO[az]=']'else aO[az]='{'az=az+1;local b0=az;for b2,aI in pairs(a_)do if type(b2)~='string'then error(\"non-string key\")end;aY(b2)aO[az]=':'az=az+1;aV(aI)aO[az]=','az=az+1 end;if az>b0 then az=az-1 end;aO[az]='}'end end;az=az+1;aP[a_]=nil end;local Z={boolean=aQ,number=aT,string=aY,table=aZ,__index=function()error(\"invalid type value\")end}setmetatable(Z,Z)function aV(aI)if aI==W then aO[az]='null'az=az+1;return end;return Z[type(aI)](aI)end;local function b3(b4,aG)aI,W=b4,aG;az,aO,aP=1,{},{}aV(aI)return aK(aO)end;return b3 end;return F end,[\"lunajson.sax\"]=function()local setmetatable,tonumber,tostring=setmetatable,tonumber,tostring;local H,I=math.floor,math.huge;local J,K=math.mininteger or nil,math.tointeger or nil;local L,M,N,O,P,Q=string.byte,string.char,string.find,string.gsub,string.match,string.sub;local function b5(S,T)error(\"parse error at \"..S..\": \"..T,2)end;local U;if _VERSION==\"Lua 5.1\"then U='[^\\32-\\255]'else U='[\\0-\\31]'end;local type,unpack=type,table.unpack or unpack;local b6=io.open;local V=nil;local function b7()end;local function b8(b9,ba)local h,bb,Y;local bc,S,bd=0,1,0;local Z,_;if type(b9)=='string'then h=b9;bc=#h;bb=function()h=''bc=0;bb=b7 end else bb=function()bd=bd+bc;S=1;repeat h=b9()if not h then h=''bc=0;bb=b7;return end;bc=#h until bc>0 end;bb()end;local be=ba.startobject or b7;local bf=ba.key or b7;local bg=ba.endobject or b7;local bh=ba.startarray or b7;local bi=ba.endarray or b7;local bj=ba.string or b7;local bk=ba.number or b7;local bl=ba.boolean or b7;local bm=ba.null or b7;local function bn()local ac=L(h,S)if not ac then bb()ac=L(h,S)end;return ac end;local function bo(T)return b5(bd+S,T)end;local function bp()return bn()or bo(\"unexpected termination\")end;local function bq()while true do S=P(h,'^[ \\n\\r\\t]*()',S)if S<=bc then return end;if bc==0 then bo(\"unexpected termination\")end;bb()end end;local function a1()bo('invalid value')end;local function br(bs,bt,bu,bv)for az=1,bt do local ac=bp()if L(bs,az)~=ac then bo(\"invalid char\")end;S=S+1 end;return bv(bu)end;local function a2()if Q(h,S,S+2)=='ull'then S=S+3;return bm(nil)end;return br('ull',3,nil,bm)end;local function a3()if Q(h,S,S+3)=='alse'then S=S+4;return bl(false)end;return br('alse',4,false,bl)end;local function a4()if Q(h,S,S+2)=='rue'then S=S+3;return bl(true)end;return br('rue',3,true,bl)end;local a5=P(tostring(0.5),'[^0-9]')local a6=tonumber;if a5~='.'then if N(a5,'%W')then a5='%'..a5 end;a6=function(a7)return tonumber(O(a7,'.',a5))end end;local function a8()return bo('invalid number')end;local function bw(aa)local bx={}local az=1;local by=true;local ac=L(h,S)S=S+1;local function bz()bx[az]=ac;az=az+1;ac=bn()S=S+1 end;if ac==0x30 then bz()if ac and 0x30<=ac and ac<0x3A then a8()end else repeat bz()until not(ac and 0x30<=ac and ac<0x3A)end;if ac==0x2E then by=false;bz()if not(ac and 0x30<=ac and ac<0x3A)then a8()end;repeat bz()until not(ac and 0x30<=ac and ac<0x3A)end;if ac==0x45 or ac==0x65 then by=false;bz()if ac==0x2B or ac==0x2D then bz()end;if not(ac and 0x30<=ac and ac<0x3A)then a8()end;repeat bz()until not(ac and 0x30<=ac and ac<0x3A)end;if ac and(0x41<=ac and ac<=0x5B or 0x61<=ac and ac<=0x7B or ac==0x2B or ac==0x2D or ac==0x2E)then a8()end;S=S-1;local ab=M(unpack(bx))ab=a6(ab)if aa then ab=-ab;if ab==J and by then ab=J end end;return bk(ab)end;local function a9(aa)local ab,ac=P(h,'^(%.?[0-9]*)([-+.A-Za-z]?)',S)if ab==''then if S>bc then S=S-1;return bw(aa)end;if ac==''then if aa then return bk(-0.0)end;return bk(0)end;if ac=='e'or ac=='E'then ab,ac=P(h,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',S)if ac==''then S=S+#ab;if S>bc then S=S-#ab-1;return bw(aa)end;if aa then return bk(-0.0)end;return bk(0.0)end end;S=S-1;return bw(aa)end;if L(ab)~=0x2E or L(ab,-1)==0x2E then S=S-1;return bw(aa)end;if ac~=''then if ac=='e'or ac=='E'then ab,ac=P(h,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',S)end;if ac~=''then S=S-1;return bw(aa)end end;S=S+#ab;if S>bc then S=S-#ab-1;return bw(aa)end;ac=a6(ab)if aa then ac=-ac end;return bk(ac)end;local function ad(aa)S=S-1;local ab,ac=P(h,'^([0-9]+%.?[0-9]*)([-+.A-Za-z]?)',S)if L(ab,-1)==0x2E then return bw(aa)end;if ac~=''then if ac~='e'and ac~='E'then return bw(aa)end;ab,ac=P(h,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',S)if not ab or ac~=''then return bw(aa)end end;S=S+#ab;if S>bc then S=S-#ab;return bw(aa)end;ac=a6(ab)if aa then ac=-ac;if ac==J and not N(ab,'[^0-9]')then ac=J end end;return bk(ac)end;local function ae()local ac=L(h,S)or bp()if ac then S=S+1;if ac>0x30 then if ac<0x3A then return ad(true)end else if ac>0x2F then return a9(true)end end end;bo(\"invalid number\")end;local af={0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,I,I,I,I,I,I,I,0xA,0xB,0xC,0xD,0xE,0xF,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,I,0xA,0xB,0xC,0xD,0xE,0xF,__index=function()return I end}setmetatable(af,af)local ag={['\"']='\"',['\\\\']='\\\\',['/']='/',['b']='\\b',['f']='\\f',['n']='\\n',['r']='\\r',['t']='\\t',__index=function()bo(\"invalid escape sequence\")end}setmetatable(ag,ag)local function ah()return bo(\"1st surrogate pair byte not continued by 2nd\")end;local ai=0;local function aj(ak,al)if ak=='u'then local am,an,ao,ap,aq=L(al,1,5)al=af[am-47]*0x1000+af[an-47]*0x100+af[ao-47]*0x10+af[ap-47]if al~=I then if al<0x80 then if aq then return M(al,aq)end;return M(al)elseif al<0x800 then am=H(al/0x40)an=al-am*0x40;am=am+0xC0;an=an+0x80;if aq then return M(am,an,aq)end;return M(am,an)elseif al<0xD800 or 0xE000<=al then am=H(al/0x1000)al=al-am*0x1000;an=H(al/0x40)ao=al-an*0x40;am=am+0xE0;an=an+0x80;ao=ao+0x80;if aq then return M(am,an,ao,aq)end;return M(am,an,ao)elseif 0xD800<=al and al<0xDC00 then if ai==0 then ai=al;if not aq then return''end;ah()end;ai=0;ah()else if ai~=0 then al=0x10000+(ai-0xD800)*0x400+al-0xDC00;ai=0;am=H(al/0x40000)al=al-am*0x40000;an=H(al/0x1000)al=al-an*0x1000;ao=H(al/0x40)ap=al-ao*0x40;am=am+0xF0;an=an+0x80;ao=ao+0x80;ap=ap+0x80;if aq then return M(am,an,ao,ap,aq)end;return M(am,an,ao,ap)end;bo(\"2nd surrogate pair byte appeared without 1st\")end end;bo(\"invalid unicode codepoint literal\")end;if ai~=0 then ai=0;ah()end;return ag[ak]..al end;local function as(at)local bA=S;local au;local aw=''local bB;while true do while true do au=N(h,'[\\\\\"]',bA)if au then break end;aw=aw..Q(h,S,bc)if bA==bc+2 then bA=2 else bA=1 end;bb()if bc==0 then bo(\"unterminated string\")end end;if L(h,au)==0x22 then break end;bA=au+2;bB=true end;aw=aw..Q(h,S,au-1)S=au+1;if N(aw,U)then bo(\"unescaped control string\")end;if bB then aw=O(aw,'\\\\(.)([^\\\\]?[^\\\\]?[^\\\\]?[^\\\\]?[^\\\\]?)',aj)if ai~=0 then ai=0;bo(\"1st surrogate pair byte not continued by 2nd\")end end;if at then return bf(aw)end;return bj(aw)end;local function ax()Y=Y+1;if Y>1000 then bo('too deeply nested json (> 1000)')end;bh()bq()if L(h,S)==0x5D then S=S+1 else local au;while true do _=Z[L(h,S)]S=S+1;_()au=P(h,'^[ \\n\\r\\t]*,[ \\n\\r\\t]*()',S)if au then S=au else au=P(h,'^[ \\n\\r\\t]*%]()',S)if au then S=au;break end;bq()local ac=L(h,S)S=S+1;if ac==0x2C then bq()elseif ac==0x5D then break else bo(\"no closing bracket of an array\")end end;if S>bc then bq()end end end;Y=Y-1;return bi()end;local function aA()Y=Y+1;if Y>1000 then bo('too deeply nested json (> 1000)')end;be()bq()if L(h,S)==0x7D then S=S+1 else local au;while true do if L(h,S)~=0x22 then bo(\"not key\")end;S=S+1;as(true)au=P(h,'^[ \\n\\r\\t]*:[ \\n\\r\\t]*()',S)if au then S=au else bq()if L(h,S)~=0x3A then bo(\"no colon after a key\")end;S=S+1;bq()end;if S>bc then bq()end;_=Z[L(h,S)]S=S+1;_()au=P(h,'^[ \\n\\r\\t]*,[ \\n\\r\\t]*()',S)if au then S=au else au=P(h,'^[ \\n\\r\\t]*}()',S)if au then S=au;break end;bq()local ac=L(h,S)S=S+1;if ac==0x2C then bq()elseif ac==0x7D then break else bo(\"no closing bracket of an object\")end end;if S>bc then bq()end end end;Y=Y-1;return bg()end;Z={[0]=a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,as,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,ae,a1,a1,a9,ad,ad,ad,ad,ad,ad,ad,ad,ad,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,ax,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a3,a1,a1,a1,a1,a1,a1,a1,a2,a1,a1,a1,a1,a1,a4,a1,a1,a1,a1,a1,a1,aA,a1,a1,a1,a1}local function bC()Y=0;bq()_=Z[L(h,S)]S=S+1;_()end;local function bD(aU)if aU<0 then error(\"the argument must be non-negative\")end;local bA=S-1+aU;local aw=Q(h,S,bA)while bA>bc and bc~=0 do bb()bA=bA-(bc-(S-1))aw=aw..Q(h,S,bA)end;if bc~=0 then S=bA+1 end;return aw end;local function bE()return bd+S end;return{run=bC,tryc=bn,read=bD,tellpos=bE}end;local function bF(bG,ba)local bH=b6(bG)local function bI()local a7;if bH then a7=bH:read(8192)if not a7 then bH:close()bH=nil end end;return a7 end;return b8(bI,ba)end;return{newparser=b8,newfileparser=bF}end,[\"libs.logger\"]=function()local bJ=require(\"logging\")require(\"logging.console\")local bK={}function bK.defaultLogger(e,C)if e~=nil then bJ.defaultLogger(bJ.console{logLevel=C,destination=\"stderr\",timestampPattern=\"!%Y-%m-%dT%H:%M:%S.%qZ\",logPattern=\"%date %level [\"..e..\"]: %message\\n\"})end;return bJ.defaultLogger()end;return bK end,[\"logging\"]=function()local type,table,string,bL,tonumber=type,table,string,tostring,tonumber;local select=select;local error=error;local aJ=string.format;local H=math.floor;local pairs=pairs;local ipairs=ipairs;local bM={_COPYRIGHT=\"Copyright (C) 2004-2010 Kepler Project, 2011-2013 Neopallium, 2020-2023 Thijs Schreijer\",_DESCRIPTION=\"A simple API to use logging features in Lua\",_VERSION=\"LuaLogging 1.8.2\"}local bN={\"DEBUG\",\"INFO\",\"WARN\",\"ERROR\",\"FATAL\",\"OFF\"}local bO=#bN;for az,C in ipairs(bN)do bN[C]=az;bM[C]=C end;local bP=bN[1]local bQ=\"%date %level %message\\n\"local bR=nil;local bS=nil;local bT=nil;local function bU()local bV=''local bW=debug and debug.traceback()or''for bX in bW:gmatch(\"%s*(.-)\\n\")do if bX:match(\"%:%d+%:\")and not bX:find('logging.lua')then bV=bV..' | '..bX end end;return bV end;local function bY(self,C,bZ,...)local b_=type(bZ)if b_=='string'then if select('#',...)>0 then local c0,c1=pcall(aJ,bZ,...)if c0 then return self:append(C,c1)else return self:append(C,\"Error formatting log message: \"..c1 ..bU())end else return self:append(C,bZ)end elseif b_=='function'then return self:append(C,bZ(...))end;return self:append(C,bM.tostring(bZ))end;local function c2()end;local function c3(bK,C,...)local r={n=select(\"#\",...),...}for az=1,r.n do r[az]=bL(r[az])end;r=table.concat(r,\" \")..\"\\n\"for c4 in r:gmatch(\"(.-)\\n\")do bK:log(C,c4)end end;local function assert(c5,...)if c5 then return c5,...end;error(aJ(...),2)end;function bM.new(c6,c7)assert(type(c6)==\"function\",\"Appender must be a function, got: %s.\",type(c6))c7=c7 or bP;assert(bN[c7],\"startLevel must be a valid log-level constant if given\")local c8={}local bK={}bK.append=c6;bK.setLevel=function(self,C)local c9=bN[C]assert(c9,\"undefined level '%s'\",bL(C))local ca=self.level;self.level=C;self.level_order=c9;for az=1,bO do local e=bN[az]:lower()if az>=c9 and az~=bO then self[e]=c8[az]else self[e]=c2 end end;if ca and ca~=C then self:log(bN[1],\"Logger: changing loglevel from %s to %s\",ca,C)end end;bK.log=function(self,C,...)local c9=bN[C]assert(c9,\"undefined level `%s'\",bL(C))if c9<self.level_order then return end;return bY(self,C,...)end;bK.getPrint=function(self,C)local c9=bN[C]assert(c9,\"undefined level `%s'\",bL(C))return function(...)if c9>=self.level_order then c3(self,C,...)end end end;for az=1,bO do local C=bN[az]if bK[C:lower()]then return nil,\"'\"..C..\"' is not a proper level name since there is already a property '\"..C:lower()..\"'\"end;c8[az]=function(self,...)return bY(self,C,...)end end;for az=1,bO do bK[bN[az]]=bN[az]end;bK:setLevel(c7)return bK end;local cb=1;local cc=debug and\"local info = debug.getinfo(%d)\"or\"local info = { short_src = '?', currentline = -1 }\"function bM.compilePattern(cd)cd=string.format(\"%q\",cd)cd=cd:gsub(\"%%source\",\"%%file:%%line in function '%%function'\")local ce={[\"date\"]=false,[\"level\"]=false,[\"message\"]=false,[\"file\"]=\"info.short_src\",[\"line\"]=\"tostring(info.currentline)\",[\"function\"]='(info.name or \"unknown function\")'}local cf=false;for cg,ch in pairs(ce)do local ci;cd,ci=cd:gsub(\"%%\"..cg,'\"..'..(ch or cg)..'..\"')cf=cf or ci>0 and ch end;if cd:sub(1,4)=='\"\"..'then cd=cd:sub(5,-1)end;if cd:sub(-4,-1)=='..\"\"'then cd=cd:sub(1,-5)end;local cj=[[\n  return function(date, level, message)\n      ]]..(cf and cc:format(cb)or\"\")..[[\n\n      return ]]..cd..[[\n\n    end]]return(loadstring or load)(cj,\"lualogging_generated_formatter\")()end;local ck;do local cl=setmetatable({},{__index=function(self,cd)self[cd]=bM.compilePattern(cd)return self[cd]end})function ck()for b2 in pairs(cl)do cl[b2]=nil end end;function bM.prepareLogMsg(cm,cn,C,co)return cl[cm](cn,C,co)end end;do local cp=os.time;local cq,cr=pcall(require,\"socket\")if cq then cp=cr.gettime end;local cs=setmetatable({},{__index=function(self,ct)local cg=ct:match(\"(%%%d*q)\")if not cg then self[ct]=false;return false end;local cu=tonumber(cg:sub(2,-2))or 3;assert(cu>=1 and cu<=6,\"millisecond format %q quantifier range is 1 to 6\")self[ct]=(\"0\"):rep(cu)return self[ct]end})function bM.date(bZ,cv)bZ=bZ or\"%c\"cv=cv or cp()local cw=cs[bZ]local cx;if cw then cx=math.fmod(cv,1)local cy=(tostring(cx)..cw):sub(3,-1)bZ=bZ:gsub(\"(%%%d*q)\",function(cg)return cy:sub(1,#cw)end)end;local cz,cA=os.date(bZ,H(cv))if type(cz)==\"table\"then cz.secf=cx or math.fmod(cv,1)end;return cz,cA end end;local function tostring(cB)local aw=''if type(cB)~='table'then if type(cB)=='string'then aw=string.format(\"%q\",cB)else aw=bL(cB)end else local cC={}for aC in pairs(cB)do if tonumber(aC)~=aC then table.insert(cC,aC)else table.insert(cC,tostring(aC))end end;table.sort(cC)aw=aw..'{'local cD=\"\"local bX;for aX,cE in ipairs(cC)do if tonumber(cE)and tonumber(cE)>0 then bX=tostring(cB[tonumber(cE)])else bX=cE..\" = \"..tostring(cB[cE])end;aw=aw..cD..bX;cD=\", \"end;aw=aw..'}'end;return aw end;bM.tostring=tostring;function bM.defaultLogPatterns(ct)if ct then if type(ct)==\"string\"then ct=bM.buildLogPatterns({},ct)end;assert(type(ct)==\"table\",\"logPatterns must be a string or a table, got: %s\",type(ct))for aX,C in ipairs(bN)do if C~=\"OFF\"then assert(type(ct[C])==\"string\",\"the patterns contains a '%s' value (instead of a string) for level '%s'\",type(ct[C]),C)end end;bR=ct end;return bR end;function bM.defaultTimestampPattern(ct)if ct then if type(ct)~=\"string\"then error(\"timestampPattern must be a string\",2)end;bS=ct end;return bS end;function bM.defaultLevel(C)if C then if not bN[C]then assert(bN[C],\"undefined level '%s'\",bL(C))end;bP=C end;return bP end;function bM.defaultLogger(bK)if bK then if type(bK)~=\"table\"or type(bK.getPrint)~=\"function\"then error(\"expected a logger object\",2)end;bT=bK end;if not bT then bT=require(\"logging.console\"){destination=\"stderr\"}end;return bT end;function bM.buildLogPatterns(cF,cG)cF=cF or{}assert(type(cG)==\"string\"or type(cG)==\"nil\",\"expected default logPattern (2nd argument) to be a string or nil, got: %s\",tostring(cG))assert(type(cF)==\"table\",\"expected patterns (1st argument) to be a table or nil, got: %s\",tostring(cF))local bs={}for aX,C in ipairs(bN)do if C~=\"OFF\"then bs[C]=cF[C]or cG or bR[C]end end;return bs end;bR=bM.buildLogPatterns({},bQ)function bM.getDeprecatedParams(cH,...)local r={n=select(\"#\",...),...}if type(r[1])==\"table\"then return r[1]end;local cI={}for az,cJ in ipairs(cH)do cI[cJ]=r[az]end;return cI end;if debug then local cK,cL;local function cM()cK:debug(\"message\")end;local cN=debug.getinfo(cM)local cO=cN.short_src..\":\"..tostring(cN.linedefined or-999)cK=bM.new(function(self,C,co)cL=bM.prepareLogMsg(\"%source\",\"\",C,co)end)while true do if not pcall(cM)then cc=\"local info = setmetatable({}, { __index = function() return 'na' end })\"break end;if cL:find(cO,1,true)then break end;cb=cb+1;ck()end end;if _VERSION<'Lua 5.2'then _G.logging=bM end;return bM end,[\"logging.console\"]=function()local io=require\"io\"local bM=require\"logging\"local cP=bM.prepareLogMsg;local cQ=setmetatable({stdout=\"stdout\",stderr=\"stderr\"},{__index=function(self,aC)if not aC then return\"stdout\"end;error(\"destination parameter must be either 'stderr' or 'stdout', got: \"..tostring(aC),3)end})local cR=setmetatable({},{__call=function(self,...)return self.new(...)end})function cR.new(cI,...)cI=bM.getDeprecatedParams({\"logPattern\"},cI,...)local c7=cI.logLevel or bM.defaultLevel()local cS=cI.timestampPattern or bM.defaultTimestampPattern()local cT=cQ[cI.destination]local cU=bM.buildLogPatterns(cI.logPatterns,cI.logPattern)return bM.new(function(self,C,co)io[cT]:write(cP(cU[C],bM.date(cS),C,co))return true end,c7)end;bM.console=cR;return cR end,[\"device_driver.driver\"]=function()local cV=require(\"libs.functional\")local i=require(\"device_driver.state\")local cW=require(\"device_driver.command\")local cX={}local cY={}local cZ={}local c_={}local d0;function cX.initialize(d1,d2,d3,d4)cY=d1 or{}cZ=d2 or{}c_=d3 or{}d0=d4 end;function cX.get_macros()return cV.as_array(c_)end;function cX.get_state_keys(d5)return cV.as_array(i.keys(cY,d5))end;function cX.get_state_value(d5,d6)local a7=i.find_first(cY,d5,d6)or{}return a7.state_value,a7.state_normalized_value end;function cX.get_execution_result(d7,d8,r,d9)local da=cW.find(cZ,d7,d8)if da==nil then return nil end;local db=cW.find_first_comm_type(da,d9)local dc=da.codes and da.codes(r)or{}local dd=da.state_changes and da.state_changes(r)or{}return db,cV.as_array(dc),cV.as_array(dd),da.linked_feedback_id,cV.as_array(da.macros)end;function cX.apply_state_change(de)de=i.copy(de)local df=i.find_first(cY,de.state_id,de.state_key)if df==nil then cY=i.insert(cY,de)else cY=i.update(cY,de)end;local dg=i.find_first(cY,de.state_id,de.state_key)local dh=not i.equals(dg,df)if dh and d0 then d0(df,dg)end;return dh end;function cX.process_feedback()end;function cX.get_states()return cV.totable(cV.map(function(a7)return a7 end,cY))end;return cX end,[\"libs.functional\"]=function()local cV=require(\"fun\")function cV.unique(bI)return cV.iter(cV.reduce(function(bd,cB)if cV.index(cB,bd)==nil then table.insert(bd,cB)end;return bd end,{},bI))end;function cV.first(bI)return cV.nth(1,bI)end;function cV.as_array(di)local dj=cV.totable(cV.map(function(dk)return dk end,di or{}))if dj[1]==nil then dj[0]=0 end;return dj end;function cV.withShallowCopy(cj,di)return cV.map(function(dk)return cj(dk)end,di)end;return cV end,[\"fun\"]=function()local dl={}local dm={}local unpack=rawget(table,\"unpack\")or unpack;local dn=function(dp,...)if dp==nil then return nil end;return...end;local dq=function(cV,dp,...)if dp==nil then return nil end;return dp,cV(...)end;local function dr(ds)local dt=type(ds)local dj;if dt=='table'then dj={}for du,dv in next,ds,nil do dj[dr(du)]=dr(dv)end else dj=ds end;return dj end;local dw={__call=function(self,dx,i)return self.gen(dx,i)end,__tostring=function(self)return'<generator>'end,__index=dm}local dy=function(bI,dx,i)return setmetatable({gen=bI,param=dx,state=i},dw),dx,i end;dl.wrap=dy;local dz=function(self)return self.gen,self.param,self.state end;dm.unwrap=dz;local dA=function(dB,dC)return nil end;local dD=function(dx,i)local i=i+1;if i>#dx then return nil end;local dE=string.sub(dx,i,i)return i,dE end;local dF=pairs({a=0})local dG=function(dH,aC)local cB;local aC,cB=dF(dH,aC)return aC,aC,cB end;local dI=function(aB,dx,i)assert(aB~=nil,\"invalid iterator\")if type(aB)==\"table\"then local dJ=getmetatable(aB)if dJ~=nil then if dJ==dw then return aB.gen,aB.param,aB.state elseif dJ.__ipairs~=nil then return dJ.__ipairs(aB)elseif dJ.__pairs~=nil then return dJ.__pairs(aB)end end;if#aB>0 then return ipairs(aB)else return dG,aB,nil end elseif type(aB)==\"function\"then return aB,dx,i elseif type(aB)==\"string\"then if#aB==0 then return dA,nil,nil end;return dD,aB,0 end;error(string.format('object %s of type \"%s\" is not iterable',aB,type(aB)))end;local dK=function(aB,dx,i)return dy(dI(aB,dx,i))end;dl.iter=dK;local dL=function(cV)return function(self)return cV(self.gen,self.param,self.state)end end;local dM=function(cV)return function(self,dN)return cV(dN,self.gen,self.param,self.state)end end;local dO=function(cV)return function(self,dN,dP)return cV(dN,dP,self.gen,self.param,self.state)end end;local dQ=function(cV)return function(bI,dx,i)return cV(dI(bI,dx,i))end end;local dR=function(cV)return function(dN,bI,dx,i)return cV(dN,dI(bI,dx,i))end end;local dS=function(cV)return function(dN,dP,bI,dx,i)return cV(dN,dP,dI(bI,dx,i))end end;local dT=function(cV,bI,dx,i)repeat i=dq(cV,bI(dx,i))until i==nil end;dm.each=dM(dT)dl.each=dR(dT)dm.for_each=dm.each;dl.for_each=dl.each;dm.foreach=dm.each;dl.foreach=dl.each;local dU=function(dx,i)local dV,dW=dx[1],dx[2]local i=i+dW;if i>dV then return nil end;return i,i end;local dX=function(dx,i)local dV,dW=dx[1],dx[2]local i=i+dW;if i<dV then return nil end;return i,i end;local dY=function(dZ,dV,dW)if dW==nil then if dV==nil then if dZ==0 then return dA,nil,nil end;dV=dZ;dZ=dV>0 and 1 or-1 end;dW=dZ<=dV and 1 or-1 end;assert(type(dZ)==\"number\",\"start must be a number\")assert(type(dV)==\"number\",\"stop must be a number\")assert(type(dW)==\"number\",\"step must be a number\")assert(dW~=0,\"step must not be zero\")if dW>0 then return dy(dU,{dV,dW},dZ-dW)elseif dW<0 then return dy(dX,{dV,dW},dZ-dW)end end;dl.range=dY;local d_=function(e0,dp)return dp+1,unpack(e0)end;local e1=function(e0,dp)return dp+1,e0(dp)end;local e2=function(e0,dp)return dp+1,e0 end;local e3=function(...)if select('#',...)<=1 then return dy(e2,select(1,...),0)else return dy(d_,{...},0)end end;dl.duplicate=e3;dl.replicate=e3;dl.xrepeat=e3;local e4=function(cV)assert(type(cV)==\"function\")return dy(e1,cV,0)end;dl.tabulate=e4;local e5=function()return dy(e2,0,0)end;dl.zeros=e5;local e6=function()return dy(e2,1,0)end;dl.ones=e6;local e7=function(e0,e8)return 0,math.random(e0[1],e0[2])end;local e9=function(ea,e8)return 0,math.random()end;local eb=function(aU,ec)if aU==nil and ec==nil then return dy(e9,0,0)end;assert(type(aU)==\"number\",\"invalid first arg to rands\")if ec==nil then ec=aU;aU=0 else assert(type(ec)==\"number\",\"invalid second arg to rands\")end;assert(aU<ec,\"empty interval\")return dy(e7,{aU,ec-1},0)end;dl.rands=eb;local ed=function(aU,ee,e0,dp)assert(aU>0,\"invalid first argument to nth\")if ee==ipairs then return e0[aU]elseif ee==dD then if aU<=#e0 then return string.sub(e0,aU,aU)else return nil end end;for az=1,aU-1,1 do dp=ee(e0,dp)if dp==nil then return nil end end;return dn(ee(e0,dp))end;dm.nth=dM(ed)dl.nth=dR(ed)local ef=function(i,...)if i==nil then error(\"head: iterator is empty\")end;return...end;local eg=function(bI,dx,i)return ef(bI(dx,i))end;dm.head=dL(eg)dl.head=dQ(eg)dl.car=dl.head;dm.car=dm.head;local eh=function(bI,dx,i)i=bI(dx,i)if i==nil then return dy(dA,nil,nil)end;return dy(bI,dx,i)end;dm.tail=dL(eh)dl.tail=dQ(eh)dl.cdr=dl.tail;dm.cdr=dm.tail;local ei=function(az,dp,...)if dp==nil then return nil end;return{az,dp},...end;local ej=function(dx,i)local aU,ee,e0=dx[1],dx[2],dx[3]local az,dp=i[1],i[2]if az>=aU then return nil end;return ei(az+1,ee(e0,dp))end;local ek=function(aU,bI,dx,i)assert(aU>=0,\"invalid first argument to take_n\")return dy(ej,{aU,bI,dx},{0,i})end;dm.take_n=dM(ek)dl.take_n=dR(ek)local el=function(cV,dp,...)if dp==nil or not cV(...)then return nil end;return dp,...end;local em=function(dx,dp)local cV,ee,e0=dx[1],dx[2],dx[3]return el(cV,ee(e0,dp))end;local en=function(cV,bI,dx,i)assert(type(cV)==\"function\",\"invalid first argument to take_while\")return dy(em,{cV,bI,dx},i)end;dm.take_while=dM(en)dl.take_while=dR(en)local eo=function(ep,bI,dx,i)if type(ep)==\"number\"then return ek(ep,bI,dx,i)else return en(ep,bI,dx,i)end end;dm.take=dM(eo)dl.take=dR(eo)local eq=function(aU,bI,dx,i)assert(aU>=0,\"invalid first argument to drop_n\")local az;for az=1,aU,1 do i=bI(dx,i)if i==nil then return dy(dA,nil,nil)end end;return dy(bI,dx,i)end;dm.drop_n=dM(eq)dl.drop_n=dR(eq)local er=function(cV,dp,...)if dp==nil or not cV(...)then return dp,false end;return dp,true,...end;local es=function(cV,ee,e0,dp)assert(type(cV)==\"function\",\"invalid first argument to drop_while\")local et,eu;repeat eu=dr(dp)dp,et=er(cV,ee(e0,dp))until not et;if dp==nil then return dy(dA,nil,nil)end;return dy(ee,e0,eu)end;dm.drop_while=dM(es)dl.drop_while=dR(es)local ev=function(ep,ee,e0,dp)if type(ep)==\"number\"then return eq(ep,ee,e0,dp)else return es(ep,ee,e0,dp)end end;dm.drop=dM(ev)dl.drop=dR(ev)local ew=function(ep,ee,e0,dp)return eo(ep,ee,e0,dp),ev(ep,ee,e0,dp)end;dm.split=dM(ew)dl.split=dR(ew)dm.split_at=dm.split;dl.split_at=dl.split;dm.span=dm.split;dl.span=dl.split;local ex=function(ey,bI,dx,i)local az=1;for ez,dE in bI,dx,i do if dE==ey then return az end;az=az+1 end;return nil end;dm.index=dM(ex)dl.index=dR(ex)dm.index_of=dm.index;dl.index_of=dl.index;dm.elem_index=dm.index;dl.elem_index=dl.index;local eA=function(dx,i)local ey,ee,e0=dx[1],dx[2],dx[3]local az,dp=i[1],i[2]local dE;while true do dp,dE=ee(e0,dp)if dp==nil then return nil end;az=az+1;if dE==ey then return{az,dp},az end end end;local eB=function(ey,bI,dx,i)return dy(eA,{ey,bI,dx},{0,i})end;dm.indexes=dM(eB)dl.indexes=dR(eB)dm.elem_indexes=dm.indexes;dl.elem_indexes=dl.indexes;dm.indices=dm.indexes;dl.indices=dl.indexes;dm.elem_indices=dm.indexes;dl.elem_indices=dl.indexes;local eC=function(cV,ee,e0,dp,eD)while true do if dp==nil or cV(eD)then break end;dp,eD=ee(e0,dp)end;return dp,eD end;local eE;local eF=function(cV,ee,e0,dp)return eE(cV,ee,e0,ee(e0,dp))end;eE=function(cV,ee,e0,dp,...)if dp==nil then return nil end;if cV(...)then return dp,...end;return eF(cV,ee,e0,dp)end;local eG=function(cV,ee,e0,dp,...)if select('#',...)<2 then return eC(cV,ee,e0,dp,...)else return eE(cV,ee,e0,dp,...)end end;local eH=function(dx,dp)local cV,ee,e0=dx[1],dx[2],dx[3]return eG(cV,ee,e0,ee(e0,dp))end;local eI=function(cV,bI,dx,i)return dy(eH,{cV,bI,dx},i)end;dm.filter=dM(eI)dl.filter=dR(eI)dm.remove_if=dm.filter;dl.remove_if=dl.filter;local eJ=function(eK,bI,dx,i)local cV=eK;if type(eK)==\"string\"then cV=function(ey)return string.find(ey,eK)~=nil end end;return eI(cV,bI,dx,i)end;dm.grep=dM(eJ)dl.grep=dR(eJ)local eL=function(cV,bI,dx,i)local eM=function(...)return not cV(...)end;return eI(cV,bI,dx,i),eI(eM,bI,dx,i)end;dm.partition=dM(eL)dl.partition=dR(eL)local eN=function(cV,dZ,i,...)if i==nil then return nil,dZ end;return i,cV(dZ,...)end;local eO=function(cV,dZ,ee,e0,dp)while true do dp,dZ=eN(cV,dZ,ee(e0,dp))if dp==nil then break end end;return dZ end;dm.foldl=dO(eO)dl.foldl=dS(eO)dm.reduce=dm.foldl;dl.reduce=dl.foldl;local eP=function(bI,dx,i)if bI==ipairs or bI==dD then return#dx end;local eQ=0;repeat i=bI(dx,i)eQ=eQ+1 until i==nil;return eQ-1 end;dm.length=dL(eP)dl.length=dQ(eP)local eR=function(bI,dx,i)return bI(dx,dr(i))==nil end;dm.is_null=dL(eR)dl.is_null=dQ(eR)local eS=function(eT,eU)local ee,e0,dp=dK(eT)local eV,eW,eX=dK(eU)local eY,eZ;for az=1,10,1 do dp,eY=ee(e0,dp)eX,eZ=eV(eW,eX)if dp==nil then return true end;if eX==nil or eY~=eZ then return false end end end;dm.is_prefix_of=eS;dl.is_prefix_of=eS;local e_=function(cV,ee,e0,dp)local dE;repeat dp,dE=dq(cV,ee(e0,dp))until dp==nil or not dE;return dp==nil end;dm.all=dM(e_)dl.all=dR(e_)dm.every=dm.all;dl.every=dl.all;local f0=function(cV,ee,e0,dp)local dE;repeat dp,dE=dq(cV,ee(e0,dp))until dp==nil or dE;return not not dE end;dm.any=dM(f0)dl.any=dR(f0)dm.some=dm.any;dl.some=dl.any;local f1=function(bI,dx,i)local a7=0;local dE=0;repeat a7=a7+dE;i,dE=bI(dx,i)until i==nil;return a7 end;dm.sum=dL(f1)dl.sum=dQ(f1)local f2=function(bI,dx,i)local f3=1;local dE=1;repeat f3=f3*dE;i,dE=bI(dx,i)until i==nil;return f3 end;dm.product=dL(f2)dl.product=dQ(f2)local f4=function(ec,aU)if aU<ec then return aU else return ec end end;local f5=function(ec,aU)if aU>ec then return aU else return ec end end;local f6=function(bI,dx,i)local i,ec=bI(dx,i)if i==nil then error(\"min: iterator is empty\")end;local f7;if type(ec)==\"number\"then f7=math.min else f7=f4 end;for aX,dE in bI,dx,i do ec=f7(ec,dE)end;return ec end;dm.min=dL(f6)dl.min=dQ(f6)dm.minimum=dm.min;dl.minimum=dl.min;local f8=function(f7,ee,e0,dp)local dp,ec=ee(e0,dp)if dp==nil then error(\"min: iterator is empty\")end;for aX,dE in ee,e0,dp do ec=f7(ec,dE)end;return ec end;dm.min_by=dM(f8)dl.min_by=dR(f8)dm.minimum_by=dm.min_by;dl.minimum_by=dl.min_by;local f9=function(ee,e0,dp)local dp,ec=ee(e0,dp)if dp==nil then error(\"max: iterator is empty\")end;local f7;if type(ec)==\"number\"then f7=math.max else f7=f5 end;for aX,dE in ee,e0,dp do ec=f7(ec,dE)end;return ec end;dm.max=dL(f9)dl.max=dQ(f9)dm.maximum=dm.max;dl.maximum=dl.max;local fa=function(f7,ee,e0,dp)local dp,ec=ee(e0,dp)if dp==nil then error(\"max: iterator is empty\")end;for aX,dE in ee,e0,dp do ec=f7(ec,dE)end;return ec end;dm.max_by=dM(fa)dl.max_by=dR(fa)dm.maximum_by=dm.maximum_by;dl.maximum_by=dl.maximum_by;local fb=function(ee,e0,dp)local dH,aC,fc={}while true do dp,fc=ee(e0,dp)if dp==nil then break end;table.insert(dH,fc)end;return dH end;dm.totable=dL(fb)dl.totable=dQ(fb)local fd=function(ee,e0,dp)local dH,aC,fc={}while true do dp,aC,fc=ee(e0,dp)if dp==nil then break end;dH[aC]=fc end;return dH end;dm.tomap=dL(fd)dl.tomap=dQ(fd)local dG=function(dx,i)local ee,e0,cV=dx[1],dx[2],dx[3]return dq(cV,ee(e0,i))end;local fe=function(cV,bI,dx,i)return dy(dG,{bI,dx,cV},i)end;dm.map=dM(fe)dl.map=dR(fe)local ff=function(i,az,dp,...)if dp==nil then return nil end;return{az+1,dp},az,...end;local fg=function(dx,i)local ee,e0=dx[1],dx[2]local az,dp=i[1],i[2]return ff(i,az,ee(e0,dp))end;local fh=function(bI,dx,i)return dy(fg,{bI,dx},{1,i})end;dm.enumerate=dL(fh)dl.enumerate=dQ(fh)local fi=function(az,dp,...)if dp==nil then return nil end;return{az+1,dp},...end;local fj=function(dx,i)local ey,ee,e0=dx[1],dx[2],dx[3]local az,dp=i[1],i[2]if az%2==1 then return{az+1,dp},ey else return fi(az,ee(e0,dp))end end;local fk=function(ey,bI,dx,i)return dy(fj,{ey,bI,dx},{0,i})end;dm.intersperse=dM(fk)dl.intersperse=dR(fk)local function fl(dx,i,fm,...)if#fm==#dx/2 then return fm,...end;local az=#fm+1;local ee,e0=dx[2*az-1],dx[2*az]local dp,dE=ee(e0,i[az])if dp==nil then return nil end;table.insert(fm,dp)return fl(dx,i,fm,dE,...)end;local fn=function(dx,i)return fl(dx,i,{})end;local fo=function(...)local aU=select('#',...)if aU>=3 then local fp=select(aU-2,...)if type(fp)=='table'and getmetatable(fp)==dw and fp.param==select(aU-1,...)and fp.state==select(aU,...)then return aU-2 end end;return aU end;local fq=function(...)local aU=fo(...)if aU==0 then return dy(dA,nil,nil)end;local dx={[2*aU]=0}local i={[aU]=0}local az,ee,e0,dp;for az=1,aU,1 do local fp=select(aU-az+1,...)ee,e0,dp=dI(fp)dx[2*az-1]=ee;dx[2*az]=e0;i[az]=dp end;return dy(fn,dx,i)end;dm.zip=fq;dl.zip=fq;local fr=function(dx,dp,...)if dp==nil then local ee,e0,fs=dx[1],dx[2],dx[3]return ee(e0,dr(fs))end;return dp,...end;local ft=function(dx,dp)local ee,e0,fs=dx[1],dx[2],dx[3]return fr(dx,ee(e0,dp))end;local fu=function(bI,dx,i)return dy(ft,{bI,dx,i},dr(i))end;dm.cycle=dL(fu)dl.cycle=dQ(fu)local fv;local fw=function(dx,i,dp,...)if dp==nil then local az=i[1]az=az+1;if az>#dx/3 then return nil end;local dp=dx[3*az]return fv(dx,{az,dp})end;return{i[1],dp},...end;fv=function(dx,i)local az,dp=i[1],i[2]local ee,e0=dx[3*az-2],dx[3*az-1]return fw(dx,i,ee(e0,i[2]))end;local fx=function(...)local aU=fo(...)if aU==0 then return dy(dA,nil,nil)end;local dx={[3*aU]=0}local az,ee,e0,dp;for az=1,aU,1 do local fy=select(az,...)ee,e0,dp=dK(fy)dx[3*az-2]=ee;dx[3*az-1]=e0;dx[3*az]=dp end;return dy(fv,dx,{1,dx[3]})end;dm.chain=fx;dl.chain=fx;local fz={lt=function(eD,fA)return eD<fA end,le=function(eD,fA)return eD<=fA end,eq=function(eD,fA)return eD==fA end,ne=function(eD,fA)return eD~=fA end,ge=function(eD,fA)return eD>=fA end,gt=function(eD,fA)return eD>fA end,add=function(eD,fA)return eD+fA end,div=function(eD,fA)return eD/fA end,floordiv=function(eD,fA)return math.floor(eD/fA)end,intdiv=function(eD,fA)local fB=eD/fA;if eD>=0 then return math.floor(fB)else return math.ceil(fB)end end,mod=function(eD,fA)return eD%fA end,mul=function(eD,fA)return eD*fA end,neq=function(eD)return-eD end,unm=function(eD)return-eD end,pow=function(eD,fA)return eD^fA end,sub=function(eD,fA)return eD-fA end,truediv=function(eD,fA)return eD/fA end,concat=function(eD,fA)return eD..fA end,len=function(eD)return#eD end,length=function(eD)return#eD end,land=function(eD,fA)return eD and fA end,lor=function(eD,fA)return eD or fA end,lnot=function(eD)return not eD end,truth=function(eD)return not not eD end}dl.operator=fz;dm.operator=fz;dl.op=fz;dm.op=fz;setmetatable(dl,{__call=function(cv,fC)for b2,aI in pairs(cv)do if _G[b2]~=nil then local c1='function '..b2 ..' already exists in global scope.'if fC then _G[b2]=aI;print('WARNING: '..c1 ..' Overwritten.')else print('NOTICE: '..c1 ..' Skipped.')end else _G[b2]=aI end end end})return dl end,[\"device_driver.state\"]=function()local i={}local cV=require(\"libs.functional\")local fD={['ON']=true,['OFF']=false,['true']=true,['false']=false,['']=false}function i.to_boolean(cB)return fD[cB]end;local function fE(d6)return d6~=\"\"and d6 or nil end;function i.init(fF)return function(d5,d6)return function(fG,fH)return{category_id=fF,state_id=d5,state_key=d6,state_value=fG,state_normalized_value=fH}end end end;function i.keys(cY,d5)return cV.totable(cV.map(function(a7)return a7.state_key end,cV.filter(function(a7)return a7.state_id==d5 end,cY)))end;local function fI(de,d5,d6)return de.state_id==d5 and de.state_key==fE(d6)end;local function N(cY,d5,d6)return cV.filter(function(a7)return fI(a7,d5,fE(d6))end,cY)end;function i.find_all(cY,d5)return cV.totable(cV.filter(function(a7)return a7.state_id==d5 end,cY))end;function i.find_first(cY,d5,d6)return cV.first(N(cY,d5,fE(d6)))end;function i.copy(de)return de and{category_id=de.category_id,state_id=de.state_id,state_key=fE(de.state_key),state_value=de.state_value,state_normalized_value=de.state_normalized_value~=\"\"and de.state_normalized_value or nil}or{}end;function i.insert(cY,de)return cV.totable(cV.chain(cY,{de}))end;function i.update(cY,de)return cV.totable(cV.withShallowCopy(function(a7)return fI(a7,de.state_id,de.state_key)and de or a7 end,cY))end;function i.merge(cY,dg)return cV.totable(cV.chain(cV.filter(function(a7)return not i.find_first(dg,a7.state_id,a7.state_key)end,cY),dg))end;function i.equals(fJ,fK)return fJ~=nil and fK~=nil and fJ.category_id==fK.category_id and fJ.state_id==fK.state_id and fJ.state_key==fK.state_key and fJ.state_value==fK.state_value and fJ.state_normalized_value==fK.state_normalized_value end;function i.get_value(cY,d5,d6)return(i.find_first(cY,d5,d6)or{}).state_value end;return i end,[\"device_driver.command\"]=function()local cV=require(\"libs.functional\")local fL=require(\"device_driver.comm_types\")local cW={}local function fM(d9)return cV.unique(fL.get_generic_comm_types(d9))end;local function fN(fO,fL)return cV.any(function(ac)return ac==fO end,fL)end;local function fP(q,d9)local fQ=fM(d9)return cV.filter(function(fO)return fN(fO,fQ)end,q)end;function cW.find_first_comm_type(da,d9)return cV.first(fP(da.generic_comm_types,d9))end;function cW.find(cZ,d7,d8)local fR=cZ[d7]return fR and fR[d8]end;return cW end,[\"device_driver.comm_types\"]=function()local fL={}local cV=require(\"libs.functional\")local db={[\"IR_EMITTER\"]=\"IR\",[\"RS232\"]=\"SERIAL\",[\"RS422\"]=\"SERIAL\",[\"RS485\"]=\"SERIAL\",[\"TCP\"]=\"TCP_UDP\",[\"TELNET\"]=\"TCP_UDP\",[\"SSH\"]=\"TCP_UDP\",[\"UDP_UNICAST\"]=\"TCP_UDP\",[\"UDP_MULTICAST\"]=\"TCP_UDP\",[\"UDP_BROADCAST\"]=\"TCP_UDP\",[\"UDP\"]=\"TCP_UDP\",[\"KNX_TUNNELING\"]=\"TCP_UDP\",[\"KNX_ROUTING\"]=\"TCP_UDP\",[\"KNX\"]=\"TCP_UDP\",[\"HTTP\"]=\"HTTP\",[\"RELAY\"]=\"RELAY\",[\"GPIO\"]=\"GPIO\",[\"USB\"]=\"SERIAL\"}function fL.get_generic_comm_types(d9)return cV.map(function(fS)return db[fS]end,d9)end;return fL end,[\"libs.beacon\"]=function()local h=require(\"lunajson\")local j={}local fT='239.249.243.243'local function fU(fV,c0,fW)return fV==true,string.format(\"%s (%i)\",string.upper(c0),fW)end;function j.build_command(s,fX,co)local fY=string.gsub(h.encode(co),'\"','\\\\\"')return string.format([[bash -c \"echo '%s' > /dev/udp/%s/%i\"]],fY,s,fX or 54345)end;function j.multicast(fX,co)local cW=j.build_command(fT,fX,co)return fU(os.execute(cW))end;function j.unicast(s,fX,co)local cW=j.build_command(s,fX,co)return fU(os.execute(cW))end;return j end,[\"libs.time_utils\"]=function()local m={}function m.get_formatted_time(aJ)local fZ=os.date(aJ)if type(fZ)==\"string\"then fZ=string.gsub(fZ,\"[\\n\\r]\",\"\\\\n\")fZ=string.gsub(fZ,'\"','\\\\\"')fZ=string.gsub(fZ,\"'\",\"\\\\'\")return fZ else return\"\"end end;return m end,[\"libs.system\"]=function()local f=require(\"libs.logger\").defaultLogger()local f_=require(\"libs.string_utils\")local l={}local g0=\" >/dev/null 2>&1\"function l.exec(da)local aX,aX,fW=os.execute(da..g0)return fW==0 end;function l.mkdir(c)return l.exec(\"mkdir -p \"..c)end;function l.init(...)for aX,c in ipairs({...})do if not l.mkdir(c)then f:warn(\"Failed to create \"..c)end end end;function l.read(da)local g1=io.popen(da)local cz=g1 and string.gsub(g1:read(\"a\"),\"\\n\",\"\")return cz~=\"\"and cz or nil end;function l.move(g2,cT)local g3,cA=os.rename(g2,cT)if not g3 then f:warn(string.format(\"Unable to copy %s to %s: %s\",g2,cT,cA))end;return g3 end;function l.copy(g2,cT)local g3=l.exec(\"cp -r \"..g2 ..\" \"..cT)if not g3 then f:warn(string.format(\"Unable to copy %s to %s\",g2,cT))end;return g3 end;function l.file_exists(g4)return l.exec(\"test -f \"..g4)end;function l.directory_exists(c)return l.exec(\"test -d \"..c)end;function l.sleep(g5)l.exec(\"sleep \"..tostring(g5))end;function l.is_running(g6)return l.exec(\"kill -0 \"..tostring(g6))end;function l.try_kill(g6)local g7=false;if not f_.is_empty(g6)then g7=l.exec(\"kill \"..g6)if not g7 then f:error(\"Unable to stop process \"..g6)end end;return g7 end;function l.fork(da,g8,g9)if not da then f:warn(\"Unable to start empty command\")return nil end;local ga=g9 and\"nohup \"or\"\"local g6;if f_.is_empty(g8)then g6=l.read(ga..da..g0 ..\" & printf $!\")else local gb=\" >>\"..g8 ..\" 2>&1\"g6=l.read(ga..da..gb..\" & printf $!\")end;if l.is_running(g6)then return g6 else f:error(\"Failed to start \"..da)return nil end end;function l.get_kernel_name()return l.read(\"uname -s\")end;function l.get_kernel_release()return l.read(\"uname -r\")end;function l.get_kernel_version()return l.read(\"uname -v\")end;function l.get_machine_name()return l.read(\"uname -m\")end;function l.get_os()return l.read(\"uname -o\")end;function l.get_hostname()return l.read(\"uname -n\")end;function l.get_pwd()return l.read(\"pwd\")end;function l.get_whoami()return l.read(\"whoami\")end;function l.backup(c,gc,gd)local ge=c..\"previous.json\"local df=c..\"current.json\"l.move(df,ge)local _,cA=io.open(df,\"w\")if not _ then f:warn(\"Unable to open file to save current \"..c..\": \"..cA)return false end;if not _:write(gd(gc),'\\n')then f:warn(\"Failed to save current \"..c..\".\")return false end;return _:close()end;function l.load(g4,gf)local _,cA=io.open(g4,\"r\")if not _ then f:warn(\"Unable to open file to load \"..g4 ..\": \"..cA)return nil end;local fZ=_:read(\"a\")if not fZ then f:warn(\"Failed to read \"..g4 ..\".\")return nil end;_:close()local g3,gc=pcall(function()return gf(fZ)end)return g3 and gc or nil end;function l.restore(c,gf)local gg=l.load(c..\"current.json\",gf)if not gg then gg=l.load(c..\"previous.json\",gf)or{}end;return gg end;function l.clear(g4)io.open(g4,\"w\"):close()end;function l.remove_backups(c)l.clear(c..\"previous.json\")l.clear(c..\"current.json\")end;function l.load_saved_state(gh)local gg=l.load(gh..\"current.json\")if not gg then gg=l.load(gh..\"previous.json\")or{}end;return gg end;return l end,[\"libs.string_utils\"]=function()local f_={}function f_.trim(aw)local gi=aw and string.gsub(aw,\"^%s*(.-)%s*$\",\"%1\")or\"\"return gi end;function f_.is_empty(aw)return aw==nil or aw==\"\"end;function f_.append_if(aw,c6,gj)return string.format(\"%s%s\",aw,gj(aw)and c6 or\"\")end;function f_.replace_special_chars(aw,gk)local gl=aw and string.gsub(aw,\"[%p%c%s]\",gk)or\"\"return gl end;return f_ end,[\"libs.brain_api\"]=function()local l=require(\"libs.system\")local h=require(\"lunajson\")local k={}local gm=\"resources/data/\"function k.get_brain_data()local gn=l.load(gm..\"settings/brain.settings.json\",h.decode)or{}local t=l.load(gm..\"Brain.json\",h.decode)or{}t.tcp_port=gn.brain_tcp_port or 8000;t.udp_port=gn.brain_udp_port or 54345;return t end;function k.get_project_data()return l.load(gm..\"Project.json\",h.decode)or{}end;function k.get_space_data()return l.load(gm..\"Space.json\",h.decode)or{}end;return k end}if d[c]then return d[c]else return b(c)end end end;local h=require(\"lunajson\")local f=require(\"libs.logger\").defaultLogger()local cX=require(\"device_driver.driver\")function initialize(o)if not o then o=require(\"config\")f=require(\"libs.logger\").defaultLogger()end;o.initialize()cX.initialize(o.initial_states,o.capabilities,o.macros,o.on_state_change)end;function getMacros()return h.encode({macros=cX.get_macros()})end;function queryAllKeys(d5)return h.encode({keys=cX.get_state_keys(d5)})end;function queryStateValue(d5,d6)return cX.get_state_value(d5,d6)end;function getExecutionResult(d9,d7,d8,r)local db,dc,dd,go,c_=cX.get_execution_result(d7,d8,r,d9)local dd=h.encode({state_changes=dd})return db,h.encode({codes=dc}),dd,go,h.encode(c_)end;function applyStateChange(de,gp)return gp and cX.apply_state_change(de)end;function processFeedback(gq,fS,gr)local gs=h.encode({matches={}})local dd=h.encode({state_changes={}})local c_=nil;return gs,dd,c_ end;function GetStates()return cX.get_states()end\n",
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "Clock",
+      "commands" : [ {
+        "name" : "Get Formatted Date",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "KEY",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          }, {
+            "name" : "FORMAT",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "GET_FORMATTED_DATE"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "CLOCK"
+    }, {
+      "name" : "Custom",
+      "commands" : [ {
+        "name" : "Set Boolean",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "KEY",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          }, {
+            "name" : "VALUE",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "boolean"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SET_BOOLEAN"
+      }, {
+        "name" : "Set Number",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "KEY",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          }, {
+            "name" : "VALUE",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "number"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SET_NUMBER"
+      }, {
+        "name" : "Set String",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "KEY",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          }, {
+            "name" : "VALUE",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SET_STRING"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "CUSTOM"
+    }, {
+      "name" : "Network",
+      "commands" : [ {
+        "name" : "Unicast Identity",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "DESTINATION_ADDRESS",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "UNICAST_IDENTITY"
+      }, {
+        "name" : "Multicast Identity",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "MULTICAST_IDENTITY"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "NETWORK"
+    }, {
+      "name" : "System",
+      "commands" : [ {
+        "name" : "Initialize",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "INITIALIZE"
+      }, {
+        "name" : "Save State",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SAVE_STATE"
+      }, {
+        "name" : "Set Auto Save State",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "AUTO_SAVE_STATE",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "OFF",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "boolean"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SET_AUTO_SAVE_STATE"
+      }, {
+        "name" : "Clear State Backups",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "CLEAR_STATE_BACKUPS"
+      }, {
+        "name" : "Set Log Level",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "LOG_LEVEL",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ {
+                "user_value" : "DEBUG",
+                "device_value" : "DEBUG"
+              }, {
+                "user_value" : "INFO",
+                "device_value" : "INFO"
+              }, {
+                "user_value" : "WARN",
+                "device_value" : "WARN"
+              }, {
+                "user_value" : "ERROR",
+                "device_value" : "ERROR"
+              } ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SET_LOG_LEVEL"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "SYSTEM"
+    } ],
+    "reference_id" : "CUSTOM"
+  } ],
+  "parameters" : [ ],
+  "project_id" : "db51c9d7-d10a-4a57-984b-b1159d751f78",
+  "device_type" : "Other",
+  "device_manufacturer" : "Machinemode",
+  "version_code" : 0,
+  "version_description" : "Initial version",
+  "created_by" : "cesar@machinemode.com",
+  "created_date" : "2023-12-29T12:02:32.772718Z",
+  "modified_by" : "cesar@machinemode.com",
+  "modified_date" : "2024-01-03T17:42:53.948031Z",
+  "device_interface" : [ {
+    "login" : {
+      "password" : "",
+      "username" : "",
+      "name_prompt" : "",
+      "ready_prompt" : "",
+      "requires_login" : false,
+      "password_prompt" : ""
+    },
+    "comm_type" : "HTTP",
+    "transmission" : {
+      "max_retries" : 0,
+      "require_ack" : false,
+      "use_heartbeat" : false,
+      "acknowledgement" : {
+        "error" : [ ],
+        "success" : [ {
+          "data" : "",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ ],
+          "trigger_state_update" : [ ],
+          "process_state_updates_first" : false
+        } ],
+        "ack_type" : "error_only"
+      },
+      "time_between_retries" : 0,
+      "heartbeat_command_ref" : {
+        "command_id" : "SLEEP_TIMER_TOGGLE",
+        "parameters" : [ ],
+        "category_id" : "POWER",
+        "command_name" : "SLEEP TIMER TOGGLE",
+        "capability_id" : "POWER_TOGGLE"
+      },
+      "min_time_between_messages" : 0.05
+    },
+    "http_settings" : {
+      "path" : "",
+      "port" : 8000,
+      "default_verb" : "GET",
+      "http_headers" : [ ],
+      "http_version" : "1.1",
+      "protocols_supported" : 1,
+      "default_data_location" : "Default"
+    },
+    "feedback_parser" : {
+      "prefix" : "",
+      "suffix" : ""
+    },
+    "connection_notes" : "",
+    "global_protocol_details" : {
+      "prefix" : "",
+      "suffix" : "",
+      "checksum_type" : "Not Used"
+    },
+    "communication_loss_parameters" : {
+      "timeout_before_disconnect" : 0
+    }
+  } ],
+  "device_models" : [ "Extras" ],
+  "device_model_codes" : [ "Generic" ],
+  "interface_allowed" : [ "HTTP" ],
+  "lua_code" : "",
+  "import_id" : null,
+  "modified_date_RFC_1123" : "Wed, 3 Jan 2024 17:42:53 GMT"
+}

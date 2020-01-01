@@ -1,0 +1,930 @@
+{
+  "id" : "6c2a1903-b89b-40f7-96a8-397e6823bbaa",
+  "description" : null,
+  "template" : false,
+  "version" : "1.0.0",
+  "status" : "Production",
+  "attributes" : [ ],
+  "categories" : [ {
+    "name" : "Keypad",
+    "macros" : [ ],
+    "states" : [ ],
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "Keypad",
+      "commands" : [ {
+        "name" : "DIGIT 9",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_9"
+      }, {
+        "name" : "DIGIT 8",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_8"
+      }, {
+        "name" : "DIGIT 7",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_7"
+      }, {
+        "name" : "DIGIT 6",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_6"
+      }, {
+        "name" : "DIGIT 5",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_5"
+      }, {
+        "name" : "DIGIT 4",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_4"
+      }, {
+        "name" : "DIGIT 3",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_3"
+      }, {
+        "name" : "DIGIT 2",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_10"
+      }, {
+        "name" : "DIGIT 1",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_2"
+      }, {
+        "name" : "DIGIT 0",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "KEYPAD"
+    } ],
+    "reference_id" : "KEYPAD"
+  }, {
+    "name" : "Volume",
+    "macros" : [ ],
+    "states" : [ ],
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "Mute Toggle",
+      "commands" : [ {
+        "name" : "MUTE TOGGLE",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "MUTE_TOGGLE"
+    }, {
+      "name" : "Volume Incremental",
+      "commands" : [ {
+        "name" : "VOLUME DOWN",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_2"
+      }, {
+        "name" : "VOLUME UP",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "VOLUME_INCREMENTAL"
+    } ],
+    "reference_id" : "VOLUME"
+  }, {
+    "name" : "Transport",
+    "macros" : [ ],
+    "states" : [ ],
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "Transport",
+      "commands" : [ {
+        "name" : "STOP",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_12"
+      }, {
+        "name" : "PLAY",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_11"
+      }, {
+        "name" : "PAUSE",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_10"
+      }, {
+        "name" : "NEXT",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_9"
+      }, {
+        "name" : "PREVIOUS",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_8"
+      }, {
+        "name" : "FORWARD",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_7"
+      }, {
+        "name" : "REVERSE",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_6"
+      }, {
+        "name" : "A",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_5"
+      }, {
+        "name" : "B",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_4"
+      }, {
+        "name" : "X",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_3"
+      }, {
+        "name" : "Y",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_2"
+      }, {
+        "name" : "OPEN/CLOSE",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "TRANSPORT"
+    } ],
+    "reference_id" : "TRANSPORT"
+  }, {
+    "name" : "Power",
+    "macros" : [ ],
+    "states" : [ ],
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "Power Discrete",
+      "commands" : [ {
+        "name" : "POWER TOGGLE",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0156 00AB 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0040 0015 0015 0015 0015 0015 0015 0015 0040 0015 0040 0015 0015 0015 0040 0015 0040 0015 0015 0015 0015 0015 0040 0015 0015 0015 0015 0015 0040 0015 0040 0015 0015 0015 0040 0015 0040 0015 0015 0015 0040 0015 0040 0015 0015 0015 0015 0015 0040 0015 067C 0156 0055 0015 0E4E",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_1"
+      }, {
+        "name" : "POWER OFF",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_2"
+      }, {
+        "name" : "POWER ON",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "POWER_DISCRETE"
+    } ],
+    "reference_id" : "POWER"
+  }, {
+    "name" : "Navigation",
+    "macros" : [ ],
+    "states" : [ ],
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "Navigation",
+      "commands" : [ {
+        "name" : "EXIT",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_13"
+      }, {
+        "name" : "ONE GUIDE",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_11"
+      }, {
+        "name" : "RETURN",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_12"
+      }, {
+        "name" : "VIEW",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_10"
+      }, {
+        "name" : "ENTER",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_9"
+      }, {
+        "name" : "XBOX",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_7"
+      }, {
+        "name" : "XBOX LONG PRESS",
+        "codes" : [ {
+          "data" : "0000 006C 0000 0034 0157 00AB 0015 0015 0016 0015 0016 0015 0015 0016 0015 0015 0016 0015 0016 0015 0015 0040 0015 0015 0016 0015 0016 0015 0015 0040 0015 0040 0015 0015 0016 003F 0016 003F 0016 0015 0016 0015 0015 0040 0015 0016 0015 0015 0016 003F 0016 003F 0016 0015 0016 003F 0016 003F 0016 0015 0015 0040 0015 0040 0015 0015 0016 0015 0016 003F 0016 067B 0156 0055 0016 0E4D 0156 0055 0015 0E4D 0156 0055 0015 0E4D 0156 0055 0016 0E4C 0156 0055 0016 0E4D 0156 0055 0015 0E4D 0156 0055 0016 0E4C 0156 0055 0016 0E4C 0156 0055 0016 0EE1",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_8"
+      }, {
+        "name" : "HOME",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_1"
+      }, {
+        "name" : "MENU",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_6"
+      }, {
+        "name" : "CURSOR ENTER",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_5"
+      }, {
+        "name" : "CURSOR RIGHT",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_4"
+      }, {
+        "name" : "CURSOR LEFT",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_3"
+      }, {
+        "name" : "CURSOR DOWN",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_2"
+      }, {
+        "name" : "CURSOR UP",
+        "codes" : [ {
+          "data" : "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "IR" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "NAVIGATION"
+    } ],
+    "reference_id" : "NAVIGATION"
+  } ],
+  "parameters" : [ ],
+  "project_id" : null,
+  "device_type" : "Game",
+  "device_manufacturer" : "Microsoft",
+  "version_code" : 0,
+  "version_description" : "",
+  "created_by" : "alex@iruleathome.com",
+  "created_date" : "2017-04-18T16:53:42.245Z",
+  "modified_by" : "alex@iruleathome.com",
+  "modified_date" : "2017-11-08T22:56:29.689Z",
+  "device_interface" : [ {
+    "comm_type" : "IR_EMITTER",
+    "ir_settings" : {
+      "use_toggle_bits" : false,
+      "default_repetition" : 1
+    },
+    "transmission" : {
+      "max_retries" : 0,
+      "require_ack" : false,
+      "use_heartbeat" : false,
+      "acknowledgement" : {
+        "error" : [ ],
+        "success" : [ ],
+        "ack_type" : "error_only"
+      },
+      "polling_frequency" : 1,
+      "time_between_retries" : 0,
+      "heartbeat_command_ref" : {
+        "command_id" : "COMMAND_7",
+        "parameters" : [ ],
+        "category_id" : "NAVIGATION",
+        "command_name" : "XBOX",
+        "capability_id" : "NAVIGATION"
+      },
+      "min_time_between_messages" : 0.1
+    },
+    "global_protocol_details" : {
+      "prefix" : "",
+      "suffix" : "",
+      "checksum_type" : "Not Used",
+      "lua_checksum_code" : ""
+    },
+    "communication_loss_parameters" : {
+      "timeout_before_disconnect" : 0
+    }
+  } ],
+  "device_models" : [ "Xbox One S", "Xbox One X", "Xbox One" ],
+  "device_model_codes" : null,
+  "interface_allowed" : [ "IR" ],
+  "lua_code" : "",
+  "import_id" : null,
+  "modified_date_RFC_1123" : "Wed, 8 Nov 2017 22:56:29 GMT"
+}

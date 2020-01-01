@@ -1,0 +1,446 @@
+{
+  "id" : "aaaaaaaa-bbbb-cccc-dddd-ee0000000000",
+  "description" : null,
+  "template" : false,
+  "version" : "1.0.0",
+  "status" : "Production",
+  "attributes" : [ ],
+  "categories" : [ {
+    "name" : "Custom States",
+    "macros" : [ ],
+    "states" : [ ],
+    "attributes" : [ {
+      "key" : "CUSTOM_STATES",
+      "value" : "true"
+    } ],
+    "capabilities" : [ ],
+    "reference_id" : "CUSTOM_STATES"
+  }, {
+    "name" : "Timers",
+    "macros" : [ ],
+    "states" : [ ],
+    "attributes" : [ {
+      "key" : "TIMERS",
+      "value" : "true"
+    } ],
+    "capabilities" : [ ],
+    "reference_id" : "TIMERS"
+  }, {
+    "name" : "Time",
+    "macros" : [ ],
+    "states" : [ {
+      "name" : "Current Time",
+      "log_changes" : false,
+      "reference_id" : "TIME_STATE",
+      "primitive_type" : "time"
+    }, {
+      "name" : "Current Date",
+      "reference_id" : "DATE_STATE",
+      "primitive_type" : "string"
+    }, {
+      "name" : "Current Hour",
+      "constraints" : {
+        "max" : 23,
+        "min" : 0,
+        "step" : 1
+      },
+      "log_changes" : false,
+      "reference_id" : "HOUR_STATE",
+      "primitive_type" : "number"
+    }, {
+      "name" : "Current Minute",
+      "constraints" : {
+        "max" : 59,
+        "min" : 0,
+        "step" : 1
+      },
+      "reference_id" : "MINUTE_STATE",
+      "primitive_type" : "number"
+    }, {
+      "name" : "Current Second",
+      "constraints" : {
+        "max" : 60,
+        "min" : 0,
+        "step" : 1
+      },
+      "reference_id" : "SECOND_STATE",
+      "primitive_type" : "number"
+    }, {
+      "name" : "Current Day of Week",
+      "constraints" : {
+        "max" : 6,
+        "min" : 0,
+        "step" : 1,
+        "sub_type" : "day_of_week",
+        "possible_values" : [ ]
+      },
+      "reference_id" : "DAY_OF_WEEK_STATE",
+      "primitive_type" : "number"
+    }, {
+      "name" : "Current Day of Month",
+      "constraints" : {
+        "max" : 31,
+        "min" : 1,
+        "step" : 1
+      },
+      "reference_id" : "DAY_OF_MONTH_STATE",
+      "primitive_type" : "number"
+    }, {
+      "name" : "Current Month",
+      "constraints" : {
+        "max" : 12,
+        "min" : 1,
+        "step" : 1,
+        "sub_type" : "month",
+        "possible_values" : [ ]
+      },
+      "reference_id" : "MONTH_STATE",
+      "primitive_type" : "number"
+    }, {
+      "name" : "Current Year",
+      "constraints" : {
+        "step" : 1
+      },
+      "reference_id" : "YEAR_STATE",
+      "primitive_type" : "number"
+    } ],
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "Time",
+      "commands" : [ {
+        "name" : "Query Time",
+        "codes" : [ {
+          "data" : "GET TIME",
+          "state_references" : [ {
+            "state_id" : "TIME_STATE"
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "is_query" : true,
+        "attributes" : [ ],
+        "reference_id" : "QUERY_TIME"
+      }, {
+        "name" : "Query Date",
+        "codes" : [ {
+          "data" : "GET DATE",
+          "state_references" : [ {
+            "state_id" : "DATE_STATE"
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "is_query" : true,
+        "attributes" : [ ],
+        "reference_id" : "QUERY_DATE"
+      } ],
+      "feedbacks" : [ {
+        "codes" : [ {
+          "data" : "TIME=$CURRENT_TIME$",
+          "state_references" : [ {
+            "name" : "CURRENT_TIME",
+            "state_id" : "TIME_STATE"
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "reference_id" : "CURRENT_TIME",
+        "feedback_type" : "regex"
+      }, {
+        "codes" : [ {
+          "data" : "DATE=$CURRENT_DATE$",
+          "state_references" : [ {
+            "name" : "CURRENT_DATE",
+            "state_id" : "DATE_STATE"
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "reference_id" : "CURRENT_DATE",
+        "feedback_type" : "regex"
+      }, {
+        "codes" : [ {
+          "data" : "HOUR=$CURRENT_HOUR$",
+          "state_references" : [ {
+            "name" : "CURRENT_HOUR",
+            "state_id" : "HOUR_STATE"
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "reference_id" : "CURRENT_HOUR",
+        "feedback_type" : "regex"
+      }, {
+        "codes" : [ {
+          "data" : "MINUTE=$CURRENT_MINUTE$",
+          "state_references" : [ {
+            "name" : "CURRENT_MINUTE",
+            "state_id" : "MINUTE_STATE"
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "reference_id" : "CURRENT_MINUTE",
+        "feedback_type" : "regex"
+      }, {
+        "codes" : [ {
+          "data" : "SECOND=$CURRENT_SECOND$",
+          "state_references" : [ {
+            "name" : "CURRENT_SECOND",
+            "state_id" : "SECOND_STATE"
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "reference_id" : "CURRENT_SECOND",
+        "feedback_type" : "regex"
+      }, {
+        "codes" : [ {
+          "data" : "DAY_OF_WEEK=$CURRENT_DAY_OF_WEEK$",
+          "state_references" : [ {
+            "name" : "CURRENT_DAY_OF_WEEK",
+            "state_id" : "DAY_OF_WEEK_STATE",
+            "state_key" : ""
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "reference_id" : "CURRENT_DAY_OF_WEEK",
+        "feedback_type" : "regex"
+      }, {
+        "codes" : [ {
+          "data" : "DAY_OF_MONTH=$CURRENT_DAY_OF_MONTH$",
+          "state_references" : [ {
+            "name" : "CURRENT_DAY_OF_MONTH",
+            "state_id" : "DAY_OF_MONTH_STATE"
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "reference_id" : "CURRENT_DAY_OF_MONTH",
+        "feedback_type" : "regex"
+      }, {
+        "codes" : [ {
+          "data" : "MONTH=$CURRENT_MONTH$",
+          "state_references" : [ {
+            "name" : "CURRENT_MONTH",
+            "state_id" : "MONTH_STATE",
+            "state_key" : ""
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "reference_id" : "CURRENT_MONTH",
+        "feedback_type" : "regex"
+      }, {
+        "codes" : [ {
+          "data" : "YEAR=$CURRENT_YEAR$",
+          "state_references" : [ {
+            "name" : "CURRENT_YEAR",
+            "state_id" : "YEAR_STATE",
+            "state_key" : ""
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "reference_id" : "CURRENT_YEAR",
+        "feedback_type" : "regex"
+      } ],
+      "attributes" : [ ],
+      "reference_id" : "SYSTEM"
+    } ],
+    "reference_id" : "CUSTOM"
+  }, {
+    "name" : "System",
+    "macros" : [ ],
+    "states" : [ {
+      "name" : "System State",
+      "log_changes" : true,
+      "reference_id" : "SYSTEM_STATE",
+      "primitive_type" : "boolean",
+      "logging_threshold" : 5
+    } ],
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "Status",
+      "commands" : [ {
+        "name" : "Set System Use",
+        "codes" : [ {
+          "data" : "SET SYSTEM USE-$SYSTEM_STATE$",
+          "state_references" : [ {
+            "name" : "SYSTEM_STATE",
+            "state_id" : "SYSTEM_STATE"
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "SET_SYSTEM_USE"
+      }, {
+        "name" : "Query System Use",
+        "codes" : [ {
+          "data" : "GET SYSTEM USE",
+          "state_references" : [ {
+            "name" : "",
+            "state_id" : "SYSTEM_STATE",
+            "state_key" : ""
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "is_query" : true,
+        "attributes" : [ ],
+        "reference_id" : "QUERY_SYSTEM_USE"
+      } ],
+      "feedbacks" : [ {
+        "codes" : [ {
+          "data" : "SYSTEM USE=$SYSTEM_STATE$",
+          "state_references" : [ {
+            "name" : "SYSTEM_STATE",
+            "state_id" : "SYSTEM_STATE",
+            "state_key" : ""
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "reference_id" : "CURRENT_SYSTEM_STATUS",
+        "feedback_type" : "regex"
+      } ],
+      "attributes" : [ ],
+      "reference_id" : "SYSTEM"
+    } ],
+    "reference_id" : "STATUS"
+  }, {
+    "name" : "Weather",
+    "macros" : [ ],
+    "states" : [ {
+      "name" : "Current Temperature",
+      "log_changes" : false,
+      "reference_id" : "TEMP_STATE",
+      "primitive_type" : "string"
+    }, {
+      "name" : "Current Conditions",
+      "log_changes" : false,
+      "reference_id" : "CONDITIONS_STATE",
+      "primitive_type" : "string"
+    }, {
+      "name" : "Current Humidity",
+      "log_changes" : false,
+      "reference_id" : "HUMIDITY_STATE",
+      "primitive_type" : "string"
+    }, {
+      "name" : "Lowest temperature today",
+      "log_changes" : false,
+      "reference_id" : "TEMP_MIN_STATE",
+      "primitive_type" : "string"
+    }, {
+      "name" : "Highest temperature today",
+      "log_changes" : false,
+      "reference_id" : "TEMP_MAX_STATE",
+      "primitive_type" : "string"
+    }, {
+      "name" : "Temperature Summary",
+      "log_changes" : false,
+      "reference_id" : "TEMP_SUMMARY_STATE",
+      "primitive_type" : "string"
+    }, {
+      "name" : "Temperature Unit",
+      "constraints" : {
+        "possible_values" : [ {
+          "user_value" : "FAHRENHEIT",
+          "device_value" : "2"
+        }, {
+          "user_value" : "CELSIUS",
+          "device_value" : "1"
+        }, {
+          "user_value" : "KELVIN",
+          "device_value" : "0"
+        } ]
+      },
+      "log_changes" : false,
+      "reference_id" : "TEMP_UNIT_STATE",
+      "primitive_type" : "string"
+    } ],
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "Status",
+      "commands" : [ {
+        "name" : "Query Weather",
+        "codes" : [ {
+          "data" : "GET WEATHER",
+          "state_references" : [ ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "is_query" : true,
+        "attributes" : [ ],
+        "reference_id" : "QUERY_WEATHER"
+      }, {
+        "name" : "Change Temperature Unit",
+        "codes" : [ {
+          "data" : "ADJUST TEMP UNIT-$TEMP_UNIT_STATE$",
+          "state_references" : [ {
+            "name" : "TEMP_UNIT_STATE",
+            "state_id" : "TEMP_UNIT_STATE"
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "ADJUST_TEMP_UNIT_STATE"
+      } ],
+      "feedbacks" : [ {
+        "codes" : [ {
+          "data" : "WEATHER=$TEMP_STATE$//$TEMP_MAX_STATE$//$TEMP_MIN_STATE$//$HUMIDITY_STATE$//$TEMP_SUMMARY_STATE$//$CONDITIONS_STATE$//$TEMP_UNIT_STATE$",
+          "state_references" : [ {
+            "name" : "TEMP_STATE",
+            "state_id" : "TEMP_STATE"
+          }, {
+            "name" : "TEMP_MAX_STATE",
+            "state_id" : "TEMP_MAX_STATE"
+          }, {
+            "name" : "TEMP_MIN_STATE",
+            "state_id" : "TEMP_MIN_STATE"
+          }, {
+            "name" : "HUMIDITY_STATE",
+            "state_id" : "HUMIDITY_STATE"
+          }, {
+            "name" : "TEMP_SUMMARY_STATE",
+            "state_id" : "TEMP_SUMMARY_STATE"
+          }, {
+            "name" : "CONDITIONS_STATE",
+            "state_id" : "CONDITIONS_STATE"
+          }, {
+            "name" : "TEMP_UNIT_STATE",
+            "state_id" : "TEMP_UNIT_STATE"
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "reference_id" : "CURRENT_WEATHER_STATUS",
+        "feedback_type" : "regex"
+      }, {
+        "codes" : [ {
+          "data" : "WEATHER_UNIT=$TEMP_UNIT_STATE$",
+          "state_references" : [ {
+            "name" : "TEMP_UNIT_STATE",
+            "state_id" : "TEMP_UNIT_STATE"
+          } ],
+          "interface_allowed" : [ "TCP_UDP" ]
+        } ],
+        "reference_id" : "CURRENT_WEATHER_UNIT",
+        "feedback_type" : "regex"
+      } ],
+      "attributes" : [ ],
+      "reference_id" : "SYSTEM"
+    } ],
+    "reference_id" : "WEATHER"
+  } ],
+  "parameters" : null,
+  "project_id" : null,
+  "device_type" : "SYSTEM",
+  "device_manufacturer" : "Kramer",
+  "version_code" : 0,
+  "version_description" : null,
+  "created_by" : "hayyan@iruleathome.com",
+  "created_date" : "2016-01-01T00:00:00Z",
+  "modified_by" : "mboris@iruleathome.com",
+  "modified_date" : "2016-01-01T00:00:00Z",
+  "device_interface" : [ {
+    "comm_type" : "TCP",
+    "transmission" : {
+      "polling_frequency" : 1,
+      "min_time_between_messages" : 0
+    }
+  } ],
+  "device_models" : [ "SYSTEM" ],
+  "device_model_codes" : [ "SYSTEM" ],
+  "interface_allowed" : [ "TCP_UDP" ],
+  "lua_code" : null,
+  "import_id" : null,
+  "modified_date_RFC_1123" : "Fri, 1 Jan 2016 00:00:00 GMT"
+}

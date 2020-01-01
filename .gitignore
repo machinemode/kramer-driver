@@ -1,0 +1,10 @@
+/luarocks
+/lua
+/lua_modules
+/.luarocks
+bundle.lua
+bundle.min.lua
+node_modules
+resources
+doc/
+dist/

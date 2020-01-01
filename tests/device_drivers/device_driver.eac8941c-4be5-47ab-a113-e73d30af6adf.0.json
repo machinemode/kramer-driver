@@ -1,0 +1,519 @@
+{
+  "id" : "eac8941c-4be5-47ab-a113-e73d30af6adf",
+  "description" : "https://machinemode.gitlab.io/kramer-ext/drivers/sidecar/",
+  "template" : false,
+  "version" : "1.0.0",
+  "status" : "Production",
+  "attributes" : [ ],
+  "categories" : [ {
+    "name" : "Custom",
+    "macros" : [ {
+      "name" : "Initialization",
+      "elements" : [ {
+        "trigger_command" : {
+          "command_id" : "INITIALIZE",
+          "parameters" : [ ],
+          "category_id" : "CUSTOM",
+          "command_name" : "Initialize",
+          "capability_id" : "SYSTEM"
+        }
+      } ],
+      "reference_id" : "INITIALIZATION"
+    } ],
+    "states" : [ {
+      "name" : "Process ID",
+      "dynamic" : false,
+      "attributes" : [ ],
+      "constraints" : {
+        "value_default" : "",
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "PID",
+      "primitive_type" : "number_array"
+    }, {
+      "name" : "Binary Path",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "BINARY_PATH",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Log file path",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "LOG_FILE_PATH",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Auto Save State",
+      "attributes" : [ ],
+      "constraints" : {
+        "value_default" : "OFF",
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "AUTO_SAVE_STATE",
+      "primitive_type" : "boolean"
+    }, {
+      "name" : "Log Level",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ {
+          "user_value" : "DEBUG",
+          "device_value" : "DEBUG"
+        }, {
+          "user_value" : "INFO",
+          "device_value" : "INFO"
+        }, {
+          "user_value" : "WARN",
+          "device_value" : "WARN"
+        }, {
+          "user_value" : "ERROR",
+          "device_value" : "ERROR"
+        } ]
+      },
+      "log_changes" : false,
+      "reference_id" : "LOG_LEVEL",
+      "primitive_type" : "string"
+    } ],
+    "lua_code" : "do local a=package.searchers or package.loaders;local b=a[2]a[2]=function(c)local d={[\"config\"]=function()local e=\"sidecar\"local f=require(\"libs.logger\").defaultLogger(e,\"INFO\")local g=require(\"lunajson\")local h=require(\"device_driver.state\")local i=require(\"common\")local j=require(\"libs.functional\")local k=require(\"libs.sidecar\")local l=require(\"libs.system\")local m=require(\"libs.string_utils\")local n=string.format(\"resources/data/%s/state/\",e)local o=\"resources/www/bundle/\"local p=string.format(\"resources/data/%s/bin/\",e)local q={}local r=h.init(\"CUSTOM\")local s={\"HTTP\"}local function t(u)return u and m.append_if(u,'/',function(v)return string.sub(v,-1)~=\"/\"end)or\"\"end;local function w(x,y)local z=h.get_value(x,\"PID\",y)return not k.is_running(z)or k.stop(z)end;local function A(x,B)local C={}if w(x,nil)then table.insert(C,r(\"PID\")(nil))table.insert(C,r(\"LOG_FILE_PATH\")(nil))end;j.each(function(y)if w(x,y)then table.insert(C,r(\"PID\",y)(nil))table.insert(C,r(\"LOG_FILE_PATH\",y)(nil))end end,B)return C end;local function D(y)local z=h.get_value(GetStates(),\"PID\",y)return not k.is_running(z)and{r(\"PID\",y)(nil),r(\"LOG_FILE_PATH\",y)(nil)}or{}end;local function E(u)local y=m.replace_special_chars(m.trim(u),\"_\")return not m.is_empty(y)and y or nil end;q.initial_states={}q.capabilities={['SYSTEM']=i.common_commands(s,n,r,f),['CUSTOM']={['LOAD']={generic_comm_types=s,state_changes=function(F)local G=m.trim(F['BINARY_PATH'])local H=m.trim(F['DIRECTORY_PATH'])local y=E(F['APP'])if m.is_empty(G)then f:warn(\"Unable to load empty BINARY_PATH\")return{}end;local I=w(GetStates(),y)and D(y)or{}local J=string.format(\"%s%s\",p,t(y))l.remove(J)if not l.mkdir(J)then return{}end;if m.is_empty(H)then if l.copy(o..G,J..G)then return j.chain(I,{r(\"BINARY_PATH\",y)(J..G)})end else H=t(H)if l.copy(o..H,J..H)then return j.chain(I,{r(\"BINARY_PATH\",y)(J..H..G)})end end;return I end},['START']={generic_comm_types=s,state_changes=function(F)local y=E(F['APP'])local K=m.trim(F['LOG_FILE_PATH'])local z=h.get_value(GetStates(),\"PID\",y)local c=h.get_value(GetStates(),\"BINARY_PATH\",y)if m.is_empty(c)then f:error(\"BINARY_PATH not found for key \"..(y or\"nil\"))return{}else z=k.restart(c,z,K,F['KEEP_ALIVE'])return{r(\"PID\",y)(z),r(\"LOG_FILE_PATH\",y)(z and K)}end end},['STOP']={generic_comm_types=s,state_changes=function(F)local y=E(F['APP'])return w(GetStates(),y)and D(y)or{}end},['CLEAR_LOG']={generic_comm_types=s,state_changes=function(F)local y=E(F['APP'])local K=h.get_value(GetStates(),\"LOG_FILE_PATH\",y)if not m.is_empty(K)then l.clear(K)end;return{}end},['CHECK']={generic_comm_types=s,state_changes=function(F)return D(E(F['APP']))end}}}q.capabilities['SYSTEM']['INITIALIZE']={generic_comm_types=s,state_changes=function()local L=l.restore(n,g.decode)local M=A(L,h.keys(L,\"PID\"))local N={r(\"LOG_LEVEL\")(f.level)}return h.merge(h.merge(N,L),M)end}q.macros={}local function O()local P=h.find_first(GetStates(),\"AUTO_SAVE_STATE\")return P==nil or h.to_boolean(P.state_value)end;function q.on_state_change()if O()then l.backup(n,GetStates(),g.encode)end end;function q.initialize()l.init(n,p)end;return q end,[\"common\"]=function()local g=require(\"lunajson\")local h=require(\"device_driver.state\")local l=require(\"libs.system\")local i={}function i.common_commands(s,Q,r,f)return{['INITIALIZE']={generic_comm_types=s,state_changes=function()local L=l.restore(Q,g.decode)local N={r(\"LOG_LEVEL\")(f.level)}return h.merge(N,L)end},['SET_LOG_LEVEL']={generic_comm_types=s,state_changes=function(F)local R=F['LOG_LEVEL']f:setLevel(R)local S=\"log level set to \"..R;f:debug(S)f:info(S)f:warn(S)f:error(S)return{r(\"LOG_LEVEL\")(R)}end},['SET_AUTO_SAVE_STATE']={generic_comm_types=s,state_changes=function(F)return{r(\"AUTO_SAVE_STATE\")(F['AUTO_SAVE_STATE'])}end},['SAVE_STATE']={generic_comm_types=s,state_changes=function()l.backup(Q,GetStates(),g.encode)return{}end},['CLEAR_STATE_BACKUPS']={generic_comm_types=s,state_changes=function()l.remove_backups(Q)return{}end}}end;return i end,[\"lunajson\"]=function()local T=require'lunajson.decoder'local U=require'lunajson.encoder'local V=require'lunajson.sax'return{decode=T(),encode=U(),newparser=V.newparser,newfileparser=V.newfileparser}end,[\"lunajson.decoder\"]=function()local setmetatable,tonumber,tostring=setmetatable,tonumber,tostring;local W,X=math.floor,math.huge;local Y,Z=math.mininteger or nil,math.tointeger or nil;local _,a0,a1,a2,a3,a4=string.byte,string.char,string.find,string.gsub,string.match,string.sub;local function a5(a6,a7)error(\"parse error at \"..a6 ..\": \"..a7,2)end;local a8;if _VERSION==\"Lua 5.1\"then a8='[^\\32-\\255]'else a8='[\\0-\\31]'end;local a9=nil;local function T()local g,a6,aa,ab,ac;local ad,ae;local function af(a7)return a5(a6,a7)end;local function ag()af('invalid value')end;local function ah()if a4(g,a6,a6+2)=='ull'then a6=a6+3;return aa end;af('invalid value')end;local function ai()if a4(g,a6,a6+3)=='alse'then a6=a6+4;return false end;af('invalid value')end;local function aj()if a4(g,a6,a6+2)=='rue'then a6=a6+3;return true end;af('invalid value')end;local ak=a3(tostring(0.5),'[^0-9]')local al=tonumber;if ak~='.'then if a1(ak,'%W')then ak='%'..ak end;al=function(v)return tonumber(a2(v,'.',ak))end end;local function am()return af('invalid number')end;local function an(ao)local ap,aq=a3(g,'^(%.?[0-9]*)([-+.A-Za-z]?)',a6)if ap==''then if aq==''then if ao then return-0.0 end;return 0 end;if aq=='e'or aq=='E'then ap,aq=a3(g,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',a6)if aq==''then a6=a6+#ap;if ao then return-0.0 end;return 0.0 end end;am()end;if _(ap)~=0x2E or _(ap,-1)==0x2E then am()end;if aq~=''then if aq=='e'or aq=='E'then ap,aq=a3(g,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',a6)end;if aq~=''then am()end end;a6=a6+#ap;aq=al(ap)if ao then aq=-aq end;return aq end;local function ar(ao)a6=a6-1;local ap,aq=a3(g,'^([0-9]+%.?[0-9]*)([-+.A-Za-z]?)',a6)if _(ap,-1)==0x2E then am()end;if aq~=''then if aq~='e'and aq~='E'then am()end;ap,aq=a3(g,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',a6)if not ap or aq~=''then am()end end;a6=a6+#ap;aq=al(ap)if ao then aq=-aq;if aq==Y and not a1(ap,'[^0-9]')then aq=Y end end;return aq end;local function as()local aq=_(g,a6)if aq then a6=a6+1;if aq>0x30 then if aq<0x3A then return ar(true)end else if aq>0x2F then return an(true)end end end;af('invalid number')end;local at={0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,X,X,X,X,X,X,X,0xA,0xB,0xC,0xD,0xE,0xF,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,0xA,0xB,0xC,0xD,0xE,0xF,__index=function()return X end}setmetatable(at,at)local au={['\"']='\"',['\\\\']='\\\\',['/']='/',['b']='\\b',['f']='\\f',['n']='\\n',['r']='\\r',['t']='\\t',__index=function()af(\"invalid escape sequence\")end}setmetatable(au,au)local function av()return af(\"1st surrogate pair byte not continued by 2nd\")end;local aw=0;local function ax(ay,az)if ay=='u'then local aA,aB,aC,aD,aE=_(az,1,5)az=at[aA-47]*0x1000+at[aB-47]*0x100+at[aC-47]*0x10+at[aD-47]if az~=X then if az<0x80 then if aE then return a0(az,aE)end;return a0(az)elseif az<0x800 then aA=W(az/0x40)aB=az-aA*0x40;aA=aA+0xC0;aB=aB+0x80;if aE then return a0(aA,aB,aE)end;return a0(aA,aB)elseif az<0xD800 or 0xE000<=az then aA=W(az/0x1000)az=az-aA*0x1000;aB=W(az/0x40)aC=az-aB*0x40;aA=aA+0xE0;aB=aB+0x80;aC=aC+0x80;if aE then return a0(aA,aB,aC,aE)end;return a0(aA,aB,aC)elseif 0xD800<=az and az<0xDC00 then if aw==0 then aw=az;if not aE then return''end;av()end;aw=0;av()else if aw~=0 then az=0x10000+(aw-0xD800)*0x400+az-0xDC00;aw=0;aA=W(az/0x40000)az=az-aA*0x40000;aB=W(az/0x1000)az=az-aB*0x1000;aC=W(az/0x40)aD=az-aC*0x40;aA=aA+0xF0;aB=aB+0x80;aC=aC+0x80;aD=aD+0x80;if aE then return a0(aA,aB,aC,aD,aE)end;return a0(aA,aB,aC,aD)end;af(\"2nd surrogate pair byte appeared without 1st\")end end;af(\"invalid unicode codepoint literal\")end;if aw~=0 then aw=0;av()end;return au[ay]..az end;local aF=setmetatable({},{__mode=\"v\"})local function aG(aH)local aI=a6;local aJ,aA,aB;repeat aI=a1(g,'\"',aI,true)if not aI then af(\"unterminated string\")end;aJ=aI-1;aI=aI+1;aA,aB=_(g,aJ-1,aJ)if aB==0x5C and aA==0x5C then repeat aJ=aJ-2;aA,aB=_(g,aJ-1,aJ)until aB~=0x5C or aA~=0x5C;aJ=aI-2 end until aB~=0x5C;local u=a4(g,a6,aJ)a6=aI;if aH then aJ=aF[u]if aJ then return aJ end;aJ=u end;if a1(u,a8)then af(\"unescaped control string\")end;if a1(u,'\\\\',1,true)then u=a2(u,'\\\\(.)([^\\\\]?[^\\\\]?[^\\\\]?[^\\\\]?[^\\\\]?)',ax)if aw~=0 then aw=0;af(\"1st surrogate pair byte not continued by 2nd\")end end;if aH then aF[aJ]=u end;return u end;local function aK()ac=ac+1;if ac>1000 then af('too deeply nested json (> 1000)')end;local aL={}a6=a3(g,'^[ \\n\\r\\t]*()',a6)local aM=0;if _(g,a6)==0x5D then a6=a6+1 else local aI=a6;repeat aM=aM+1;ae=ad[_(g,aI)]a6=aI+1;aL[aM]=ae()aI=a3(g,'^[ \\n\\r\\t]*,[ \\n\\r\\t]*()',a6)until not aI;aI=a3(g,'^[ \\n\\r\\t]*%]()',a6)if not aI then af(\"no closing bracket of an array\")end;a6=aI end;if ab then aL[0]=aM end;ac=ac-1;return aL end;local function aN()ac=ac+1;if ac>1000 then af('too deeply nested json (> 1000)')end;local aO={}a6=a3(g,'^[ \\n\\r\\t]*()',a6)if _(g,a6)==0x7D then a6=a6+1 else local aI=a6;repeat if _(g,aI)~=0x22 then af(\"not key\")end;a6=aI+1;local aP=aG(true)ae=ag;local aA,aB,aC=_(g,a6,a6+3)if aA==0x3A then if aB~=0x20 then ae=ad[aB]aI=a6+2 else ae=ad[aC]aI=a6+3 end end;if ae==ag then aI=a3(g,'^[ \\n\\r\\t]*:[ \\n\\r\\t]*()',a6)if not aI then af(\"no colon after a key\")end;ae=ad[_(g,aI)]aI=aI+1 end;a6=aI;aO[aP]=ae()aI=a3(g,'^[ \\n\\r\\t]*,[ \\n\\r\\t]*()',a6)until not aI;aI=a3(g,'^[ \\n\\r\\t]*}()',a6)if not aI then af(\"no closing bracket of an object\")end;a6=aI end;ac=ac-1;return aO end;ad={[0]=ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,aG,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,as,ag,ag,an,ar,ar,ar,ar,ar,ar,ar,ar,ar,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,aK,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ai,ag,ag,ag,ag,ag,ag,ag,ah,ag,ag,ag,ag,ag,aj,ag,ag,ag,ag,ag,ag,aN,ag,ag,ag,ag,__index=function()af(\"unexpected termination\")end}setmetatable(ad,ad)local function aQ(aR,aS,aT,aU)g,a6,aa,ab=aR,aS,aT,aU;ac=0;a6=a3(g,'^[ \\n\\r\\t]*()',a6)ae=ad[_(g,a6)]a6=a6+1;local aV=ae()if aS then return aV,a6 else ae,a6=a1(g,'^[ \\n\\r\\t]*',a6)if a6~=#g then af('json ended')end;return aV end end;return aQ end;return T end,[\"lunajson.encoder\"]=function()local error=error;local _,a1,aW,a2,a3=string.byte,string.find,string.format,string.gsub,string.match;local aX=table.concat;local tostring=tostring;local pairs,type=pairs,type;local setmetatable=setmetatable;local aY,aZ=1/0,-1/0;local a_;if _VERSION==\"Lua 5.1\"then a_='[^ -!#-[%]^-\\255]'else a_='[\\0-\\31\"\\\\]'end;local a9=nil;local function U()local aV,aa;local aM,b0,b1;local function b2(aV)b0[aM]=tostring(aV)aM=aM+1 end;local ak=a3(tostring(0.5),'[^0-9]')local b3=a3(tostring(12345.12345),'[^0-9'..ak..']')if ak=='.'then ak=nil end;local b4;if ak or b3 then b4=true;if ak and a1(ak,'%W')then ak='%'..ak end;if b3 and a1(b3,'%W')then b3='%'..b3 end end;local b5=function(b6)if aZ<b6 and b6<aY then local v=aW(\"%.17g\",b6)if b4 then if b3 then v=a2(v,b3,'')end;if ak then v=a2(v,ak,'.')end end;b0[aM]=v;aM=aM+1;return end;error('invalid number')end;local b7;local b8={['\"']='\\\\\"',['\\\\']='\\\\\\\\',['\\b']='\\\\b',['\\f']='\\\\f',['\\n']='\\\\n',['\\r']='\\\\r',['\\t']='\\\\t',__index=function(b9,aq)return aW('\\\\u00%02X',_(aq))end}setmetatable(b8,b8)local function ba(v)b0[aM]='\"'if a1(v,a_)then v=a2(v,a_,b8)end;b0[aM+1]=v;b0[aM+2]='\"'aM=aM+3 end;local function bb(bc)if b1[bc]then error(\"loop detected\")end;b1[bc]=true;local bd=bc[0]if type(bd)=='number'then b0[aM]='['aM=aM+1;for be=1,bd do b7(bc[be])b0[aM]=','aM=aM+1 end;if bd>0 then aM=aM-1 end;b0[aM]=']'else bd=bc[1]if bd~=nil then b0[aM]='['aM=aM+1;local be=2;repeat b7(bd)bd=bc[be]if bd==nil then break end;be=be+1;b0[aM]=','aM=aM+1 until false;b0[aM]=']'else b0[aM]='{'aM=aM+1;local bd=aM;for bf,aV in pairs(bc)do if type(bf)~='string'then error(\"non-string key\")end;ba(bf)b0[aM]=':'aM=aM+1;b7(aV)b0[aM]=','aM=aM+1 end;if aM>bd then aM=aM-1 end;b0[aM]='}'end end;aM=aM+1;b1[bc]=nil end;local ad={boolean=b2,number=b5,string=ba,table=bb,__index=function()error(\"invalid type value\")end}setmetatable(ad,ad)function b7(aV)if aV==aa then b0[aM]='null'aM=aM+1;return end;return ad[type(aV)](aV)end;local function bg(bh,aT)aV,aa=bh,aT;aM,b0,b1=1,{},{}b7(aV)return aX(b0)end;return bg end;return U end,[\"lunajson.sax\"]=function()local setmetatable,tonumber,tostring=setmetatable,tonumber,tostring;local W,X=math.floor,math.huge;local Y,Z=math.mininteger or nil,math.tointeger or nil;local _,a0,a1,a2,a3,a4=string.byte,string.char,string.find,string.gsub,string.match,string.sub;local function bi(a6,a7)error(\"parse error at \"..a6 ..\": \"..a7,2)end;local a8;if _VERSION==\"Lua 5.1\"then a8='[^\\32-\\255]'else a8='[\\0-\\31]'end;local type,unpack=type,table.unpack or unpack;local bj=io.open;local a9=nil;local function bk()end;local function bl(bm,bn)local g,bo,ac;local bp,a6,bq=0,1,0;local ad,ae;if type(bm)=='string'then g=bm;bp=#g;bo=function()g=''bp=0;bo=bk end else bo=function()bq=bq+bp;a6=1;repeat g=bm()if not g then g=''bp=0;bo=bk;return end;bp=#g until bp>0 end;bo()end;local br=bn.startobject or bk;local bs=bn.key or bk;local bt=bn.endobject or bk;local bu=bn.startarray or bk;local bv=bn.endarray or bk;local bw=bn.string or bk;local bx=bn.number or bk;local by=bn.boolean or bk;local bz=bn.null or bk;local function bA()local aq=_(g,a6)if not aq then bo()aq=_(g,a6)end;return aq end;local function bB(a7)return bi(bq+a6,a7)end;local function bC()return bA()or bB(\"unexpected termination\")end;local function bD()while true do a6=a3(g,'^[ \\n\\r\\t]*()',a6)if a6<=bp then return end;if bp==0 then bB(\"unexpected termination\")end;bo()end end;local function ag()bB('invalid value')end;local function bE(bF,bG,bH,bI)for aM=1,bG do local aq=bC()if _(bF,aM)~=aq then bB(\"invalid char\")end;a6=a6+1 end;return bI(bH)end;local function ah()if a4(g,a6,a6+2)=='ull'then a6=a6+3;return bz(nil)end;return bE('ull',3,nil,bz)end;local function ai()if a4(g,a6,a6+3)=='alse'then a6=a6+4;return by(false)end;return bE('alse',4,false,by)end;local function aj()if a4(g,a6,a6+2)=='rue'then a6=a6+3;return by(true)end;return bE('rue',3,true,by)end;local ak=a3(tostring(0.5),'[^0-9]')local al=tonumber;if ak~='.'then if a1(ak,'%W')then ak='%'..ak end;al=function(v)return tonumber(a2(v,'.',ak))end end;local function am()return bB('invalid number')end;local function bJ(ao)local bK={}local aM=1;local bL=true;local aq=_(g,a6)a6=a6+1;local function bM()bK[aM]=aq;aM=aM+1;aq=bA()a6=a6+1 end;if aq==0x30 then bM()if aq and 0x30<=aq and aq<0x3A then am()end else repeat bM()until not(aq and 0x30<=aq and aq<0x3A)end;if aq==0x2E then bL=false;bM()if not(aq and 0x30<=aq and aq<0x3A)then am()end;repeat bM()until not(aq and 0x30<=aq and aq<0x3A)end;if aq==0x45 or aq==0x65 then bL=false;bM()if aq==0x2B or aq==0x2D then bM()end;if not(aq and 0x30<=aq and aq<0x3A)then am()end;repeat bM()until not(aq and 0x30<=aq and aq<0x3A)end;if aq and(0x41<=aq and aq<=0x5B or 0x61<=aq and aq<=0x7B or aq==0x2B or aq==0x2D or aq==0x2E)then am()end;a6=a6-1;local ap=a0(unpack(bK))ap=al(ap)if ao then ap=-ap;if ap==Y and bL then ap=Y end end;return bx(ap)end;local function an(ao)local ap,aq=a3(g,'^(%.?[0-9]*)([-+.A-Za-z]?)',a6)if ap==''then if a6>bp then a6=a6-1;return bJ(ao)end;if aq==''then if ao then return bx(-0.0)end;return bx(0)end;if aq=='e'or aq=='E'then ap,aq=a3(g,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',a6)if aq==''then a6=a6+#ap;if a6>bp then a6=a6-#ap-1;return bJ(ao)end;if ao then return bx(-0.0)end;return bx(0.0)end end;a6=a6-1;return bJ(ao)end;if _(ap)~=0x2E or _(ap,-1)==0x2E then a6=a6-1;return bJ(ao)end;if aq~=''then if aq=='e'or aq=='E'then ap,aq=a3(g,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',a6)end;if aq~=''then a6=a6-1;return bJ(ao)end end;a6=a6+#ap;if a6>bp then a6=a6-#ap-1;return bJ(ao)end;aq=al(ap)if ao then aq=-aq end;return bx(aq)end;local function ar(ao)a6=a6-1;local ap,aq=a3(g,'^([0-9]+%.?[0-9]*)([-+.A-Za-z]?)',a6)if _(ap,-1)==0x2E then return bJ(ao)end;if aq~=''then if aq~='e'and aq~='E'then return bJ(ao)end;ap,aq=a3(g,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',a6)if not ap or aq~=''then return bJ(ao)end end;a6=a6+#ap;if a6>bp then a6=a6-#ap;return bJ(ao)end;aq=al(ap)if ao then aq=-aq;if aq==Y and not a1(ap,'[^0-9]')then aq=Y end end;return bx(aq)end;local function as()local aq=_(g,a6)or bC()if aq then a6=a6+1;if aq>0x30 then if aq<0x3A then return ar(true)end else if aq>0x2F then return an(true)end end end;bB(\"invalid number\")end;local at={0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,X,X,X,X,X,X,X,0xA,0xB,0xC,0xD,0xE,0xF,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,0xA,0xB,0xC,0xD,0xE,0xF,__index=function()return X end}setmetatable(at,at)local au={['\"']='\"',['\\\\']='\\\\',['/']='/',['b']='\\b',['f']='\\f',['n']='\\n',['r']='\\r',['t']='\\t',__index=function()bB(\"invalid escape sequence\")end}setmetatable(au,au)local function av()return bB(\"1st surrogate pair byte not continued by 2nd\")end;local aw=0;local function ax(ay,az)if ay=='u'then local aA,aB,aC,aD,aE=_(az,1,5)az=at[aA-47]*0x1000+at[aB-47]*0x100+at[aC-47]*0x10+at[aD-47]if az~=X then if az<0x80 then if aE then return a0(az,aE)end;return a0(az)elseif az<0x800 then aA=W(az/0x40)aB=az-aA*0x40;aA=aA+0xC0;aB=aB+0x80;if aE then return a0(aA,aB,aE)end;return a0(aA,aB)elseif az<0xD800 or 0xE000<=az then aA=W(az/0x1000)az=az-aA*0x1000;aB=W(az/0x40)aC=az-aB*0x40;aA=aA+0xE0;aB=aB+0x80;aC=aC+0x80;if aE then return a0(aA,aB,aC,aE)end;return a0(aA,aB,aC)elseif 0xD800<=az and az<0xDC00 then if aw==0 then aw=az;if not aE then return''end;av()end;aw=0;av()else if aw~=0 then az=0x10000+(aw-0xD800)*0x400+az-0xDC00;aw=0;aA=W(az/0x40000)az=az-aA*0x40000;aB=W(az/0x1000)az=az-aB*0x1000;aC=W(az/0x40)aD=az-aC*0x40;aA=aA+0xF0;aB=aB+0x80;aC=aC+0x80;aD=aD+0x80;if aE then return a0(aA,aB,aC,aD,aE)end;return a0(aA,aB,aC,aD)end;bB(\"2nd surrogate pair byte appeared without 1st\")end end;bB(\"invalid unicode codepoint literal\")end;if aw~=0 then aw=0;av()end;return au[ay]..az end;local function aG(aH)local bN=a6;local aI;local u=''local bO;while true do while true do aI=a1(g,'[\\\\\"]',bN)if aI then break end;u=u..a4(g,a6,bp)if bN==bp+2 then bN=2 else bN=1 end;bo()if bp==0 then bB(\"unterminated string\")end end;if _(g,aI)==0x22 then break end;bN=aI+2;bO=true end;u=u..a4(g,a6,aI-1)a6=aI+1;if a1(u,a8)then bB(\"unescaped control string\")end;if bO then u=a2(u,'\\\\(.)([^\\\\]?[^\\\\]?[^\\\\]?[^\\\\]?[^\\\\]?)',ax)if aw~=0 then aw=0;bB(\"1st surrogate pair byte not continued by 2nd\")end end;if aH then return bs(u)end;return bw(u)end;local function aK()ac=ac+1;if ac>1000 then bB('too deeply nested json (> 1000)')end;bu()bD()if _(g,a6)==0x5D then a6=a6+1 else local aI;while true do ae=ad[_(g,a6)]a6=a6+1;ae()aI=a3(g,'^[ \\n\\r\\t]*,[ \\n\\r\\t]*()',a6)if aI then a6=aI else aI=a3(g,'^[ \\n\\r\\t]*%]()',a6)if aI then a6=aI;break end;bD()local aq=_(g,a6)a6=a6+1;if aq==0x2C then bD()elseif aq==0x5D then break else bB(\"no closing bracket of an array\")end end;if a6>bp then bD()end end end;ac=ac-1;return bv()end;local function aN()ac=ac+1;if ac>1000 then bB('too deeply nested json (> 1000)')end;br()bD()if _(g,a6)==0x7D then a6=a6+1 else local aI;while true do if _(g,a6)~=0x22 then bB(\"not key\")end;a6=a6+1;aG(true)aI=a3(g,'^[ \\n\\r\\t]*:[ \\n\\r\\t]*()',a6)if aI then a6=aI else bD()if _(g,a6)~=0x3A then bB(\"no colon after a key\")end;a6=a6+1;bD()end;if a6>bp then bD()end;ae=ad[_(g,a6)]a6=a6+1;ae()aI=a3(g,'^[ \\n\\r\\t]*,[ \\n\\r\\t]*()',a6)if aI then a6=aI else aI=a3(g,'^[ \\n\\r\\t]*}()',a6)if aI then a6=aI;break end;bD()local aq=_(g,a6)a6=a6+1;if aq==0x2C then bD()elseif aq==0x7D then break else bB(\"no closing bracket of an object\")end end;if a6>bp then bD()end end end;ac=ac-1;return bt()end;ad={[0]=ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,aG,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,as,ag,ag,an,ar,ar,ar,ar,ar,ar,ar,ar,ar,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,aK,ag,ag,ag,ag,ag,ag,ag,ag,ag,ag,ai,ag,ag,ag,ag,ag,ag,ag,ah,ag,ag,ag,ag,ag,aj,ag,ag,ag,ag,ag,ag,aN,ag,ag,ag,ag}local function bP()ac=0;bD()ae=ad[_(g,a6)]a6=a6+1;ae()end;local function bQ(b6)if b6<0 then error(\"the argument must be non-negative\")end;local bN=a6-1+b6;local u=a4(g,a6,bN)while bN>bp and bp~=0 do bo()bN=bN-(bp-(a6-1))u=u..a4(g,a6,bN)end;if bp~=0 then a6=bN+1 end;return u end;local function bR()return bq+a6 end;return{run=bP,tryc=bA,read=bQ,tellpos=bR}end;local function bS(bT,bn)local bU=bj(bT)local function bV()local v;if bU then v=bU:read(8192)if not v then bU:close()bU=nil end end;return v end;return bl(bV,bn)end;return{newparser=bl,newfileparser=bS}end,[\"libs.logger\"]=function()local bW=require(\"logging\")require(\"logging.console\")local bX={}function bX.defaultLogger(e,R)if e~=nil then bW.defaultLogger(bW.console{logLevel=R,destination=\"stderr\",timestampPattern=\"!%Y-%m-%dT%H:%M:%S.%qZ\",logPattern=\"%date %level [\"..e..\"]: %message\\n\"})end;return bW.defaultLogger()end;return bX end,[\"logging\"]=function()local type,table,string,bY,tonumber=type,table,string,tostring,tonumber;local select=select;local error=error;local aW=string.format;local W=math.floor;local pairs=pairs;local ipairs=ipairs;local bZ={_COPYRIGHT=\"Copyright (C) 2004-2010 Kepler Project, 2011-2013 Neopallium, 2020-2023 Thijs Schreijer\",_DESCRIPTION=\"A simple API to use logging features in Lua\",_VERSION=\"LuaLogging 1.8.2\"}local b_={\"DEBUG\",\"INFO\",\"WARN\",\"ERROR\",\"FATAL\",\"OFF\"}local c0=#b_;for aM,R in ipairs(b_)do b_[R]=aM;bZ[R]=R end;local c1=b_[1]local c2=\"%date %level %message\\n\"local c3=nil;local c4=nil;local c5=nil;local function c6()local c7=''local c8=debug and debug.traceback()or''for c9 in c8:gmatch(\"%s*(.-)\\n\")do if c9:match(\"%:%d+%:\")and not c9:find('logging.lua')then c7=c7 ..' | '..c9 end end;return c7 end;local function ca(self,R,cb,...)local cc=type(cb)if cc=='string'then if select('#',...)>0 then local cd,ce=pcall(aW,cb,...)if cd then return self:append(R,ce)else return self:append(R,\"Error formatting log message: \"..ce..c6())end else return self:append(R,cb)end elseif cc=='function'then return self:append(R,cb(...))end;return self:append(R,bZ.tostring(cb))end;local function cf()end;local function cg(bX,R,...)local F={n=select(\"#\",...),...}for aM=1,F.n do F[aM]=bY(F[aM])end;F=table.concat(F,\" \")..\"\\n\"for ch in F:gmatch(\"(.-)\\n\")do bX:log(R,ch)end end;local function assert(ci,...)if ci then return ci,...end;error(aW(...),2)end;function bZ.new(cj,ck)assert(type(cj)==\"function\",\"Appender must be a function, got: %s.\",type(cj))ck=ck or c1;assert(b_[ck],\"startLevel must be a valid log-level constant if given\")local cl={}local bX={}bX.append=cj;bX.setLevel=function(self,R)local cm=b_[R]assert(cm,\"undefined level '%s'\",bY(R))local cn=self.level;self.level=R;self.level_order=cm;for aM=1,c0 do local e=b_[aM]:lower()if aM>=cm and aM~=c0 then self[e]=cl[aM]else self[e]=cf end end;if cn and cn~=R then self:log(b_[1],\"Logger: changing loglevel from %s to %s\",cn,R)end end;bX.log=function(self,R,...)local cm=b_[R]assert(cm,\"undefined level `%s'\",bY(R))if cm<self.level_order then return end;return ca(self,R,...)end;bX.getPrint=function(self,R)local cm=b_[R]assert(cm,\"undefined level `%s'\",bY(R))return function(...)if cm>=self.level_order then cg(self,R,...)end end end;for aM=1,c0 do local R=b_[aM]if bX[R:lower()]then return nil,\"'\"..R..\"' is not a proper level name since there is already a property '\"..R:lower()..\"'\"end;cl[aM]=function(self,...)return ca(self,R,...)end end;for aM=1,c0 do bX[b_[aM]]=b_[aM]end;bX:setLevel(ck)return bX end;local co=1;local cp=debug and\"local info = debug.getinfo(%d)\"or\"local info = { short_src = '?', currentline = -1 }\"function bZ.compilePattern(cq)cq=string.format(\"%q\",cq)cq=cq:gsub(\"%%source\",\"%%file:%%line in function '%%function'\")local cr={[\"date\"]=false,[\"level\"]=false,[\"message\"]=false,[\"file\"]=\"info.short_src\",[\"line\"]=\"tostring(info.currentline)\",[\"function\"]='(info.name or \"unknown function\")'}local cs=false;for ct,cu in pairs(cr)do local cv;cq,cv=cq:gsub(\"%%\"..ct,'\"..'..(cu or ct)..'..\"')cs=cs or cv>0 and cu end;if cq:sub(1,4)=='\"\"..'then cq=cq:sub(5,-1)end;if cq:sub(-4,-1)=='..\"\"'then cq=cq:sub(1,-5)end;local cw=[[\n  return function(date, level, message)\n      ]]..(cs and cp:format(co)or\"\")..[[\n\n      return ]]..cq..[[\n\n    end]]return(loadstring or load)(cw,\"lualogging_generated_formatter\")()end;local cx;do local cy=setmetatable({},{__index=function(self,cq)self[cq]=bZ.compilePattern(cq)return self[cq]end})function cx()for bf in pairs(cy)do cy[bf]=nil end end;function bZ.prepareLogMsg(cz,cA,R,cB)return cy[cz](cA,R,cB)end end;do local cC=os.time;local cD,cE=pcall(require,\"socket\")if cD then cC=cE.gettime end;local cF=setmetatable({},{__index=function(self,cG)local ct=cG:match(\"(%%%d*q)\")if not ct then self[cG]=false;return false end;local cH=tonumber(ct:sub(2,-2))or 3;assert(cH>=1 and cH<=6,\"millisecond format %q quantifier range is 1 to 6\")self[cG]=(\"0\"):rep(cH)return self[cG]end})function bZ.date(cb,cI)cb=cb or\"%c\"cI=cI or cC()local cJ=cF[cb]local cK;if cJ then cK=math.fmod(cI,1)local cL=(tostring(cK)..cJ):sub(3,-1)cb=cb:gsub(\"(%%%d*q)\",function(ct)return cL:sub(1,#cJ)end)end;local cM,cN=os.date(cb,W(cI))if type(cM)==\"table\"then cM.secf=cK or math.fmod(cI,1)end;return cM,cN end end;local function tostring(cO)local u=''if type(cO)~='table'then if type(cO)=='string'then u=string.format(\"%q\",cO)else u=bY(cO)end else local cP={}for aP in pairs(cO)do if tonumber(aP)~=aP then table.insert(cP,aP)else table.insert(cP,tostring(aP))end end;table.sort(cP)u=u..'{'local cQ=\"\"local c9;for b9,cR in ipairs(cP)do if tonumber(cR)and tonumber(cR)>0 then c9=tostring(cO[tonumber(cR)])else c9=cR..\" = \"..tostring(cO[cR])end;u=u..cQ..c9;cQ=\", \"end;u=u..'}'end;return u end;bZ.tostring=tostring;function bZ.defaultLogPatterns(cG)if cG then if type(cG)==\"string\"then cG=bZ.buildLogPatterns({},cG)end;assert(type(cG)==\"table\",\"logPatterns must be a string or a table, got: %s\",type(cG))for b9,R in ipairs(b_)do if R~=\"OFF\"then assert(type(cG[R])==\"string\",\"the patterns contains a '%s' value (instead of a string) for level '%s'\",type(cG[R]),R)end end;c3=cG end;return c3 end;function bZ.defaultTimestampPattern(cG)if cG then if type(cG)~=\"string\"then error(\"timestampPattern must be a string\",2)end;c4=cG end;return c4 end;function bZ.defaultLevel(R)if R then if not b_[R]then assert(b_[R],\"undefined level '%s'\",bY(R))end;c1=R end;return c1 end;function bZ.defaultLogger(bX)if bX then if type(bX)~=\"table\"or type(bX.getPrint)~=\"function\"then error(\"expected a logger object\",2)end;c5=bX end;if not c5 then c5=require(\"logging.console\"){destination=\"stderr\"}end;return c5 end;function bZ.buildLogPatterns(cS,cT)cS=cS or{}assert(type(cT)==\"string\"or type(cT)==\"nil\",\"expected default logPattern (2nd argument) to be a string or nil, got: %s\",tostring(cT))assert(type(cS)==\"table\",\"expected patterns (1st argument) to be a table or nil, got: %s\",tostring(cS))local bF={}for b9,R in ipairs(b_)do if R~=\"OFF\"then bF[R]=cS[R]or cT or c3[R]end end;return bF end;c3=bZ.buildLogPatterns({},c2)function bZ.getDeprecatedParams(cU,...)local F={n=select(\"#\",...),...}if type(F[1])==\"table\"then return F[1]end;local cV={}for aM,cW in ipairs(cU)do cV[cW]=F[aM]end;return cV end;if debug then local cX,cY;local function cZ()cX:debug(\"message\")end;local c_=debug.getinfo(cZ)local d0=c_.short_src..\":\"..tostring(c_.linedefined or-999)cX=bZ.new(function(self,R,cB)cY=bZ.prepareLogMsg(\"%source\",\"\",R,cB)end)while true do if not pcall(cZ)then cp=\"local info = setmetatable({}, { __index = function() return 'na' end })\"break end;if cY:find(d0,1,true)then break end;co=co+1;cx()end end;if _VERSION<'Lua 5.2'then _G.logging=bZ end;return bZ end,[\"logging.console\"]=function()local io=require\"io\"local bZ=require\"logging\"local d1=bZ.prepareLogMsg;local d2=setmetatable({stdout=\"stdout\",stderr=\"stderr\"},{__index=function(self,aP)if not aP then return\"stdout\"end;error(\"destination parameter must be either 'stderr' or 'stdout', got: \"..tostring(aP),3)end})local d3=setmetatable({},{__call=function(self,...)return self.new(...)end})function d3.new(cV,...)cV=bZ.getDeprecatedParams({\"logPattern\"},cV,...)local ck=cV.logLevel or bZ.defaultLevel()local d4=cV.timestampPattern or bZ.defaultTimestampPattern()local d5=d2[cV.destination]local d6=bZ.buildLogPatterns(cV.logPatterns,cV.logPattern)return bZ.new(function(self,R,cB)io[d5]:write(d1(d6[R],bZ.date(d4),R,cB))return true end,ck)end;bZ.console=d3;return d3 end,[\"device_driver.driver\"]=function()local j=require(\"libs.functional\")local h=require(\"device_driver.state\")local d7=require(\"device_driver.command\")local d8={}local x={}local d9={}local da={}local db;function d8.initialize(dc,dd,de,df)x=dc or{}d9=dd or{}da=de or{}db=df end;function d8.get_macros()return j.as_array(da)end;function d8.get_state_keys(dg)return j.as_array(h.keys(x,dg))end;function d8.get_state_value(dg,dh)local v=h.find_first(x,dg,dh)or{}return v.state_value,v.state_normalized_value end;function d8.get_execution_result(di,dj,F,dk)local dl=d7.find(d9,di,dj)if dl==nil then return nil end;local dm=d7.find_first_comm_type(dl,dk)local dn=dl.codes and dl.codes(F)or{}local C=dl.state_changes and dl.state_changes(F)or{}return dm,j.as_array(dn),j.as_array(C),dl.linked_feedback_id,j.as_array(dl.macros)end;function d8.apply_state_change(dp)dp=h.copy(dp)local dq=h.find_first(x,dp.state_id,dp.state_key)if dq==nil then x=h.insert(x,dp)else x=h.update(x,dp)end;local dr=h.find_first(x,dp.state_id,dp.state_key)local ds=not h.equals(dr,dq)if ds and db then db(dq,dr)end;return ds end;function d8.process_feedback()end;function d8.get_states()return j.totable(j.map(function(v)return v end,x))end;return d8 end,[\"libs.functional\"]=function()local j=require(\"fun\")function j.unique(bV)return j.iter(j.reduce(function(bq,cO)if j.index(cO,bq)==nil then table.insert(bq,cO)end;return bq end,{},bV))end;function j.first(bV)return j.nth(1,bV)end;function j.as_array(dt)local du=j.totable(j.map(function(dv)return dv end,dt or{}))if du[1]==nil then du[0]=0 end;return du end;function j.withShallowCopy(cw,dt)return j.map(function(dv)return cw(dv)end,dt)end;return j end,[\"fun\"]=function()local dw={}local dx={}local unpack=rawget(table,\"unpack\")or unpack;local dy=function(dz,...)if dz==nil then return nil end;return...end;local dA=function(j,dz,...)if dz==nil then return nil end;return dz,j(...)end;local function dB(dC)local dD=type(dC)local du;if dD=='table'then du={}for dE,dF in next,dC,nil do du[dB(dE)]=dB(dF)end else du=dC end;return du end;local dG={__call=function(self,dH,h)return self.gen(dH,h)end,__tostring=function(self)return'<generator>'end,__index=dx}local dI=function(bV,dH,h)return setmetatable({gen=bV,param=dH,state=h},dG),dH,h end;dw.wrap=dI;local dJ=function(self)return self.gen,self.param,self.state end;dx.unwrap=dJ;local dK=function(dL,dM)return nil end;local dN=function(dH,h)local h=h+1;if h>#dH then return nil end;local dO=string.sub(dH,h,h)return h,dO end;local dP=pairs({a=0})local dQ=function(dR,aP)local cO;local aP,cO=dP(dR,aP)return aP,aP,cO end;local dS=function(aO,dH,h)assert(aO~=nil,\"invalid iterator\")if type(aO)==\"table\"then local dT=getmetatable(aO)if dT~=nil then if dT==dG then return aO.gen,aO.param,aO.state elseif dT.__ipairs~=nil then return dT.__ipairs(aO)elseif dT.__pairs~=nil then return dT.__pairs(aO)end end;if#aO>0 then return ipairs(aO)else return dQ,aO,nil end elseif type(aO)==\"function\"then return aO,dH,h elseif type(aO)==\"string\"then if#aO==0 then return dK,nil,nil end;return dN,aO,0 end;error(string.format('object %s of type \"%s\" is not iterable',aO,type(aO)))end;local dU=function(aO,dH,h)return dI(dS(aO,dH,h))end;dw.iter=dU;local dV=function(j)return function(self)return j(self.gen,self.param,self.state)end end;local dW=function(j)return function(self,dX)return j(dX,self.gen,self.param,self.state)end end;local dY=function(j)return function(self,dX,dZ)return j(dX,dZ,self.gen,self.param,self.state)end end;local d_=function(j)return function(bV,dH,h)return j(dS(bV,dH,h))end end;local e0=function(j)return function(dX,bV,dH,h)return j(dX,dS(bV,dH,h))end end;local e1=function(j)return function(dX,dZ,bV,dH,h)return j(dX,dZ,dS(bV,dH,h))end end;local e2=function(j,bV,dH,h)repeat h=dA(j,bV(dH,h))until h==nil end;dx.each=dW(e2)dw.each=e0(e2)dx.for_each=dx.each;dw.for_each=dw.each;dx.foreach=dx.each;dw.foreach=dw.each;local e3=function(dH,h)local w,e4=dH[1],dH[2]local h=h+e4;if h>w then return nil end;return h,h end;local e5=function(dH,h)local w,e4=dH[1],dH[2]local h=h+e4;if h<w then return nil end;return h,h end;local e6=function(e7,w,e4)if e4==nil then if w==nil then if e7==0 then return dK,nil,nil end;w=e7;e7=w>0 and 1 or-1 end;e4=e7<=w and 1 or-1 end;assert(type(e7)==\"number\",\"start must be a number\")assert(type(w)==\"number\",\"stop must be a number\")assert(type(e4)==\"number\",\"step must be a number\")assert(e4~=0,\"step must not be zero\")if e4>0 then return dI(e3,{w,e4},e7-e4)elseif e4<0 then return dI(e5,{w,e4},e7-e4)end end;dw.range=e6;local e8=function(e9,dz)return dz+1,unpack(e9)end;local ea=function(e9,dz)return dz+1,e9(dz)end;local eb=function(e9,dz)return dz+1,e9 end;local ec=function(...)if select('#',...)<=1 then return dI(eb,select(1,...),0)else return dI(e8,{...},0)end end;dw.duplicate=ec;dw.replicate=ec;dw.xrepeat=ec;local ed=function(j)assert(type(j)==\"function\")return dI(ea,j,0)end;dw.tabulate=ed;local ee=function()return dI(eb,0,0)end;dw.zeros=ee;local ef=function()return dI(eb,1,0)end;dw.ones=ef;local eg=function(e9,eh)return 0,math.random(e9[1],e9[2])end;local ei=function(ej,eh)return 0,math.random()end;local ek=function(b6,el)if b6==nil and el==nil then return dI(ei,0,0)end;assert(type(b6)==\"number\",\"invalid first arg to rands\")if el==nil then el=b6;b6=0 else assert(type(el)==\"number\",\"invalid second arg to rands\")end;assert(b6<el,\"empty interval\")return dI(eg,{b6,el-1},0)end;dw.rands=ek;local em=function(b6,en,e9,dz)assert(b6>0,\"invalid first argument to nth\")if en==ipairs then return e9[b6]elseif en==dN then if b6<=#e9 then return string.sub(e9,b6,b6)else return nil end end;for aM=1,b6-1,1 do dz=en(e9,dz)if dz==nil then return nil end end;return dy(en(e9,dz))end;dx.nth=dW(em)dw.nth=e0(em)local eo=function(h,...)if h==nil then error(\"head: iterator is empty\")end;return...end;local ep=function(bV,dH,h)return eo(bV(dH,h))end;dx.head=dV(ep)dw.head=d_(ep)dw.car=dw.head;dx.car=dx.head;local eq=function(bV,dH,h)h=bV(dH,h)if h==nil then return dI(dK,nil,nil)end;return dI(bV,dH,h)end;dx.tail=dV(eq)dw.tail=d_(eq)dw.cdr=dw.tail;dx.cdr=dx.tail;local er=function(aM,dz,...)if dz==nil then return nil end;return{aM,dz},...end;local es=function(dH,h)local b6,en,e9=dH[1],dH[2],dH[3]local aM,dz=h[1],h[2]if aM>=b6 then return nil end;return er(aM+1,en(e9,dz))end;local et=function(b6,bV,dH,h)assert(b6>=0,\"invalid first argument to take_n\")return dI(es,{b6,bV,dH},{0,h})end;dx.take_n=dW(et)dw.take_n=e0(et)local eu=function(j,dz,...)if dz==nil or not j(...)then return nil end;return dz,...end;local ev=function(dH,dz)local j,en,e9=dH[1],dH[2],dH[3]return eu(j,en(e9,dz))end;local ew=function(j,bV,dH,h)assert(type(j)==\"function\",\"invalid first argument to take_while\")return dI(ev,{j,bV,dH},h)end;dx.take_while=dW(ew)dw.take_while=e0(ew)local ex=function(ey,bV,dH,h)if type(ey)==\"number\"then return et(ey,bV,dH,h)else return ew(ey,bV,dH,h)end end;dx.take=dW(ex)dw.take=e0(ex)local ez=function(b6,bV,dH,h)assert(b6>=0,\"invalid first argument to drop_n\")local aM;for aM=1,b6,1 do h=bV(dH,h)if h==nil then return dI(dK,nil,nil)end end;return dI(bV,dH,h)end;dx.drop_n=dW(ez)dw.drop_n=e0(ez)local eA=function(j,dz,...)if dz==nil or not j(...)then return dz,false end;return dz,true,...end;local eB=function(j,en,e9,dz)assert(type(j)==\"function\",\"invalid first argument to drop_while\")local eC,eD;repeat eD=dB(dz)dz,eC=eA(j,en(e9,dz))until not eC;if dz==nil then return dI(dK,nil,nil)end;return dI(en,e9,eD)end;dx.drop_while=dW(eB)dw.drop_while=e0(eB)local eE=function(ey,en,e9,dz)if type(ey)==\"number\"then return ez(ey,en,e9,dz)else return eB(ey,en,e9,dz)end end;dx.drop=dW(eE)dw.drop=e0(eE)local eF=function(ey,en,e9,dz)return ex(ey,en,e9,dz),eE(ey,en,e9,dz)end;dx.split=dW(eF)dw.split=e0(eF)dx.split_at=dx.split;dw.split_at=dw.split;dx.span=dx.split;dw.span=dw.split;local eG=function(eH,bV,dH,h)local aM=1;for eI,dO in bV,dH,h do if dO==eH then return aM end;aM=aM+1 end;return nil end;dx.index=dW(eG)dw.index=e0(eG)dx.index_of=dx.index;dw.index_of=dw.index;dx.elem_index=dx.index;dw.elem_index=dw.index;local eJ=function(dH,h)local eH,en,e9=dH[1],dH[2],dH[3]local aM,dz=h[1],h[2]local dO;while true do dz,dO=en(e9,dz)if dz==nil then return nil end;aM=aM+1;if dO==eH then return{aM,dz},aM end end end;local eK=function(eH,bV,dH,h)return dI(eJ,{eH,bV,dH},{0,h})end;dx.indexes=dW(eK)dw.indexes=e0(eK)dx.elem_indexes=dx.indexes;dw.elem_indexes=dw.indexes;dx.indices=dx.indexes;dw.indices=dw.indexes;dx.elem_indices=dx.indexes;dw.elem_indices=dw.indexes;local eL=function(j,en,e9,dz,eM)while true do if dz==nil or j(eM)then break end;dz,eM=en(e9,dz)end;return dz,eM end;local eN;local eO=function(j,en,e9,dz)return eN(j,en,e9,en(e9,dz))end;eN=function(j,en,e9,dz,...)if dz==nil then return nil end;if j(...)then return dz,...end;return eO(j,en,e9,dz)end;local eP=function(j,en,e9,dz,...)if select('#',...)<2 then return eL(j,en,e9,dz,...)else return eN(j,en,e9,dz,...)end end;local eQ=function(dH,dz)local j,en,e9=dH[1],dH[2],dH[3]return eP(j,en,e9,en(e9,dz))end;local eR=function(j,bV,dH,h)return dI(eQ,{j,bV,dH},h)end;dx.filter=dW(eR)dw.filter=e0(eR)dx.remove_if=dx.filter;dw.remove_if=dw.filter;local eS=function(eT,bV,dH,h)local j=eT;if type(eT)==\"string\"then j=function(eH)return string.find(eH,eT)~=nil end end;return eR(j,bV,dH,h)end;dx.grep=dW(eS)dw.grep=e0(eS)local eU=function(j,bV,dH,h)local eV=function(...)return not j(...)end;return eR(j,bV,dH,h),eR(eV,bV,dH,h)end;dx.partition=dW(eU)dw.partition=e0(eU)local eW=function(j,e7,h,...)if h==nil then return nil,e7 end;return h,j(e7,...)end;local eX=function(j,e7,en,e9,dz)while true do dz,e7=eW(j,e7,en(e9,dz))if dz==nil then break end end;return e7 end;dx.foldl=dY(eX)dw.foldl=e1(eX)dx.reduce=dx.foldl;dw.reduce=dw.foldl;local eY=function(bV,dH,h)if bV==ipairs or bV==dN then return#dH end;local eZ=0;repeat h=bV(dH,h)eZ=eZ+1 until h==nil;return eZ-1 end;dx.length=dV(eY)dw.length=d_(eY)local e_=function(bV,dH,h)return bV(dH,dB(h))==nil end;dx.is_null=dV(e_)dw.is_null=d_(e_)local f0=function(f1,f2)local en,e9,dz=dU(f1)local f3,f4,f5=dU(f2)local f6,f7;for aM=1,10,1 do dz,f6=en(e9,dz)f5,f7=f3(f4,f5)if dz==nil then return true end;if f5==nil or f6~=f7 then return false end end end;dx.is_prefix_of=f0;dw.is_prefix_of=f0;local f8=function(j,en,e9,dz)local dO;repeat dz,dO=dA(j,en(e9,dz))until dz==nil or not dO;return dz==nil end;dx.all=dW(f8)dw.all=e0(f8)dx.every=dx.all;dw.every=dw.all;local f9=function(j,en,e9,dz)local dO;repeat dz,dO=dA(j,en(e9,dz))until dz==nil or dO;return not not dO end;dx.any=dW(f9)dw.any=e0(f9)dx.some=dx.any;dw.some=dw.any;local fa=function(bV,dH,h)local v=0;local dO=0;repeat v=v+dO;h,dO=bV(dH,h)until h==nil;return v end;dx.sum=dV(fa)dw.sum=d_(fa)local fb=function(bV,dH,h)local fc=1;local dO=1;repeat fc=fc*dO;h,dO=bV(dH,h)until h==nil;return fc end;dx.product=dV(fb)dw.product=d_(fb)local fd=function(el,b6)if b6<el then return b6 else return el end end;local fe=function(el,b6)if b6>el then return b6 else return el end end;local ff=function(bV,dH,h)local h,el=bV(dH,h)if h==nil then error(\"min: iterator is empty\")end;local fg;if type(el)==\"number\"then fg=math.min else fg=fd end;for b9,dO in bV,dH,h do el=fg(el,dO)end;return el end;dx.min=dV(ff)dw.min=d_(ff)dx.minimum=dx.min;dw.minimum=dw.min;local fh=function(fg,en,e9,dz)local dz,el=en(e9,dz)if dz==nil then error(\"min: iterator is empty\")end;for b9,dO in en,e9,dz do el=fg(el,dO)end;return el end;dx.min_by=dW(fh)dw.min_by=e0(fh)dx.minimum_by=dx.min_by;dw.minimum_by=dw.min_by;local fi=function(en,e9,dz)local dz,el=en(e9,dz)if dz==nil then error(\"max: iterator is empty\")end;local fg;if type(el)==\"number\"then fg=math.max else fg=fe end;for b9,dO in en,e9,dz do el=fg(el,dO)end;return el end;dx.max=dV(fi)dw.max=d_(fi)dx.maximum=dx.max;dw.maximum=dw.max;local fj=function(fg,en,e9,dz)local dz,el=en(e9,dz)if dz==nil then error(\"max: iterator is empty\")end;for b9,dO in en,e9,dz do el=fg(el,dO)end;return el end;dx.max_by=dW(fj)dw.max_by=e0(fj)dx.maximum_by=dx.maximum_by;dw.maximum_by=dw.maximum_by;local fk=function(en,e9,dz)local dR,aP,fl={}while true do dz,fl=en(e9,dz)if dz==nil then break end;table.insert(dR,fl)end;return dR end;dx.totable=dV(fk)dw.totable=d_(fk)local fm=function(en,e9,dz)local dR,aP,fl={}while true do dz,aP,fl=en(e9,dz)if dz==nil then break end;dR[aP]=fl end;return dR end;dx.tomap=dV(fm)dw.tomap=d_(fm)local dQ=function(dH,h)local en,e9,j=dH[1],dH[2],dH[3]return dA(j,en(e9,h))end;local fn=function(j,bV,dH,h)return dI(dQ,{bV,dH,j},h)end;dx.map=dW(fn)dw.map=e0(fn)local fo=function(h,aM,dz,...)if dz==nil then return nil end;return{aM+1,dz},aM,...end;local fp=function(dH,h)local en,e9=dH[1],dH[2]local aM,dz=h[1],h[2]return fo(h,aM,en(e9,dz))end;local fq=function(bV,dH,h)return dI(fp,{bV,dH},{1,h})end;dx.enumerate=dV(fq)dw.enumerate=d_(fq)local fr=function(aM,dz,...)if dz==nil then return nil end;return{aM+1,dz},...end;local fs=function(dH,h)local eH,en,e9=dH[1],dH[2],dH[3]local aM,dz=h[1],h[2]if aM%2==1 then return{aM+1,dz},eH else return fr(aM,en(e9,dz))end end;local ft=function(eH,bV,dH,h)return dI(fs,{eH,bV,dH},{0,h})end;dx.intersperse=dW(ft)dw.intersperse=e0(ft)local function fu(dH,h,fv,...)if#fv==#dH/2 then return fv,...end;local aM=#fv+1;local en,e9=dH[2*aM-1],dH[2*aM]local dz,dO=en(e9,h[aM])if dz==nil then return nil end;table.insert(fv,dz)return fu(dH,h,fv,dO,...)end;local fw=function(dH,h)return fu(dH,h,{})end;local fx=function(...)local b6=select('#',...)if b6>=3 then local fy=select(b6-2,...)if type(fy)=='table'and getmetatable(fy)==dG and fy.param==select(b6-1,...)and fy.state==select(b6,...)then return b6-2 end end;return b6 end;local fz=function(...)local b6=fx(...)if b6==0 then return dI(dK,nil,nil)end;local dH={[2*b6]=0}local h={[b6]=0}local aM,en,e9,dz;for aM=1,b6,1 do local fy=select(b6-aM+1,...)en,e9,dz=dS(fy)dH[2*aM-1]=en;dH[2*aM]=e9;h[aM]=dz end;return dI(fw,dH,h)end;dx.zip=fz;dw.zip=fz;local fA=function(dH,dz,...)if dz==nil then local en,e9,fB=dH[1],dH[2],dH[3]return en(e9,dB(fB))end;return dz,...end;local fC=function(dH,dz)local en,e9,fB=dH[1],dH[2],dH[3]return fA(dH,en(e9,dz))end;local fD=function(bV,dH,h)return dI(fC,{bV,dH,h},dB(h))end;dx.cycle=dV(fD)dw.cycle=d_(fD)local fE;local fF=function(dH,h,dz,...)if dz==nil then local aM=h[1]aM=aM+1;if aM>#dH/3 then return nil end;local dz=dH[3*aM]return fE(dH,{aM,dz})end;return{h[1],dz},...end;fE=function(dH,h)local aM,dz=h[1],h[2]local en,e9=dH[3*aM-2],dH[3*aM-1]return fF(dH,h,en(e9,h[2]))end;local fG=function(...)local b6=fx(...)if b6==0 then return dI(dK,nil,nil)end;local dH={[3*b6]=0}local aM,en,e9,dz;for aM=1,b6,1 do local fH=select(aM,...)en,e9,dz=dU(fH)dH[3*aM-2]=en;dH[3*aM-1]=e9;dH[3*aM]=dz end;return dI(fE,dH,{1,dH[3]})end;dx.chain=fG;dw.chain=fG;local fI={lt=function(eM,fJ)return eM<fJ end,le=function(eM,fJ)return eM<=fJ end,eq=function(eM,fJ)return eM==fJ end,ne=function(eM,fJ)return eM~=fJ end,ge=function(eM,fJ)return eM>=fJ end,gt=function(eM,fJ)return eM>fJ end,add=function(eM,fJ)return eM+fJ end,div=function(eM,fJ)return eM/fJ end,floordiv=function(eM,fJ)return math.floor(eM/fJ)end,intdiv=function(eM,fJ)local fK=eM/fJ;if eM>=0 then return math.floor(fK)else return math.ceil(fK)end end,mod=function(eM,fJ)return eM%fJ end,mul=function(eM,fJ)return eM*fJ end,neq=function(eM)return-eM end,unm=function(eM)return-eM end,pow=function(eM,fJ)return eM^fJ end,sub=function(eM,fJ)return eM-fJ end,truediv=function(eM,fJ)return eM/fJ end,concat=function(eM,fJ)return eM..fJ end,len=function(eM)return#eM end,length=function(eM)return#eM end,land=function(eM,fJ)return eM and fJ end,lor=function(eM,fJ)return eM or fJ end,lnot=function(eM)return not eM end,truth=function(eM)return not not eM end}dw.operator=fI;dx.operator=fI;dw.op=fI;dx.op=fI;setmetatable(dw,{__call=function(cI,fL)for bf,aV in pairs(cI)do if _G[bf]~=nil then local ce='function '..bf..' already exists in global scope.'if fL then _G[bf]=aV;print('WARNING: '..ce..' Overwritten.')else print('NOTICE: '..ce..' Skipped.')end else _G[bf]=aV end end end})return dw end,[\"device_driver.state\"]=function()local h={}local j=require(\"libs.functional\")local fM={['ON']=true,['OFF']=false,['true']=true,['false']=false,['']=false}function h.to_boolean(cO)return fM[cO]end;local function fN(dh)return dh~=\"\"and dh or nil end;function h.init(fO)return function(dg,dh)return function(fP,fQ)return{category_id=fO,state_id=dg,state_key=dh,state_value=fP,state_normalized_value=fQ}end end end;function h.keys(x,dg)return j.totable(j.map(function(v)return v.state_key end,j.filter(function(v)return v.state_id==dg end,x)))end;local function fR(dp,dg,dh)return dp.state_id==dg and dp.state_key==fN(dh)end;local function a1(x,dg,dh)return j.filter(function(v)return fR(v,dg,fN(dh))end,x)end;function h.find_all(x,dg)return j.totable(j.filter(function(v)return v.state_id==dg end,x))end;function h.find_first(x,dg,dh)return j.first(a1(x,dg,fN(dh)))end;function h.copy(dp)return dp and{category_id=dp.category_id,state_id=dp.state_id,state_key=fN(dp.state_key),state_value=dp.state_value,state_normalized_value=dp.state_normalized_value~=\"\"and dp.state_normalized_value or nil}or{}end;function h.insert(x,dp)return j.totable(j.chain(x,{dp}))end;function h.update(x,dp)return j.totable(j.withShallowCopy(function(v)return fR(v,dp.state_id,dp.state_key)and dp or v end,x))end;function h.merge(x,dr)return j.totable(j.chain(j.filter(function(v)return not h.find_first(dr,v.state_id,v.state_key)end,x),dr))end;function h.equals(fS,fT)return fS~=nil and fT~=nil and fS.category_id==fT.category_id and fS.state_id==fT.state_id and fS.state_key==fT.state_key and fS.state_value==fT.state_value and fS.state_normalized_value==fT.state_normalized_value end;function h.get_value(x,dg,dh)return(h.find_first(x,dg,dh)or{}).state_value end;return h end,[\"device_driver.command\"]=function()local j=require(\"libs.functional\")local fU=require(\"device_driver.comm_types\")local d7={}local function fV(dk)return j.unique(fU.get_generic_comm_types(dk))end;local function fW(fX,fU)return j.any(function(aq)return aq==fX end,fU)end;local function fY(s,dk)local fZ=fV(dk)return j.filter(function(fX)return fW(fX,fZ)end,s)end;function d7.find_first_comm_type(dl,dk)return j.first(fY(dl.generic_comm_types,dk))end;function d7.find(d9,di,dj)local f_=d9[di]return f_ and f_[dj]end;return d7 end,[\"device_driver.comm_types\"]=function()local fU={}local j=require(\"libs.functional\")local dm={[\"IR_EMITTER\"]=\"IR\",[\"RS232\"]=\"SERIAL\",[\"RS422\"]=\"SERIAL\",[\"RS485\"]=\"SERIAL\",[\"TCP\"]=\"TCP_UDP\",[\"TELNET\"]=\"TCP_UDP\",[\"SSH\"]=\"TCP_UDP\",[\"UDP_UNICAST\"]=\"TCP_UDP\",[\"UDP_MULTICAST\"]=\"TCP_UDP\",[\"UDP_BROADCAST\"]=\"TCP_UDP\",[\"UDP\"]=\"TCP_UDP\",[\"KNX_TUNNELING\"]=\"TCP_UDP\",[\"KNX_ROUTING\"]=\"TCP_UDP\",[\"KNX\"]=\"TCP_UDP\",[\"HTTP\"]=\"HTTP\",[\"RELAY\"]=\"RELAY\",[\"GPIO\"]=\"GPIO\",[\"USB\"]=\"SERIAL\"}function fU.get_generic_comm_types(dk)return j.map(function(g0)return dm[g0]end,dk)end;return fU end,[\"libs.system\"]=function()local f=require(\"libs.logger\").defaultLogger()local m=require(\"libs.string_utils\")local l={}local g1=\" >/dev/null 2>&1\"function l.exec(dl)local b9,b9,g2=os.execute(dl..g1)return g2==0 end;function l.mkdir(c)return l.exec(\"mkdir -p \"..c)end;function l.init(...)for b9,c in ipairs({...})do if not l.mkdir(c)then f:warn(\"Failed to create \"..c)end end end;function l.read(dl)local g3=io.popen(dl)local cM=g3 and string.gsub(g3:read(\"a\"),\"\\n\",\"\")return cM~=\"\"and cM or nil end;function l.move(g4,d5)local g5,cN=os.rename(g4,d5)if not g5 then f:warn(string.format(\"Unable to copy %s to %s: %s\",g4,d5,cN))end;return g5 end;function l.remove(c)return l.exec(\"rm -rf \"..c)end;function l.copy(g4,d5)local g5=l.exec(\"cp -rf \"..g4 ..\" \"..d5)if not g5 then f:warn(string.format(\"Unable to copy %s to %s\",g4,d5))end;return g5 end;function l.file_exists(g6)return l.exec(\"test -f \"..g6)end;function l.directory_exists(c)return l.exec(\"test -d \"..c)end;function l.sleep(g7)l.exec(\"sleep \"..tostring(g7))end;function l.is_running(z)return l.exec(\"kill -0 \"..tostring(z))end;function l.try_kill(z)local g8=false;if not m.is_empty(z)then g8=l.exec(\"kill \"..z)if not g8 then f:error(\"Unable to stop process \"..z)end end;return g8 end;function l.fork(dl,K,g9)if not dl then f:warn(\"Unable to start empty command\")return nil end;local ga=g9 and\"nohup \"or\"\"local z;if m.is_empty(K)then z=l.read(ga..dl..g1 ..\" & printf $!\")else local gb=\" >>\"..K..\" 2>&1\"z=l.read(ga..dl..gb..\" & printf $!\")end;if l.is_running(z)then return z else f:error(\"Failed to start \"..dl)return nil end end;function l.get_kernel_name()return l.read(\"uname -s\")end;function l.get_kernel_release()return l.read(\"uname -r\")end;function l.get_kernel_version()return l.read(\"uname -v\")end;function l.get_machine_name()return l.read(\"uname -m\")end;function l.get_os()return l.read(\"uname -o\")end;function l.get_hostname()return l.read(\"uname -n\")end;function l.get_pwd()return l.read(\"pwd\")end;function l.get_whoami()return l.read(\"whoami\")end;function l.backup(c,gc,gd)local ge=c..\"previous.json\"local dq=c..\"current.json\"l.move(dq,ge)local ae,cN=io.open(dq,\"w\")if not ae then f:warn(\"Unable to open file to save current \"..c..\": \"..cN)return false end;if not ae:write(gd(gc),'\\n')then f:warn(\"Failed to save current \"..c..\".\")return false end;return ae:close()end;function l.load(g6,gf)local ae,cN=io.open(g6,\"r\")if not ae then f:warn(\"Unable to open file to load \"..g6 ..\": \"..cN)return nil end;local gg=ae:read(\"a\")if not gg then f:warn(\"Failed to read \"..g6 ..\".\")return nil end;ae:close()local g5,gc=pcall(function()return gf(gg)end)return g5 and gc or nil end;function l.restore(c,gf)local gh=l.load(c..\"current.json\",gf)if not gh then gh=l.load(c..\"previous.json\",gf)or{}end;return gh end;function l.clear(g6)io.open(g6,\"w\"):close()end;function l.remove_backups(c)l.clear(c..\"previous.json\")l.clear(c..\"current.json\")end;function l.load_saved_state(gi)local gh=l.load(gi..\"current.json\")if not gh then gh=l.load(gi..\"previous.json\")or{}end;return gh end;return l end,[\"libs.string_utils\"]=function()local m={}function m.trim(u)local gj=u and string.gsub(u,\"^%s*(.-)%s*$\",\"%1\")or\"\"return gj end;function m.is_empty(u)return u==nil or u==\"\"end;function m.append_if(u,cj,gk)return string.format(\"%s%s\",u,gk(u)and cj or\"\")end;function m.replace_special_chars(u,gl)local gm=u and string.gsub(u,\"[%p%c%s]\",gl)or\"\"return gm end;return m end,[\"libs.sidecar\"]=function()local l=require(\"libs.system\")local k={}function k.restart(gn,go,K,g9)l.try_kill(go)return l.fork(gn,K,g9)end;function k.stop(z)return l.try_kill(z)end;function k.is_running(z)return l.is_running(z)end;return k end}if d[c]then return d[c]else return b(c)end end end;local g=require(\"lunajson\")local f=require(\"libs.logger\").defaultLogger()local d8=require(\"device_driver.driver\")function initialize(q)if not q then q=require(\"config\")f=require(\"libs.logger\").defaultLogger()end;q.initialize()d8.initialize(q.initial_states,q.capabilities,q.macros,q.on_state_change)end;function getMacros()return g.encode({macros=d8.get_macros()})end;function queryAllKeys(dg)return g.encode({keys=d8.get_state_keys(dg)})end;function queryStateValue(dg,dh)return d8.get_state_value(dg,dh)end;function getExecutionResult(dk,di,dj,F)local dm,dn,C,gp,da=d8.get_execution_result(di,dj,F,dk)local C=g.encode({state_changes=C})return dm,g.encode({codes=dn}),C,gp,g.encode(da)end;function applyStateChange(dp,gq)return gq and d8.apply_state_change(dp)end;function processFeedback(gr,g0,gs)local gt=g.encode({matches={}})local C=g.encode({state_changes={}})local da=nil;return gt,C,da end;function GetStates()return d8.get_states()end\n",
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "Custom",
+      "commands" : [ {
+        "name" : "Load",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "APP",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          }, {
+            "name" : "DIRECTORY_PATH",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          }, {
+            "name" : "BINARY_PATH",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "LOAD"
+      }, {
+        "name" : "Start",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "APP",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          }, {
+            "name" : "LOG_FILE_PATH",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          }, {
+            "name" : "KEEP_ALIVE",
+            "dynamic" : false,
+            "attributes" : [ {
+              "key" : "INSTRUCTIONS",
+              "value" : "Allow the sidecar to outlive Brain in the event of a crash. Not recommended for containerized installations, e.g., docker"
+            } ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "boolean"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "START"
+      }, {
+        "name" : "Stop",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "APP",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "STOP"
+      }, {
+        "name" : "Check",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "APP",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : true,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "CHECK"
+      }, {
+        "name" : "Clear Log",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "APP",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "CLEAR_LOG"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "CUSTOM"
+    }, {
+      "name" : "System",
+      "commands" : [ {
+        "name" : "Initialize",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "INITIALIZE"
+      }, {
+        "name" : "Save State",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SAVE_STATE"
+      }, {
+        "name" : "Set Auto Save State",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "AUTO_SAVE_STATE",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "OFF",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "boolean"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SET_AUTO_SAVE_STATE"
+      }, {
+        "name" : "Clear State Backups",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "CLEAR_STATE_BACKUPS"
+      }, {
+        "name" : "Set Log Level",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "LOG_LEVEL",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ {
+                "user_value" : "DEBUG",
+                "device_value" : "DEBUG"
+              }, {
+                "user_value" : "INFO",
+                "device_value" : "INFO"
+              }, {
+                "user_value" : "WARN",
+                "device_value" : "WARN"
+              }, {
+                "user_value" : "ERROR",
+                "device_value" : "ERROR"
+              } ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SET_LOG_LEVEL"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "SYSTEM"
+    } ],
+    "reference_id" : "CUSTOM"
+  } ],
+  "parameters" : [ ],
+  "project_id" : "db51c9d7-d10a-4a57-984b-b1159d751f78",
+  "device_type" : "Other",
+  "device_manufacturer" : "Machinemode",
+  "version_code" : 0,
+  "version_description" : "",
+  "created_by" : "cesar@machinemode.com",
+  "created_date" : "2023-12-29T12:06:39.018695Z",
+  "modified_by" : "cesar@machinemode.com",
+  "modified_date" : "2024-01-03T01:57:48.311904Z",
+  "device_interface" : [ {
+    "login" : {
+      "password" : "",
+      "username" : "",
+      "name_prompt" : "",
+      "ready_prompt" : "",
+      "requires_login" : false,
+      "password_prompt" : ""
+    },
+    "comm_type" : "HTTP",
+    "transmission" : {
+      "max_retries" : 0,
+      "require_ack" : false,
+      "use_heartbeat" : false,
+      "acknowledgement" : {
+        "error" : [ ],
+        "success" : [ {
+          "data" : "",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ ],
+          "trigger_state_update" : [ ],
+          "process_state_updates_first" : false
+        } ],
+        "ack_type" : "error_only"
+      },
+      "time_between_retries" : 0,
+      "heartbeat_command_ref" : {
+        "command_id" : "SLEEP_TIMER_TOGGLE",
+        "parameters" : [ ],
+        "category_id" : "POWER",
+        "command_name" : "SLEEP TIMER TOGGLE",
+        "capability_id" : "POWER_TOGGLE"
+      },
+      "min_time_between_messages" : 0.05
+    },
+    "http_settings" : {
+      "path" : "/",
+      "port" : 8000,
+      "default_verb" : "GET",
+      "http_headers" : [ ],
+      "http_version" : "1.1",
+      "protocols_supported" : 1,
+      "default_data_location" : "Default"
+    },
+    "feedback_parser" : {
+      "prefix" : "",
+      "suffix" : ""
+    },
+    "connection_notes" : "",
+    "global_protocol_details" : {
+      "prefix" : "",
+      "suffix" : "",
+      "checksum_type" : "Not Used"
+    },
+    "communication_loss_parameters" : {
+      "timeout_before_disconnect" : 0
+    }
+  } ],
+  "device_models" : [ "Sidecar" ],
+  "device_model_codes" : [ "Generic" ],
+  "interface_allowed" : [ "HTTP" ],
+  "lua_code" : "",
+  "import_id" : null,
+  "modified_date_RFC_1123" : "Wed, 3 Jan 2024 01:57:48 GMT"
+}

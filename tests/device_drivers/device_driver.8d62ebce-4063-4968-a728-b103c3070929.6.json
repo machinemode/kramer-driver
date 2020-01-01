@@ -1,0 +1,1751 @@
+{
+  "id" : "8d62ebce-4063-4968-a728-b103c3070929",
+  "description" : null,
+  "template" : false,
+  "version" : "1.0.5",
+  "status" : "Production",
+  "attributes" : [ ],
+  "categories" : [ {
+    "name" : "Light",
+    "macros" : [ ],
+    "states" : [ {
+      "name" : "Light State",
+      "dynamic" : false,
+      "attributes" : [ ],
+      "constraints" : {
+        "value_default" : "",
+        "possible_values" : [ {
+          "user_value" : "true",
+          "device_value" : "true"
+        }, {
+          "user_value" : "false",
+          "device_value" : "false"
+        } ]
+      },
+      "log_changes" : true,
+      "reference_id" : "STATE",
+      "primitive_type" : "boolean_array",
+      "logging_threshold" : 5
+    }, {
+      "name" : "Brightness Level",
+      "dynamic" : true,
+      "attributes" : [ ],
+      "constraints" : {
+        "max" : 255,
+        "min" : 0,
+        "step" : 1,
+        "regex" : "",
+        "value_default" : "",
+        "encoding_prefix" : "",
+        "possible_values" : [ ],
+        "numeric_encoding" : "Decimal",
+        "show_decimal_point" : true,
+        "number_of_characters" : 0
+      },
+      "log_changes" : true,
+      "reference_id" : "BRIGHTNESS",
+      "primitive_type" : "number_array",
+      "logging_threshold" : 5
+    }, {
+      "name" : "Hue Color",
+      "dynamic" : true,
+      "attributes" : [ ],
+      "constraints" : {
+        "max" : 65535,
+        "min" : 0,
+        "step" : 1,
+        "regex" : "",
+        "value_default" : "",
+        "encoding_prefix" : "",
+        "possible_values" : [ ],
+        "numeric_encoding" : "Decimal",
+        "show_decimal_point" : true,
+        "number_of_characters" : 0
+      },
+      "log_changes" : true,
+      "reference_id" : "HUE",
+      "primitive_type" : "number_array",
+      "logging_threshold" : 5
+    }, {
+      "name" : "Saturation Level",
+      "dynamic" : true,
+      "attributes" : [ ],
+      "constraints" : {
+        "max" : 255,
+        "min" : 0,
+        "step" : 1,
+        "regex" : "",
+        "value_default" : "",
+        "encoding_prefix" : "",
+        "possible_values" : [ ],
+        "numeric_encoding" : "Decimal",
+        "show_decimal_point" : true,
+        "number_of_characters" : 0
+      },
+      "log_changes" : true,
+      "reference_id" : "SATURATION",
+      "primitive_type" : "number_array",
+      "logging_threshold" : 5
+    }, {
+      "name" : "Dynamic Effect",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ {
+          "user_value" : "None",
+          "device_value" : "none"
+        }, {
+          "user_value" : "Color Loop",
+          "device_value" : "colorloop"
+        } ]
+      },
+      "log_changes" : true,
+      "reference_id" : "STATE_3",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Light X value",
+      "dynamic" : true,
+      "attributes" : [ ],
+      "constraints" : {
+        "max" : 1,
+        "min" : 0,
+        "step" : 1.0E-4,
+        "value_default" : "",
+        "possible_values" : [ ],
+        "show_decimal_point" : true,
+        "number_of_characters" : 0
+      },
+      "log_changes" : true,
+      "reference_id" : "STATE_7",
+      "primitive_type" : "number_array"
+    }, {
+      "name" : "Light Y value",
+      "dynamic" : true,
+      "attributes" : [ ],
+      "constraints" : {
+        "max" : 1,
+        "min" : 0,
+        "step" : 1.0E-4,
+        "value_default" : "",
+        "possible_values" : [ ],
+        "show_decimal_point" : true,
+        "number_of_characters" : 0
+      },
+      "log_changes" : true,
+      "reference_id" : "STATE_8",
+      "primitive_type" : "number_array"
+    }, {
+      "name" : "Color Temperature",
+      "dynamic" : true,
+      "attributes" : [ ],
+      "constraints" : {
+        "max" : 500,
+        "min" : 153,
+        "step" : 1,
+        "value_default" : "",
+        "possible_values" : [ ],
+        "numeric_encoding" : "Decimal"
+      },
+      "log_changes" : true,
+      "reference_id" : "STATE_2",
+      "primitive_type" : "number_array"
+    }, {
+      "name" : "Alert Mode",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ {
+          "user_value" : "None",
+          "device_value" : "none"
+        }, {
+          "user_value" : "Breathing Cycle",
+          "device_value" : "select"
+        }, {
+          "user_value" : "15 Second Breathing Cycle",
+          "device_value" : "lselect"
+        } ]
+      },
+      "log_changes" : true,
+      "reference_id" : "STATE_9",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Color Mode",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ {
+          "user_value" : "Hue & Saturation",
+          "device_value" : "hs"
+        }, {
+          "user_value" : "XY",
+          "device_value" : "xy"
+        }, {
+          "user_value" : "Color Temperature",
+          "device_value" : "ct"
+        } ]
+      },
+      "log_changes" : true,
+      "reference_id" : "STATE_6",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Light Mode",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ ]
+      },
+      "log_changes" : true,
+      "reference_id" : "STATE_5",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Light Reachable",
+      "attributes" : [ ],
+      "constraints" : {
+        "value_default" : "OFF",
+        "possible_values" : [ {
+          "user_value" : "Reachable",
+          "device_value" : "true"
+        }, {
+          "user_value" : "Unreachable",
+          "device_value" : "false"
+        } ]
+      },
+      "log_changes" : true,
+      "reference_id" : "STATE_4",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Scene Number",
+      "dynamic" : true,
+      "attributes" : [ {
+        "key" : "USER_INITIALIZED",
+        "value" : "true"
+      }, {
+        "key" : "USER_VALUE_HEADING",
+        "value" : "User Friendly Name That Corresponds To The Scene Number"
+      }, {
+        "key" : "DEVICE_VALUE_HEADING",
+        "value" : "Actual Scene Number Acquired From The Hue Tool (Link Here - https://www.manula.com/manuals/kramer/kramer-control/1/en/topic/programming-phillips-hue-with-kramer-control?q=Hue)"
+      }, {
+        "key" : "INSTRUCTIONS",
+        "value" : "Add User Friendly Names To Each Scene That Will Be Used In The Space"
+      }, {
+        "key" : "KEY_PARAMETER",
+        "value" : "$GROUP_NUMBER$"
+      } ],
+      "constraints" : {
+        "value_default" : "",
+        "possible_values" : [ ]
+      },
+      "log_changes" : true,
+      "reference_id" : "STATE_1",
+      "primitive_type" : "string_array"
+    } ],
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "Discrete",
+      "commands" : [ {
+        "name" : "Set Light State",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$/state{\"on\":$LIGHT_STATE$}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "SET_STATE"
+      }, {
+        "name" : "Set Brightness Level",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$/state{\"on\":$LIGHT_STATE$, \"bri\":$BRIGHTNESS_LEVEL$}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          }, {
+            "name" : "BRIGHTNESS_LEVEL",
+            "state_id" : "BRIGHTNESS",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Brightness Level"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "SET_LEVEL_BRIGHTNESS"
+      }, {
+        "name" : "Set Hue Color",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$/state{\"on\":$LIGHT_STATE$, \"hue\":$HUE_COLOR$}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          }, {
+            "name" : "HUE_COLOR",
+            "state_id" : "HUE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Hue Color"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "SET_LEVEL_HUE"
+      }, {
+        "name" : "Set Saturation Level",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$/state{\"on\":$LIGHT_STATE$, \"sat\":$SATURATION_LEVEL$}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          }, {
+            "name" : "SATURATION_LEVEL",
+            "state_id" : "SATURATION",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Saturation Level"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "SET_LEVEL_SATURATION"
+      }, {
+        "name" : "Set Dynamic Effect",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$/state{\"on\":$LIGHT_STATE$, \"effect\":\"$DYNAMIC_EFFECT$\"}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "DYNAMIC_EFFECT",
+            "state_id" : "STATE_3",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Dynamic Effect"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "SET_COLOR_2"
+      }, {
+        "name" : "Set XY Level",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$/state{\"on\":$LIGHT_STATE$, \"xy\": [ $LIGHT_X_VALUE$,$LIGHT_Y_VALUE$]}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "LIGHT_Y_VALUE",
+            "state_id" : "STATE_8",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Y value"
+          }, {
+            "name" : "LIGHT_X_VALUE",
+            "state_id" : "STATE_7",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light X value"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "SET_COLOR_3"
+      }, {
+        "name" : "Set Color Temperature Level",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$/state{\"on\":$LIGHT_STATE$, \"ct\":$COLOR_TEMPERATURE$}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          }, {
+            "name" : "COLOR_TEMPERATURE",
+            "state_id" : "STATE_2",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Color Temperature"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "SET_LEVEL_BRIGHTNESS_2"
+      }, {
+        "name" : "Set Alert Mode",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$/state{\"on\":$LIGHT_STATE$, \"alert\":\"$ALERT_MODE$\"}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          }, {
+            "name" : "ALERT_MODE",
+            "state_id" : "STATE_9",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Alert Mode"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "SET_LEVEL_SATURATION_3"
+      }, {
+        "name" : "Set White Light",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$/state{\"on\":$LIGHT_STATE$, \"alert\":\"$ALERT_MODE$\",\"transitiontime\":\"$TRANSITION_TIME$}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "ALERT_MODE",
+            "state_id" : "STATE_9",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Alert Mode"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "SET_WHITE_LIGHT"
+      }, {
+        "name" : "Query White Light",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$",
+          "attributes" : [ {
+            "key" : "HTTP_METHOD",
+            "value" : "GET"
+          } ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : true,
+        "log_cloud" : false,
+        "attributes" : [ {
+          "key" : "SYNCHRONOUS_FEEDBACK_ID",
+          "value" : "FEEDBACK_4"
+        } ],
+        "reference_id" : "QUERY_1"
+      }, {
+        "name" : "Set Dimmable White Light",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$/state{\"on\":$LIGHT_STATE$, \"bri\":$BRIGHTNESS_LEVEL$, \"alert\":\"$ALERT_MODE$\",\"transitiontime\":\"$TRANSITION_TIME$}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "ALERT_MODE",
+            "state_id" : "STATE_9",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Alert Mode"
+          }, {
+            "name" : "BRIGHTNESS_LEVEL",
+            "state_id" : "BRIGHTNESS",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Brightness Level"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "SET_DIMMABLE_WHITE_LIGHT"
+      }, {
+        "name" : "Query White Dimmable Light",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$",
+          "attributes" : [ {
+            "key" : "HTTP_METHOD",
+            "value" : "GET"
+          } ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : true,
+        "log_cloud" : false,
+        "attributes" : [ {
+          "key" : "SYNCHRONOUS_FEEDBACK_ID",
+          "value" : "FEEDBACK_3"
+        } ],
+        "reference_id" : "QUERY"
+      }, {
+        "name" : "Set White Ambiance Light",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$/state{\"on\":$LIGHT_STATE$, \"bri\":$BRIGHTNESS_LEVEL$, \"ct\":$COLOR_TEMPERATURE$, \"alert\":\"$ALERT_MODE$\",\"transitiontime\":\"$TRANSITION_TIME$}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "ALERT_MODE",
+            "state_id" : "STATE_9",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Alert Mode"
+          }, {
+            "name" : "COLOR_TEMPERATURE",
+            "state_id" : "STATE_2",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Color Temperature"
+          }, {
+            "name" : "BRIGHTNESS_LEVEL",
+            "state_id" : "BRIGHTNESS",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Brightness Level"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "SET_WHITE_AMBIANCE_LIGHT"
+      }, {
+        "name" : "Query White Ambiance Light",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$",
+          "attributes" : [ {
+            "key" : "HTTP_METHOD",
+            "value" : "GET"
+          } ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : true,
+        "log_cloud" : false,
+        "attributes" : [ {
+          "key" : "SYNCHRONOUS_FEEDBACK_ID",
+          "value" : "FEEDBACK"
+        } ],
+        "reference_id" : "QUERY_2"
+      }, {
+        "name" : "Set White & Color Ambiance Light",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$/state{\"on\":$LIGHT_STATE$, \"bri\":$BRIGHTNESS_LEVEL$, \"hue\":$HUE_VALUE$, \"sat\":$SATURATION_LEVEL$, \"effect\":\"$DYNAMIC_EFFECT$\", \"xy\":[$LIGHT_X_VALUE$,$LIGHT_Y_VALUE$], \"ct\":$COLOR_TEMPERATURE$, \"alert\":\"$ALERT_MODE$\",\"transitiontime\":\"$TRANSITION_TIME$}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "ALERT_MODE",
+            "state_id" : "STATE_9",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Alert Mode"
+          }, {
+            "name" : "COLOR_TEMPERATURE",
+            "state_id" : "STATE_2",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Color Temperature"
+          }, {
+            "name" : "LIGHT_Y_VALUE",
+            "state_id" : "STATE_8",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Y value"
+          }, {
+            "name" : "LIGHT_X_VALUE",
+            "state_id" : "STATE_7",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light X value"
+          }, {
+            "name" : "DYNAMIC_EFFECT",
+            "state_id" : "STATE_3",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Dynamic Effect"
+          }, {
+            "name" : "HUE_VALUE",
+            "state_id" : "HUE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Hue Color"
+          }, {
+            "name" : "BRIGHTNESS_LEVEL",
+            "state_id" : "BRIGHTNESS",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Brightness Level"
+          }, {
+            "name" : "SATURATION_LEVEL",
+            "state_id" : "SATURATION",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Saturation Level"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "SET_WHITE_COLOR_AMBIANCE_LIGHT"
+      }, {
+        "name" : "Query White & Color Ambiance Light",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$",
+          "attributes" : [ {
+            "key" : "HTTP_METHOD",
+            "value" : "GET"
+          } ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : true,
+        "log_cloud" : false,
+        "attributes" : [ {
+          "key" : "SYNCHRONOUS_FEEDBACK_ID",
+          "value" : "FEEDBACK_1"
+        } ],
+        "reference_id" : "QUERY_3"
+      }, {
+        "name" : "Set Color Light",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$/state{\"on\":$LIGHT_STATE$, \"bri\":$BRIGHTNESS_LEVEL$, \"hue\":$HUE_VALUE$, \"sat\":$SATURATION_LEVEL$, \"effect\":\"$DYNAMIC_EFFECT$\", \"xy\":[$LIGHT_X_VALUE$,$LIGHT_Y_VALUE$], \"alert\":\"$ALERT_MODE$\",\"transitiontime\":\"$TRANSITION_TIME$}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "ALERT_MODE",
+            "state_id" : "STATE_9",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Alert Mode"
+          }, {
+            "name" : "LIGHT_Y_VALUE",
+            "state_id" : "STATE_8",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Y value"
+          }, {
+            "name" : "LIGHT_X_VALUE",
+            "state_id" : "STATE_7",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light X value"
+          }, {
+            "name" : "DYNAMIC_EFFECT",
+            "state_id" : "STATE_3",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Dynamic Effect"
+          }, {
+            "name" : "HUE_VALUE",
+            "state_id" : "HUE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Hue Color"
+          }, {
+            "name" : "BRIGHTNESS_LEVEL",
+            "state_id" : "BRIGHTNESS",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Brightness Level"
+          }, {
+            "name" : "SATURATION_LEVEL",
+            "state_id" : "SATURATION",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Saturation Level"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "SET_COLOR_LIGHT"
+      }, {
+        "name" : "Query Color Light",
+        "codes" : [ {
+          "data" : "/$USERNAME$/lights/$LIGHT_NUMBER$",
+          "attributes" : [ {
+            "key" : "HTTP_METHOD",
+            "value" : "GET"
+          } ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : true,
+        "log_cloud" : false,
+        "attributes" : [ {
+          "key" : "SYNCHRONOUS_FEEDBACK_ID",
+          "value" : "FEEDBACK_5"
+        } ],
+        "reference_id" : "QUERY_4"
+      }, {
+        "name" : "Recall Scene",
+        "codes" : [ {
+          "data" : "/$USERNAME$/groups/$GROUP_NUMBER$/action{\"scene\":\"$SCENE_NUMBER$\"}",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "SCENE_NUMBER",
+            "state_id" : "STATE_1",
+            "state_key" : "$GROUP_NUMBER$",
+            "state_name" : "Scene Number"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "RECALL_SCENE"
+      } ],
+      "feedbacks" : [ {
+        "name" : "Specific Color Set",
+        "codes" : [ {
+          "data" : "[{\"success\": {\"/lights/11/state/on\": $LIGHT_STATE$}},{\"success\": {\"/lights/11/state/hue\": $HUE_COLOR$}},{\"success\": {\"/lights/11/state/sat\": $SATURATION_LEVEL$}},{\"success\": {\"/lights/11/state/bri\": $BRIGHTNESS_LEVEL$}},{\"success\": {\"/lights/11/state/effect\": \"$DYNAMIC_EFFECT$\"}}]",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "DYNAMIC_EFFECT",
+            "state_id" : "STATE_3",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Dynamic Effect"
+          }, {
+            "name" : "HUE_COLOR",
+            "state_id" : "HUE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Hue Color"
+          }, {
+            "name" : "BRIGHTNESS_LEVEL",
+            "state_id" : "BRIGHTNESS",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Brightness Level"
+          }, {
+            "name" : "SATURATION_LEVEL",
+            "state_id" : "SATURATION",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Saturation Level"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "FEEDBACK_2",
+        "feedback_type" : "regex",
+        "token_delimiter" : "",
+        "key_value_separator" : "",
+        "number_of_tokens_expected" : 0
+      }, {
+        "name" : "Light Status",
+        "codes" : [ {
+          "data" : "[{\"success\": {\"/lights/$LIGHT_NUMBER$/state/on\": $LIGHT_STATE$}}]",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "STATUS",
+        "feedback_type" : "regex"
+      }, {
+        "name" : "Brightness Level",
+        "codes" : [ {
+          "data" : "[{\"success\": {\"/lights/$LIGHT_NUMBER$/state/on\": $LIGHT_STATE$}},{\"success\": {\"/lights/$LIGHT_NUMBER$/state/bri\": $BRIGHTNESS_LEVEL$}}]",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "BRIGHTNESS_LEVEL",
+            "state_id" : "BRIGHTNESS",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Brightness Level"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "BRIGHTNESS_LEVEL",
+        "feedback_type" : "regex"
+      }, {
+        "name" : "Hue Color",
+        "codes" : [ {
+          "data" : "[{\"success\": {\"/lights/$LIGHT_NUMBER$/state/on\": $LIGHT_STATE$}},{\"success\": {\"/lights/$LIGHT_NUMBER$/state/hue\": $HUE_COLOR$}}]",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "HUE_COLOR",
+            "state_id" : "HUE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Hue Color"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "HUE_LEVEL",
+        "feedback_type" : "regex"
+      }, {
+        "name" : "Saturation Level",
+        "codes" : [ {
+          "data" : "[{\"success\": {\"/lights/$LIGHT_NUMBER$/state/on\": $LIGHT_STATE$}},{\"success\": {\"/lights/$LIGHT_NUMBER$/state/sat\": $SATURATION_LEVEL$}}]",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "SATURATION_LEVEL",
+            "state_id" : "SATURATION",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Saturation Level"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "SATURATION_LEVEL",
+        "feedback_type" : "regex"
+      }, {
+        "name" : "Effect Status",
+        "codes" : [ {
+          "data" : "[{\"success\": {\"/lights/$LIGHT_NUMBER$/state/effect\": \"$DYNAMIC_EFFECT$\"}}]",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "DYNAMIC_EFFECT",
+            "state_id" : "STATE_3",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Dynamic Effect"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "STATUS_4",
+        "feedback_type" : "regex"
+      }, {
+        "name" : "XY Value",
+        "codes" : [ {
+          "data" : "[{\"success\": {\"/lights/$LIGHT_NUMBER$/state/on\": $LIGHT_STATE$}},{\"success\": {\"/lights/$LIGHT_NUMBER$/state/xy\": [$LIGHT_X_VALUE$,$LIGHT_Y_VALUE$]}}]",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "LIGHT_Y_VALUE",
+            "state_id" : "STATE_8",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Y value"
+          }, {
+            "name" : "LIGHT_X_VALUE",
+            "state_id" : "STATE_7",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light X value"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "SATURATION_LEVEL_3",
+        "feedback_type" : "regex"
+      }, {
+        "name" : "Color Temperature",
+        "codes" : [ {
+          "data" : "[{\"success\": {\"/lights/$LIGHT_NUMBER$/state/on\": $LIGHT_STATE$}},{\"success\": {\"/lights/$LIGHT_NUMBER$/state/ct\": $COLOR_TEMPERATURE$}}]",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "COLOR_TEMPERATURE",
+            "state_id" : "STATE_2",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Color Temperature"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "SATURATION_LEVEL_2",
+        "feedback_type" : "regex"
+      }, {
+        "name" : "Alert Status",
+        "codes" : [ {
+          "data" : "[{\"success\": {\"/lights/$LIGHT_NUMBER$/state/alert\": \"$ALERT_MODE$\"}}]",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "ALERT_MODE",
+            "state_id" : "STATE_9",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Alert Mode"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "STATUS_3",
+        "feedback_type" : "regex"
+      }, {
+        "name" : "White Light State",
+        "codes" : [ {
+          "data" : "{\"state\":{\"on\":$LIGHT_STATE$,\"alert\":\"$ALERT_MODE$\", \"mode\":\"$LIGHT_MODE$\",\"reachable\":$LIGHT_REACHABLE$},$EXTRA$",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "EXTRA",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "COLOR_MODE",
+            "state_id" : "STATE_6",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Color Mode"
+          }, {
+            "name" : "LIGHT_REACHABLE",
+            "state_id" : "STATE_4",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Reachable"
+          }, {
+            "name" : "LIGHT_MODE",
+            "state_id" : "STATE_5",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Mode"
+          }, {
+            "name" : "ALERT_MODE",
+            "state_id" : "STATE_9",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Alert Mode"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "FEEDBACK_4",
+        "feedback_type" : "regex_partial",
+        "token_delimiter" : "",
+        "key_value_separator" : "",
+        "number_of_tokens_expected" : 0
+      }, {
+        "name" : "White Dimmable Light State",
+        "codes" : [ {
+          "data" : "{\"state\":{\"on\":$LIGHT_STATE$,\"bri\":$BRIGHTNESS_LEVEL$,\"ct\":$COLOR_TEMPERATURE$,\"alert\":\"$ALERT_MODE$\",\"colormode\":\"$COLOR_MODE$\",\"mode\":\"$LIGHT_MODE$\",\"reachable\":$LIGHT_REACHABLE$},$EXTRA$",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "EXTRA",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "COLOR_TEMPERATURE",
+            "state_id" : "STATE_2",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Color Temperature"
+          }, {
+            "name" : "COLOR_MODE",
+            "state_id" : "STATE_6",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Color Mode"
+          }, {
+            "name" : "LIGHT_REACHABLE",
+            "state_id" : "STATE_4",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Reachable"
+          }, {
+            "name" : "LIGHT_MODE",
+            "state_id" : "STATE_5",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Mode"
+          }, {
+            "name" : "ALERT_MODE",
+            "state_id" : "STATE_9",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Alert Mode"
+          }, {
+            "name" : "BRIGHTNESS_LEVEL",
+            "state_id" : "BRIGHTNESS",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Brightness Level"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "FEEDBACK_3",
+        "feedback_type" : "regex_partial",
+        "token_delimiter" : "",
+        "key_value_separator" : "",
+        "number_of_tokens_expected" : 0
+      }, {
+        "name" : "White Ambiance Light State",
+        "codes" : [ {
+          "data" : "{\"state\":{\"on\":$LIGHT_STATE$,\"bri\":$BRIGHTNESS_LEVEL$, \"ct\":$COLOR_TEMPERATURE$,\"alert\":\"$ALERT_MODE$\", \"mode\":\"$LIGHT_MODE$\",\"reachable\":$LIGHT_REACHABLE$},$EXTRA$",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "EXTRA",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "LIGHT_REACHABLE",
+            "state_id" : "STATE_4",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Reachable"
+          }, {
+            "name" : "LIGHT_MODE",
+            "state_id" : "STATE_5",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Mode"
+          }, {
+            "name" : "ALERT_MODE",
+            "state_id" : "STATE_9",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Alert Mode"
+          }, {
+            "name" : "COLOR_TEMPERATURE",
+            "state_id" : "STATE_2",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Color Temperature"
+          }, {
+            "name" : "BRIGHTNESS_LEVEL",
+            "state_id" : "BRIGHTNESS",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Brightness Level"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "FEEDBACK",
+        "feedback_type" : "regex_partial",
+        "token_delimiter" : "",
+        "key_value_separator" : "",
+        "number_of_tokens_expected" : 0
+      }, {
+        "name" : "White & Color Ambiance Light State",
+        "codes" : [ {
+          "data" : "{\"state\":{\"on\":$LIGHT_STATE$,\"bri\":$BRIGHTNESS_LEVEL$,\"hue\":$HUE_COLOR$,\"sat\":$SATURATION_LEVEL$,\"effect\":\"$DYNAMIC_EFFECT$\",\"xy\":[$LIGHT_X_VALUE$,$LIGHT_Y_VALUE$],\"ct\":$COLOR_TEMPERATURE$,\"alert\":\"$ALERT_MODE$\",\"colormode\":\"$COLOR_MODE$\",\"mode\":\"$LIGHT_MODE$\",\"reachable\":$LIGHT_REACHABLE$},$EXTRA$",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "EXTRA",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "LIGHT_REACHABLE",
+            "state_id" : "STATE_4",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Reachable"
+          }, {
+            "name" : "LIGHT_MODE",
+            "state_id" : "STATE_5",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Mode"
+          }, {
+            "name" : "COLOR_MODE",
+            "state_id" : "STATE_6",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Color Mode"
+          }, {
+            "name" : "ALERT_MODE",
+            "state_id" : "STATE_9",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Alert Mode"
+          }, {
+            "name" : "COLOR_TEMPERATURE",
+            "state_id" : "STATE_2",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Color Temperature"
+          }, {
+            "name" : "LIGHT_Y_VALUE",
+            "state_id" : "STATE_8",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Y value"
+          }, {
+            "name" : "LIGHT_X_VALUE",
+            "state_id" : "STATE_7",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light X value"
+          }, {
+            "name" : "DYNAMIC_EFFECT",
+            "state_id" : "STATE_3",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Dynamic Effect"
+          }, {
+            "name" : "SATURATION_LEVEL",
+            "state_id" : "SATURATION",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Saturation Level"
+          }, {
+            "name" : "HUE_COLOR",
+            "state_id" : "HUE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Hue Color"
+          }, {
+            "name" : "BRIGHTNESS_LEVEL",
+            "state_id" : "BRIGHTNESS",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Brightness Level"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "FEEDBACK_1",
+        "feedback_type" : "regex_partial",
+        "token_delimiter" : "",
+        "key_value_separator" : "",
+        "number_of_tokens_expected" : 0
+      }, {
+        "name" : "Color Light State",
+        "codes" : [ {
+          "data" : "{\"state\":{\"on\":$LIGHT_STATE$,\"bri\":$BRIGHTNESS_LEVEL$,\"hue\":$HUE_COLOR$,\"sat\":$SATURATION_LEVEL$,\"effect\":\"$DYNAMIC_EFFECT$\",\"xy\":[$LIGHT_X_VALUE$,$LIGHT_Y_VALUE$],\"alert\":\"$ALERT_MODE$\",\"colormode\":\"$COLOR_MODE$\",\"mode\":\"$LIGHT_MODE$\",\"reachable\":$LIGHT_REACHABLE$},$EXTRA$",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "EXTRA",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "LIGHT_REACHABLE",
+            "state_id" : "STATE_4",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Reachable"
+          }, {
+            "name" : "LIGHT_MODE",
+            "state_id" : "STATE_5",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Mode"
+          }, {
+            "name" : "COLOR_MODE",
+            "state_id" : "STATE_6",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Color Mode"
+          }, {
+            "name" : "ALERT_MODE",
+            "state_id" : "STATE_9",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Alert Mode"
+          }, {
+            "name" : "LIGHT_Y_VALUE",
+            "state_id" : "STATE_8",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light Y value"
+          }, {
+            "name" : "LIGHT_X_VALUE",
+            "state_id" : "STATE_7",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light X value"
+          }, {
+            "name" : "DYNAMIC_EFFECT",
+            "state_id" : "STATE_3",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Dynamic Effect"
+          }, {
+            "name" : "SATURATION_LEVEL",
+            "state_id" : "SATURATION",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Saturation Level"
+          }, {
+            "name" : "HUE_COLOR",
+            "state_id" : "HUE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Hue Color"
+          }, {
+            "name" : "BRIGHTNESS_LEVEL",
+            "state_id" : "BRIGHTNESS",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Brightness Level"
+          }, {
+            "name" : "LIGHT_STATE",
+            "state_id" : "STATE",
+            "state_key" : "$LIGHT_NUMBER$",
+            "state_name" : "Light State"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "FEEDBACK_5",
+        "feedback_type" : "regex_partial",
+        "token_delimiter" : "",
+        "key_value_separator" : "",
+        "number_of_tokens_expected" : 0
+      }, {
+        "name" : "Scene Recall Status",
+        "codes" : [ {
+          "data" : "[{\"success\": {\"/groups/$GROUP_NUMBER$/action/scene\": \"$SCENE_NUMBER$\"}]",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ {
+            "name" : "SCENE_NUMBER",
+            "state_id" : "STATE_1",
+            "state_key" : "$GROUP_NUMBER$",
+            "state_name" : "Scene Number"
+          } ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "STATUS_2",
+        "feedback_type" : "regex"
+      } ],
+      "attributes" : [ ],
+      "reference_id" : "DISCRETE"
+    } ],
+    "reference_id" : "LIGHT"
+  } ],
+  "parameters" : [ {
+    "name" : "TRANSITION_TIME",
+    "dynamic" : false,
+    "attributes" : [ {
+      "key" : "USER_INITIALIZED",
+      "value" : "true"
+    }, {
+      "key" : "INSTRUCTIONS",
+      "value" : "Delete Any Unused Transition Times "
+    } ],
+    "constraints" : {
+      "regex" : "",
+      "value_default" : "",
+      "possible_values" : [ {
+        "user_value" : "Immediate",
+        "device_value" : "0"
+      }, {
+        "user_value" : "100ms",
+        "device_value" : "1"
+      }, {
+        "user_value" : "200ms",
+        "device_value" : "2"
+      }, {
+        "user_value" : "300ms",
+        "device_value" : "3"
+      }, {
+        "user_value" : "400ms",
+        "device_value" : "4"
+      }, {
+        "user_value" : "0.5 Sec",
+        "device_value" : "5"
+      }, {
+        "user_value" : "600ms",
+        "device_value" : "6"
+      }, {
+        "user_value" : "700ms",
+        "device_value" : "7"
+      }, {
+        "user_value" : "800ms",
+        "device_value" : "8"
+      }, {
+        "user_value" : "900ms",
+        "device_value" : "9"
+      }, {
+        "user_value" : "1 Sec",
+        "device_value" : "10"
+      }, {
+        "user_value" : "1.5 Sec",
+        "device_value" : "15"
+      }, {
+        "user_value" : "2 Sec",
+        "device_value" : "20"
+      }, {
+        "user_value" : "2.5 Sec",
+        "device_value" : "25"
+      }, {
+        "user_value" : "3 Sec",
+        "device_value" : "30"
+      }, {
+        "user_value" : "4 Sec",
+        "device_value" : "40"
+      }, {
+        "user_value" : "5 Sec",
+        "device_value" : "50"
+      }, {
+        "user_value" : "10 Sec",
+        "device_value" : "100"
+      }, {
+        "user_value" : "15 Sec",
+        "device_value" : "150"
+      }, {
+        "user_value" : "30 Sec",
+        "device_value" : "300"
+      }, {
+        "user_value" : "45 Sec",
+        "device_value" : "450"
+      }, {
+        "user_value" : "1 Min",
+        "device_value" : "600"
+      }, {
+        "user_value" : "1.5 Min",
+        "device_value" : "900"
+      }, {
+        "user_value" : "2 Min",
+        "device_value" : "1200"
+      }, {
+        "user_value" : "3 Min",
+        "device_value" : "1800"
+      }, {
+        "user_value" : "5 Min",
+        "device_value" : "3600"
+      }, {
+        "user_value" : "10 Min",
+        "device_value" : "6000"
+      }, {
+        "user_value" : "15 Min",
+        "device_value" : "9600"
+      }, {
+        "user_value" : "20 Min",
+        "device_value" : "12000"
+      }, {
+        "user_value" : "30 Min",
+        "device_value" : "18000"
+      }, {
+        "user_value" : "45 Min",
+        "device_value" : "27600"
+      }, {
+        "user_value" : "1 Hour",
+        "device_value" : "36000"
+      } ],
+      "show_decimal_point" : true,
+      "number_of_characters" : 0
+    },
+    "parameter_type" : "string"
+  }, {
+    "name" : "LIGHT_NUMBER",
+    "dynamic" : false,
+    "attributes" : [ {
+      "key" : "USER_INITIALIZED",
+      "value" : "true"
+    } ],
+    "constraints" : {
+      "max" : 50,
+      "min" : 1,
+      "step" : 1,
+      "regex" : "",
+      "value_default" : "",
+      "encoding_prefix" : "",
+      "possible_values" : [ ],
+      "numeric_encoding" : "Decimal",
+      "show_decimal_point" : true,
+      "number_of_characters" : 0
+    },
+    "parameter_type" : "number"
+  }, {
+    "name" : "USERNAME",
+    "dynamic" : false,
+    "attributes" : [ {
+      "key" : "USER_INITIALIZED",
+      "value" : "true"
+    } ],
+    "constraints" : {
+      "max" : 0,
+      "min" : 0,
+      "step" : 0,
+      "regex" : "",
+      "value_default" : "",
+      "encoding_prefix" : "",
+      "possible_values" : [ ],
+      "numeric_encoding" : "Decimal",
+      "show_decimal_point" : true,
+      "number_of_characters" : 0
+    },
+    "parameter_type" : "string"
+  }, {
+    "name" : "GROUP_NUMBER",
+    "dynamic" : false,
+    "attributes" : [ {
+      "key" : "USER_INITIALIZED",
+      "value" : "true"
+    }, {
+      "key" : "USER_VALUE_HEADING",
+      "value" : "User Friendly Name That Corresponds To The Group Number Found In The Hue Tool"
+    }, {
+      "key" : "DEVICE_VALUE_HEADING",
+      "value" : "Actual Group Number That Corresponds To The Group Name"
+    }, {
+      "key" : "INSTRUCTIONS",
+      "value" : "Enter User Friendly Names For The Groups That Have Been Created In The Hue App"
+    } ],
+    "constraints" : {
+      "regex" : "",
+      "value_default" : "",
+      "possible_values" : [ ],
+      "show_decimal_point" : true,
+      "number_of_characters" : 0
+    },
+    "parameter_type" : "string"
+  } ],
+  "project_id" : null,
+  "device_type" : "Lighting",
+  "device_manufacturer" : "Philips",
+  "version_code" : 6,
+  "version_description" : "Version 1.0.5\n> Fixed feedback fro Dimmable White Light",
+  "created_by" : "alex@iruleathome.com",
+  "created_date" : "2021-07-20T14:14:52.485876Z",
+  "modified_by" : "alex@iruleathome.com",
+  "modified_date" : "2021-07-20T14:16:52.236657Z",
+  "device_interface" : [ {
+    "login" : {
+      "password" : "",
+      "username" : "",
+      "name_prompt" : "",
+      "ready_prompt" : "",
+      "requires_login" : false,
+      "password_prompt" : ""
+    },
+    "comm_type" : "HTTP",
+    "transmission" : {
+      "max_retries" : 0,
+      "require_ack" : false,
+      "use_heartbeat" : false,
+      "acknowledgement" : {
+        "error" : [ ],
+        "success" : [ ],
+        "ack_type" : "error_only"
+      },
+      "time_between_retries" : 0,
+      "heartbeat_command_ref" : {
+        "command_id" : "",
+        "parameters" : [ ],
+        "category_id" : "POWER",
+        "capability_id" : ""
+      },
+      "min_time_between_messages" : 0.05
+    },
+    "http_settings" : {
+      "path" : "",
+      "port" : 80,
+      "default_verb" : "PUT",
+      "http_headers" : [ ],
+      "http_version" : "1.1",
+      "default_protocol" : "HTTP",
+      "protocols_supported" : 1,
+      "default_data_location" : "URL"
+    },
+    "feedback_parser" : {
+      "prefix" : "",
+      "suffix" : ""
+    },
+    "connection_notes" : "",
+    "global_protocol_details" : {
+      "prefix" : "/api",
+      "suffix" : "",
+      "checksum_type" : "Not Used"
+    }
+  } ],
+  "device_models" : [ "HUE" ],
+  "device_model_codes" : [ "Generic" ],
+  "interface_allowed" : [ "HTTP" ],
+  "lua_code" : "",
+  "import_id" : null,
+  "modified_date_RFC_1123" : "Tue, 20 Jul 2021 14:16:52 GMT"
+}

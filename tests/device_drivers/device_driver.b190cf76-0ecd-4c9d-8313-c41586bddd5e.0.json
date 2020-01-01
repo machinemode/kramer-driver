@@ -1,0 +1,435 @@
+{
+  "id" : "b190cf76-0ecd-4c9d-8313-c41586bddd5e",
+  "description" : "https://www.leviton.com/en/docs/VRC0P_ASCII_Programming_Application_Note.pdf",
+  "template" : false,
+  "version" : "0.0.1",
+  "status" : "Beta",
+  "attributes" : [ ],
+  "categories" : [ {
+    "name" : "Light",
+    "macros" : [ ],
+    "states" : [ {
+      "name" : "Receive Error",
+      "dynamic" : false,
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ ],
+        "number_of_characters" : 0
+      },
+      "log_changes" : true,
+      "reference_id" : "STATE_2",
+      "primitive_type" : "string"
+    }, {
+      "name" : "Transmission Error",
+      "dynamic" : false,
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ ],
+        "number_of_characters" : 0
+      },
+      "log_changes" : true,
+      "reference_id" : "STATE_3",
+      "primitive_type" : "string"
+    }, {
+      "name" : "On",
+      "attributes" : [ ],
+      "constraints" : {
+        "value_default" : "OFF",
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "STATE_1",
+      "primitive_type" : "boolean_array"
+    } ],
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "Lamp",
+      "commands" : [ {
+        "name" : "Request",
+        "codes" : [ {
+          "data" : "?N$NODE$",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "NODE",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "min" : 0,
+              "step" : 1,
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "numeric_encoding" : "Decimal",
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "number"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "SERIAL" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : true,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "QUERY_2"
+      }, {
+        "name" : "Update",
+        "codes" : [ {
+          "data" : "N$NODE$UP",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "NODE",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "min" : 0,
+              "step" : 1,
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "numeric_encoding" : "Decimal",
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "number"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "SERIAL" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : true,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "QUERY_1"
+      }, {
+        "name" : "On",
+        "codes" : [ {
+          "data" : "N$NODE$ON",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "NODE",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "min" : 0,
+              "step" : 1,
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "numeric_encoding" : "Decimal",
+              "show_decimal_point" : false,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "number"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "SERIAL" ],
+          "trigger_state_update" : [ {
+            "state_id" : "STATE_1",
+            "state_key" : "$NODE$",
+            "process_value" : {
+              "value" : "true",
+              "transform" : { }
+            }
+          } ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "IR_ON"
+      }, {
+        "name" : "Off",
+        "codes" : [ {
+          "data" : "N$NODE$OFF",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "NODE",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "min" : 0,
+              "step" : 1,
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "numeric_encoding" : "Decimal",
+              "show_decimal_point" : false,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "number"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "SERIAL" ],
+          "trigger_state_update" : [ {
+            "state_id" : "STATE_1",
+            "state_key" : "$NODE$",
+            "process_value" : {
+              "value" : "false",
+              "transform" : { }
+            }
+          } ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : true,
+        "attributes" : [ ],
+        "reference_id" : "OFF"
+      } ],
+      "feedbacks" : [ {
+        "name" : "Request Feedback",
+        "codes" : [ {
+          "data" : "N0$NODE$L$ON$",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "ON",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ {
+                "user_value" : "false",
+                "device_value" : "000"
+              }, {
+                "user_value" : "true",
+                "device_value" : "255"
+              } ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          }, {
+            "name" : "NODE",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "min" : 0,
+              "step" : 1,
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "numeric_encoding" : "Decimal",
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "number"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "SERIAL" ],
+          "trigger_state_update" : [ {
+            "state_id" : "STATE_1",
+            "state_key" : "$NODE$",
+            "state_name" : "On",
+            "process_value" : {
+              "value" : "$ON$",
+              "transform" : { }
+            }
+          } ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "FEEDBACK_3",
+        "feedback_type" : "regex_partial",
+        "token_delimiter" : "",
+        "key_value_separator" : "",
+        "number_of_tokens_expected" : 0
+      }, {
+        "name" : "Command received",
+        "codes" : [ {
+          "data" : "E$ERROR$",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "ERROR",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ {
+                "user_value" : "Wrong start of the string symbol",
+                "device_value" : "001"
+              }, {
+                "user_value" : "No error",
+                "device_value" : "000"
+              }, {
+                "user_value" : "nput buffer overflow",
+                "device_value" : "002"
+              }, {
+                "user_value" : "Cannot start RF transmission. All buffers are taken ",
+                "device_value" : "003"
+              }, {
+                "user_value" : "Cannot start RF transmission because previous one has not finished",
+                "device_value" : "004"
+              }, {
+                "user_value" : "Unrecognized command",
+                "device_value" : "005"
+              }, {
+                "user_value" : "Attempt to send the new buffer over RS232 before previous one had been processed",
+                "device_value" : "006"
+              }, {
+                "user_value" : "The send Message does not have data fields specified",
+                "device_value" : "007"
+              }, {
+                "user_value" : "Cannot stop SUC mode. Node is SUC",
+                "device_value" : "008"
+              }, {
+                "user_value" : "EEPROM is busy, can’t store group information",
+                "device_value" : "009"
+              }, {
+                "user_value" : "No devices with specified properties have been found",
+                "device_value" : "010"
+              } ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "SERIAL" ],
+          "trigger_state_update" : [ {
+            "state_id" : "STATE_2",
+            "state_key" : "",
+            "process_value" : {
+              "value" : "$ERROR$",
+              "transform" : { }
+            }
+          } ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "FEEDBACK_1",
+        "feedback_type" : "regex",
+        "token_delimiter" : "",
+        "key_value_separator" : "",
+        "number_of_tokens_expected" : 0
+      }, {
+        "name" : "Command transmitted",
+        "codes" : [ {
+          "data" : "X0$ERROR$",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "ERROR",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ {
+                "user_value" : "Success",
+                "device_value" : "00"
+              }, {
+                "user_value" : "Unknown",
+                "device_value" : "01"
+              }, {
+                "user_value" : "Error",
+                "device_value" : "02"
+              } ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "SERIAL" ],
+          "trigger_state_update" : [ {
+            "state_id" : "STATE_3",
+            "state_key" : "",
+            "process_value" : {
+              "value" : "$ERROR$",
+              "transform" : { }
+            }
+          } ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "FEEDBACK_2",
+        "feedback_type" : "regex_partial",
+        "token_delimiter" : "",
+        "key_value_separator" : "",
+        "number_of_tokens_expected" : 0
+      } ],
+      "attributes" : [ ],
+      "reference_id" : "LAMP"
+    } ],
+    "reference_id" : "LIGHT"
+  } ],
+  "parameters" : [ ],
+  "project_id" : "6c286d96-d44b-419a-b35c-64fc1b0ddead",
+  "device_type" : "Lighting",
+  "device_manufacturer" : "Leviton",
+  "version_code" : 0,
+  "version_description" : null,
+  "created_by" : "cesar@iruleathome.com",
+  "created_date" : "2023-07-13T18:08:56.010806Z",
+  "modified_by" : "cesar@iruleathome.com",
+  "modified_date" : "2023-07-19T12:32:42.53411Z",
+  "device_interface" : [ {
+    "comm_type" : "RS232",
+    "transmission" : {
+      "max_retries" : 0,
+      "require_ack" : false,
+      "use_heartbeat" : false,
+      "polling_frequency" : 1,
+      "time_between_retries" : 0,
+      "min_time_between_messages" : 0.1
+    },
+    "feedback_parser" : {
+      "prefix" : "<",
+      "suffix" : "\\x0D\\x0A"
+    },
+    "serial_settings" : {
+      "parity" : "none",
+      "baudrate" : [ "9600" ],
+      "data_bits" : 8,
+      "stop_bits" : 1,
+      "start_bits" : 1,
+      "flow_control" : "none",
+      "default_baudrate" : "9600",
+      "connection_wiring" : "straight"
+    },
+    "global_protocol_details" : {
+      "prefix" : ">",
+      "suffix" : "\\x0D\\x0A",
+      "lua_checksum_code" : "",
+      "lua_postprocess_code" : ""
+    }
+  } ],
+  "device_models" : [ "Vizia RF + VRC0P" ],
+  "device_model_codes" : [ "Generic" ],
+  "interface_allowed" : [ "SERIAL" ],
+  "lua_code" : "",
+  "import_id" : 5586,
+  "modified_date_RFC_1123" : "Wed, 19 Jul 2023 12:32:42 GMT"
+}

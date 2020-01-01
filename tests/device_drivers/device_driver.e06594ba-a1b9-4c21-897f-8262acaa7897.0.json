@@ -1,0 +1,376 @@
+{
+  "id" : "e06594ba-a1b9-4c21-897f-8262acaa7897",
+  "description" : "https://machinemode.gitlab.io/kramer-ext/drivers/i18n/",
+  "template" : false,
+  "version" : "1.0.0",
+  "status" : "Production",
+  "attributes" : [ ],
+  "categories" : [ {
+    "name" : "Configuration",
+    "macros" : [ {
+      "name" : "Initialization",
+      "elements" : [ {
+        "trigger_command" : {
+          "command_id" : "INITIALIZE",
+          "parameters" : [ ],
+          "category_id" : "CONFIGURATION",
+          "command_name" : "Initialize",
+          "capability_id" : "SYSTEM"
+        }
+      } ],
+      "reference_id" : "INITIALIZATION"
+    } ],
+    "states" : [ {
+      "name" : "i18n",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "I18N",
+      "primitive_type" : "string_array"
+    }, {
+      "name" : "Auto Save State",
+      "attributes" : [ ],
+      "constraints" : {
+        "value_default" : "OFF",
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "AUTO_SAVE_STATE",
+      "primitive_type" : "boolean"
+    }, {
+      "name" : "Log Level",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ {
+          "user_value" : "DEBUG",
+          "device_value" : "DEBUG"
+        }, {
+          "user_value" : "INFO",
+          "device_value" : "INFO"
+        }, {
+          "user_value" : "WARN",
+          "device_value" : "WARN"
+        }, {
+          "user_value" : "ERROR",
+          "device_value" : "ERROR"
+        } ]
+      },
+      "log_changes" : false,
+      "reference_id" : "LOG_LEVEL",
+      "primitive_type" : "string"
+    }, {
+      "name" : "Locale",
+      "attributes" : [ ],
+      "constraints" : {
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "LOCALE",
+      "primitive_type" : "string"
+    } ],
+    "lua_code" : "do local a=package.searchers or package.loaders;local b=a[2]a[2]=function(c)local d={[\"config\"]=function()local e=\"i18n\"local f=require(\"libs.logger\").defaultLogger(e,\"INFO\")local g=require(\"common\")local h=require(\"libs.functional\")local i=require(\"lunajson\")local j=require(\"i18n.init\")local k=require(\"device_driver.state\")local l=require(\"libs.brain_api\")local m=require(\"libs.system\")local n=string.format(\"resources/data/%s/state/\",e)local o={}local p=k.init(\"CONFIGURATION\")local q={\"HTTP\"}local function r(s)local t=string.gsub(s,\"_\",\"-\")return t end;local function u()return h.map(function(v)return p(\"I18N\",v)(j.translate(v))end,j.getKeys())end;local function w(x,y)local y=string.format([[ { \"%s\": %s } ]],x,y)local z,A=pcall(function()return i.decode(y)end)if not z then f:error(string.format(\"Failed to set translation for %s due to invalid json\",x))else j.load(A)end;return z end;o.initial_states={}o.capabilities={['SYSTEM']=g.common_commands(q,n,p,f),['SYSTEM_MODE']={['SET_LOCALE']={generic_comm_types=q,state_changes=function(B)j.setLocale(r(B['LOCALE']))return h.chain(u(),{p(\"LOCALE\")(j.getLocale())})end},['SET_TRANSLATION']={generic_comm_types=q,state_changes=function(B)local x=r(B['LOCALE'])local C=k.find_first(GetStates(),\"LOCALE\")or{}local D=w(x,B['JSON'])if D and x==C.state_value then return u()else return{}end end},['PLURALIZE']={generic_comm_types=q,state_changes=function(B)local v=B['KEY']local E=B['COUNT']return{p(\"I18N\",string.format(\"%s_%s\",v,tostring(E)))(j.translate(v,{count=E}))}end}}}o.capabilities['SYSTEM']['INITIALIZE']={generic_comm_types=q,state_changes=function()local F=l.get_project_data()local G=m.restore(n,i.decode)local H=k.find_first(G,\"LOCALE\")if H and H.state_value then j.setLocale(H.state_value)else j.setLocale(r(F.locale or\"en_US\"))end;local I={p(\"LOG_LEVEL\")(f.level),p(\"LOCALE\")(j.getLocale())}return k.merge(I,G)end}o.macros={}local function J()local K=k.find_first(GetStates(),\"AUTO_SAVE_STATE\")return K==nil or k.to_boolean(K.state_value)end;function o.on_state_change()if J()then m.backup(n,GetStates(),i.encode)end end;function o.initialize()m.init(n)end;return o end,[\"common\"]=function()local i=require(\"lunajson\")local k=require(\"device_driver.state\")local m=require(\"libs.system\")local g={}function g.common_commands(q,L,p,f)return{['INITIALIZE']={generic_comm_types=q,state_changes=function()local G=m.restore(L,i.decode)local I={p(\"LOG_LEVEL\")(f.level)}return k.merge(I,G)end},['SET_LOG_LEVEL']={generic_comm_types=q,state_changes=function(B)local M=B['LOG_LEVEL']f:setLevel(M)local N=\"log level set to \"..M;f:debug(N)f:info(N)f:warn(N)f:error(N)return{p(\"LOG_LEVEL\")(M)}end},['SET_AUTO_SAVE_STATE']={generic_comm_types=q,state_changes=function(B)return{p(\"AUTO_SAVE_STATE\")(B['AUTO_SAVE_STATE'])}end},['SAVE_STATE']={generic_comm_types=q,state_changes=function()m.backup(L,GetStates(),i.encode)return{}end},['CLEAR_STATE_BACKUPS']={generic_comm_types=q,state_changes=function()m.remove_backups(L)return{}end}}end;return g end,[\"lunajson\"]=function()local O=require'lunajson.decoder'local P=require'lunajson.encoder'local Q=require'lunajson.sax'return{decode=O(),encode=P(),newparser=Q.newparser,newfileparser=Q.newfileparser}end,[\"lunajson.decoder\"]=function()local setmetatable,tonumber,tostring=setmetatable,tonumber,tostring;local R,S=math.floor,math.huge;local T,U=math.mininteger or nil,math.tointeger or nil;local V,W,X,Y,Z,_=string.byte,string.char,string.find,string.gsub,string.match,string.sub;local function a0(a1,a2)error(\"parse error at \"..a1 ..\": \"..a2,2)end;local a3;if _VERSION==\"Lua 5.1\"then a3='[^\\32-\\255]'else a3='[\\0-\\31]'end;local a4=nil;local function O()local i,a1,a5,a6,a7;local a8,a9;local function aa(a2)return a0(a1,a2)end;local function ab()aa('invalid value')end;local function ac()if _(i,a1,a1+2)=='ull'then a1=a1+3;return a5 end;aa('invalid value')end;local function ad()if _(i,a1,a1+3)=='alse'then a1=a1+4;return false end;aa('invalid value')end;local function ae()if _(i,a1,a1+2)=='rue'then a1=a1+3;return true end;aa('invalid value')end;local af=Z(tostring(0.5),'[^0-9]')local ag=tonumber;if af~='.'then if X(af,'%W')then af='%'..af end;ag=function(ah)return tonumber(Y(ah,'.',af))end end;local function ai()return aa('invalid number')end;local function aj(ak)local al,am=Z(i,'^(%.?[0-9]*)([-+.A-Za-z]?)',a1)if al==''then if am==''then if ak then return-0.0 end;return 0 end;if am=='e'or am=='E'then al,am=Z(i,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',a1)if am==''then a1=a1+#al;if ak then return-0.0 end;return 0.0 end end;ai()end;if V(al)~=0x2E or V(al,-1)==0x2E then ai()end;if am~=''then if am=='e'or am=='E'then al,am=Z(i,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',a1)end;if am~=''then ai()end end;a1=a1+#al;am=ag(al)if ak then am=-am end;return am end;local function an(ak)a1=a1-1;local al,am=Z(i,'^([0-9]+%.?[0-9]*)([-+.A-Za-z]?)',a1)if V(al,-1)==0x2E then ai()end;if am~=''then if am~='e'and am~='E'then ai()end;al,am=Z(i,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',a1)if not al or am~=''then ai()end end;a1=a1+#al;am=ag(al)if ak then am=-am;if am==T and not X(al,'[^0-9]')then am=T end end;return am end;local function ao()local am=V(i,a1)if am then a1=a1+1;if am>0x30 then if am<0x3A then return an(true)end else if am>0x2F then return aj(true)end end end;aa('invalid number')end;local ap={0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,S,S,S,S,S,S,S,0xA,0xB,0xC,0xD,0xE,0xF,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,0xA,0xB,0xC,0xD,0xE,0xF,__index=function()return S end}setmetatable(ap,ap)local aq={['\"']='\"',['\\\\']='\\\\',['/']='/',['b']='\\b',['f']='\\f',['n']='\\n',['r']='\\r',['t']='\\t',__index=function()aa(\"invalid escape sequence\")end}setmetatable(aq,aq)local function ar()return aa(\"1st surrogate pair byte not continued by 2nd\")end;local as=0;local function at(au,av)if au=='u'then local aw,ax,ay,az,aA=V(av,1,5)av=ap[aw-47]*0x1000+ap[ax-47]*0x100+ap[ay-47]*0x10+ap[az-47]if av~=S then if av<0x80 then if aA then return W(av,aA)end;return W(av)elseif av<0x800 then aw=R(av/0x40)ax=av-aw*0x40;aw=aw+0xC0;ax=ax+0x80;if aA then return W(aw,ax,aA)end;return W(aw,ax)elseif av<0xD800 or 0xE000<=av then aw=R(av/0x1000)av=av-aw*0x1000;ax=R(av/0x40)ay=av-ax*0x40;aw=aw+0xE0;ax=ax+0x80;ay=ay+0x80;if aA then return W(aw,ax,ay,aA)end;return W(aw,ax,ay)elseif 0xD800<=av and av<0xDC00 then if as==0 then as=av;if not aA then return''end;ar()end;as=0;ar()else if as~=0 then av=0x10000+(as-0xD800)*0x400+av-0xDC00;as=0;aw=R(av/0x40000)av=av-aw*0x40000;ax=R(av/0x1000)av=av-ax*0x1000;ay=R(av/0x40)az=av-ay*0x40;aw=aw+0xF0;ax=ax+0x80;ay=ay+0x80;az=az+0x80;if aA then return W(aw,ax,ay,az,aA)end;return W(aw,ax,ay,az)end;aa(\"2nd surrogate pair byte appeared without 1st\")end end;aa(\"invalid unicode codepoint literal\")end;if as~=0 then as=0;ar()end;return aq[au]..av end;local aB=setmetatable({},{__mode=\"v\"})local function aC(aD)local aE=a1;local aF,aw,ax;repeat aE=X(i,'\"',aE,true)if not aE then aa(\"unterminated string\")end;aF=aE-1;aE=aE+1;aw,ax=V(i,aF-1,aF)if ax==0x5C and aw==0x5C then repeat aF=aF-2;aw,ax=V(i,aF-1,aF)until ax~=0x5C or aw~=0x5C;aF=aE-2 end until ax~=0x5C;local aG=_(i,a1,aF)a1=aE;if aD then aF=aB[aG]if aF then return aF end;aF=aG end;if X(aG,a3)then aa(\"unescaped control string\")end;if X(aG,'\\\\',1,true)then aG=Y(aG,'\\\\(.)([^\\\\]?[^\\\\]?[^\\\\]?[^\\\\]?[^\\\\]?)',at)if as~=0 then as=0;aa(\"1st surrogate pair byte not continued by 2nd\")end end;if aD then aB[aF]=aG end;return aG end;local function aH()a7=a7+1;if a7>1000 then aa('too deeply nested json (> 1000)')end;local aI={}a1=Z(i,'^[ \\n\\r\\t]*()',a1)local aJ=0;if V(i,a1)==0x5D then a1=a1+1 else local aE=a1;repeat aJ=aJ+1;a9=a8[V(i,aE)]a1=aE+1;aI[aJ]=a9()aE=Z(i,'^[ \\n\\r\\t]*,[ \\n\\r\\t]*()',a1)until not aE;aE=Z(i,'^[ \\n\\r\\t]*%]()',a1)if not aE then aa(\"no closing bracket of an array\")end;a1=aE end;if a6 then aI[0]=aJ end;a7=a7-1;return aI end;local function aK()a7=a7+1;if a7>1000 then aa('too deeply nested json (> 1000)')end;local aL={}a1=Z(i,'^[ \\n\\r\\t]*()',a1)if V(i,a1)==0x7D then a1=a1+1 else local aE=a1;repeat if V(i,aE)~=0x22 then aa(\"not key\")end;a1=aE+1;local v=aC(true)a9=ab;local aw,ax,ay=V(i,a1,a1+3)if aw==0x3A then if ax~=0x20 then a9=a8[ax]aE=a1+2 else a9=a8[ay]aE=a1+3 end end;if a9==ab then aE=Z(i,'^[ \\n\\r\\t]*:[ \\n\\r\\t]*()',a1)if not aE then aa(\"no colon after a key\")end;a9=a8[V(i,aE)]aE=aE+1 end;a1=aE;aL[v]=a9()aE=Z(i,'^[ \\n\\r\\t]*,[ \\n\\r\\t]*()',a1)until not aE;aE=Z(i,'^[ \\n\\r\\t]*}()',a1)if not aE then aa(\"no closing bracket of an object\")end;a1=aE end;a7=a7-1;return aL end;a8={[0]=ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,aC,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ao,ab,ab,aj,an,an,an,an,an,an,an,an,an,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,aH,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ad,ab,ab,ab,ab,ab,ab,ab,ac,ab,ab,ab,ab,ab,ae,ab,ab,ab,ab,ab,ab,aK,ab,ab,ab,ab,__index=function()aa(\"unexpected termination\")end}setmetatable(a8,a8)local function aM(aN,aO,aP,aQ)i,a1,a5,a6=aN,aO,aP,aQ;a7=0;a1=Z(i,'^[ \\n\\r\\t]*()',a1)a9=a8[V(i,a1)]a1=a1+1;local aR=a9()if aO then return aR,a1 else a9,a1=X(i,'^[ \\n\\r\\t]*',a1)if a1~=#i then aa('json ended')end;return aR end end;return aM end;return O end,[\"lunajson.encoder\"]=function()local error=error;local V,X,aS,Y,Z=string.byte,string.find,string.format,string.gsub,string.match;local aT=table.concat;local tostring=tostring;local pairs,type=pairs,type;local setmetatable=setmetatable;local aU,aV=1/0,-1/0;local aW;if _VERSION==\"Lua 5.1\"then aW='[^ -!#-[%]^-\\255]'else aW='[\\0-\\31\"\\\\]'end;local a4=nil;local function P()local aR,a5;local aJ,aX,aY;local function aZ(aR)aX[aJ]=tostring(aR)aJ=aJ+1 end;local af=Z(tostring(0.5),'[^0-9]')local a_=Z(tostring(12345.12345),'[^0-9'..af..']')if af=='.'then af=nil end;local b0;if af or a_ then b0=true;if af and X(af,'%W')then af='%'..af end;if a_ and X(a_,'%W')then a_='%'..a_ end end;local b1=function(b2)if aV<b2 and b2<aU then local ah=aS(\"%.17g\",b2)if b0 then if a_ then ah=Y(ah,a_,'')end;if af then ah=Y(ah,af,'.')end end;aX[aJ]=ah;aJ=aJ+1;return end;error('invalid number')end;local b3;local b4={['\"']='\\\\\"',['\\\\']='\\\\\\\\',['\\b']='\\\\b',['\\f']='\\\\f',['\\n']='\\\\n',['\\r']='\\\\r',['\\t']='\\\\t',__index=function(b5,am)return aS('\\\\u00%02X',V(am))end}setmetatable(b4,b4)local function b6(ah)aX[aJ]='\"'if X(ah,aW)then ah=Y(ah,aW,b4)end;aX[aJ+1]=ah;aX[aJ+2]='\"'aJ=aJ+3 end;local function b7(b8)if aY[b8]then error(\"loop detected\")end;aY[b8]=true;local b9=b8[0]if type(b9)=='number'then aX[aJ]='['aJ=aJ+1;for ba=1,b9 do b3(b8[ba])aX[aJ]=','aJ=aJ+1 end;if b9>0 then aJ=aJ-1 end;aX[aJ]=']'else b9=b8[1]if b9~=nil then aX[aJ]='['aJ=aJ+1;local ba=2;repeat b3(b9)b9=b8[ba]if b9==nil then break end;ba=ba+1;aX[aJ]=','aJ=aJ+1 until false;aX[aJ]=']'else aX[aJ]='{'aJ=aJ+1;local b9=aJ;for bb,aR in pairs(b8)do if type(bb)~='string'then error(\"non-string key\")end;b6(bb)aX[aJ]=':'aJ=aJ+1;b3(aR)aX[aJ]=','aJ=aJ+1 end;if aJ>b9 then aJ=aJ-1 end;aX[aJ]='}'end end;aJ=aJ+1;aY[b8]=nil end;local a8={boolean=aZ,number=b1,string=b6,table=b7,__index=function()error(\"invalid type value\")end}setmetatable(a8,a8)function b3(aR)if aR==a5 then aX[aJ]='null'aJ=aJ+1;return end;return a8[type(aR)](aR)end;local function bc(bd,aP)aR,a5=bd,aP;aJ,aX,aY=1,{},{}b3(aR)return aT(aX)end;return bc end;return P end,[\"lunajson.sax\"]=function()local setmetatable,tonumber,tostring=setmetatable,tonumber,tostring;local R,S=math.floor,math.huge;local T,U=math.mininteger or nil,math.tointeger or nil;local V,W,X,Y,Z,_=string.byte,string.char,string.find,string.gsub,string.match,string.sub;local function be(a1,a2)error(\"parse error at \"..a1 ..\": \"..a2,2)end;local a3;if _VERSION==\"Lua 5.1\"then a3='[^\\32-\\255]'else a3='[\\0-\\31]'end;local type,unpack=type,table.unpack or unpack;local bf=io.open;local a4=nil;local function bg()end;local function bh(bi,bj)local i,bk,a7;local bl,a1,bm=0,1,0;local a8,a9;if type(bi)=='string'then i=bi;bl=#i;bk=function()i=''bl=0;bk=bg end else bk=function()bm=bm+bl;a1=1;repeat i=bi()if not i then i=''bl=0;bk=bg;return end;bl=#i until bl>0 end;bk()end;local bn=bj.startobject or bg;local bo=bj.key or bg;local bp=bj.endobject or bg;local bq=bj.startarray or bg;local br=bj.endarray or bg;local bs=bj.string or bg;local bt=bj.number or bg;local bu=bj.boolean or bg;local bv=bj.null or bg;local function bw()local am=V(i,a1)if not am then bk()am=V(i,a1)end;return am end;local function bx(a2)return be(bm+a1,a2)end;local function by()return bw()or bx(\"unexpected termination\")end;local function bz()while true do a1=Z(i,'^[ \\n\\r\\t]*()',a1)if a1<=bl then return end;if bl==0 then bx(\"unexpected termination\")end;bk()end end;local function ab()bx('invalid value')end;local function bA(bB,bC,bD,bE)for aJ=1,bC do local am=by()if V(bB,aJ)~=am then bx(\"invalid char\")end;a1=a1+1 end;return bE(bD)end;local function ac()if _(i,a1,a1+2)=='ull'then a1=a1+3;return bv(nil)end;return bA('ull',3,nil,bv)end;local function ad()if _(i,a1,a1+3)=='alse'then a1=a1+4;return bu(false)end;return bA('alse',4,false,bu)end;local function ae()if _(i,a1,a1+2)=='rue'then a1=a1+3;return bu(true)end;return bA('rue',3,true,bu)end;local af=Z(tostring(0.5),'[^0-9]')local ag=tonumber;if af~='.'then if X(af,'%W')then af='%'..af end;ag=function(ah)return tonumber(Y(ah,'.',af))end end;local function ai()return bx('invalid number')end;local function bF(ak)local bG={}local aJ=1;local bH=true;local am=V(i,a1)a1=a1+1;local function bI()bG[aJ]=am;aJ=aJ+1;am=bw()a1=a1+1 end;if am==0x30 then bI()if am and 0x30<=am and am<0x3A then ai()end else repeat bI()until not(am and 0x30<=am and am<0x3A)end;if am==0x2E then bH=false;bI()if not(am and 0x30<=am and am<0x3A)then ai()end;repeat bI()until not(am and 0x30<=am and am<0x3A)end;if am==0x45 or am==0x65 then bH=false;bI()if am==0x2B or am==0x2D then bI()end;if not(am and 0x30<=am and am<0x3A)then ai()end;repeat bI()until not(am and 0x30<=am and am<0x3A)end;if am and(0x41<=am and am<=0x5B or 0x61<=am and am<=0x7B or am==0x2B or am==0x2D or am==0x2E)then ai()end;a1=a1-1;local al=W(unpack(bG))al=ag(al)if ak then al=-al;if al==T and bH then al=T end end;return bt(al)end;local function aj(ak)local al,am=Z(i,'^(%.?[0-9]*)([-+.A-Za-z]?)',a1)if al==''then if a1>bl then a1=a1-1;return bF(ak)end;if am==''then if ak then return bt(-0.0)end;return bt(0)end;if am=='e'or am=='E'then al,am=Z(i,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',a1)if am==''then a1=a1+#al;if a1>bl then a1=a1-#al-1;return bF(ak)end;if ak then return bt(-0.0)end;return bt(0.0)end end;a1=a1-1;return bF(ak)end;if V(al)~=0x2E or V(al,-1)==0x2E then a1=a1-1;return bF(ak)end;if am~=''then if am=='e'or am=='E'then al,am=Z(i,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',a1)end;if am~=''then a1=a1-1;return bF(ak)end end;a1=a1+#al;if a1>bl then a1=a1-#al-1;return bF(ak)end;am=ag(al)if ak then am=-am end;return bt(am)end;local function an(ak)a1=a1-1;local al,am=Z(i,'^([0-9]+%.?[0-9]*)([-+.A-Za-z]?)',a1)if V(al,-1)==0x2E then return bF(ak)end;if am~=''then if am~='e'and am~='E'then return bF(ak)end;al,am=Z(i,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',a1)if not al or am~=''then return bF(ak)end end;a1=a1+#al;if a1>bl then a1=a1-#al;return bF(ak)end;am=ag(al)if ak then am=-am;if am==T and not X(al,'[^0-9]')then am=T end end;return bt(am)end;local function ao()local am=V(i,a1)or by()if am then a1=a1+1;if am>0x30 then if am<0x3A then return an(true)end else if am>0x2F then return aj(true)end end end;bx(\"invalid number\")end;local ap={0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,S,S,S,S,S,S,S,0xA,0xB,0xC,0xD,0xE,0xF,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,0xA,0xB,0xC,0xD,0xE,0xF,__index=function()return S end}setmetatable(ap,ap)local aq={['\"']='\"',['\\\\']='\\\\',['/']='/',['b']='\\b',['f']='\\f',['n']='\\n',['r']='\\r',['t']='\\t',__index=function()bx(\"invalid escape sequence\")end}setmetatable(aq,aq)local function ar()return bx(\"1st surrogate pair byte not continued by 2nd\")end;local as=0;local function at(au,av)if au=='u'then local aw,ax,ay,az,aA=V(av,1,5)av=ap[aw-47]*0x1000+ap[ax-47]*0x100+ap[ay-47]*0x10+ap[az-47]if av~=S then if av<0x80 then if aA then return W(av,aA)end;return W(av)elseif av<0x800 then aw=R(av/0x40)ax=av-aw*0x40;aw=aw+0xC0;ax=ax+0x80;if aA then return W(aw,ax,aA)end;return W(aw,ax)elseif av<0xD800 or 0xE000<=av then aw=R(av/0x1000)av=av-aw*0x1000;ax=R(av/0x40)ay=av-ax*0x40;aw=aw+0xE0;ax=ax+0x80;ay=ay+0x80;if aA then return W(aw,ax,ay,aA)end;return W(aw,ax,ay)elseif 0xD800<=av and av<0xDC00 then if as==0 then as=av;if not aA then return''end;ar()end;as=0;ar()else if as~=0 then av=0x10000+(as-0xD800)*0x400+av-0xDC00;as=0;aw=R(av/0x40000)av=av-aw*0x40000;ax=R(av/0x1000)av=av-ax*0x1000;ay=R(av/0x40)az=av-ay*0x40;aw=aw+0xF0;ax=ax+0x80;ay=ay+0x80;az=az+0x80;if aA then return W(aw,ax,ay,az,aA)end;return W(aw,ax,ay,az)end;bx(\"2nd surrogate pair byte appeared without 1st\")end end;bx(\"invalid unicode codepoint literal\")end;if as~=0 then as=0;ar()end;return aq[au]..av end;local function aC(aD)local bJ=a1;local aE;local aG=''local bK;while true do while true do aE=X(i,'[\\\\\"]',bJ)if aE then break end;aG=aG.._(i,a1,bl)if bJ==bl+2 then bJ=2 else bJ=1 end;bk()if bl==0 then bx(\"unterminated string\")end end;if V(i,aE)==0x22 then break end;bJ=aE+2;bK=true end;aG=aG.._(i,a1,aE-1)a1=aE+1;if X(aG,a3)then bx(\"unescaped control string\")end;if bK then aG=Y(aG,'\\\\(.)([^\\\\]?[^\\\\]?[^\\\\]?[^\\\\]?[^\\\\]?)',at)if as~=0 then as=0;bx(\"1st surrogate pair byte not continued by 2nd\")end end;if aD then return bo(aG)end;return bs(aG)end;local function aH()a7=a7+1;if a7>1000 then bx('too deeply nested json (> 1000)')end;bq()bz()if V(i,a1)==0x5D then a1=a1+1 else local aE;while true do a9=a8[V(i,a1)]a1=a1+1;a9()aE=Z(i,'^[ \\n\\r\\t]*,[ \\n\\r\\t]*()',a1)if aE then a1=aE else aE=Z(i,'^[ \\n\\r\\t]*%]()',a1)if aE then a1=aE;break end;bz()local am=V(i,a1)a1=a1+1;if am==0x2C then bz()elseif am==0x5D then break else bx(\"no closing bracket of an array\")end end;if a1>bl then bz()end end end;a7=a7-1;return br()end;local function aK()a7=a7+1;if a7>1000 then bx('too deeply nested json (> 1000)')end;bn()bz()if V(i,a1)==0x7D then a1=a1+1 else local aE;while true do if V(i,a1)~=0x22 then bx(\"not key\")end;a1=a1+1;aC(true)aE=Z(i,'^[ \\n\\r\\t]*:[ \\n\\r\\t]*()',a1)if aE then a1=aE else bz()if V(i,a1)~=0x3A then bx(\"no colon after a key\")end;a1=a1+1;bz()end;if a1>bl then bz()end;a9=a8[V(i,a1)]a1=a1+1;a9()aE=Z(i,'^[ \\n\\r\\t]*,[ \\n\\r\\t]*()',a1)if aE then a1=aE else aE=Z(i,'^[ \\n\\r\\t]*}()',a1)if aE then a1=aE;break end;bz()local am=V(i,a1)a1=a1+1;if am==0x2C then bz()elseif am==0x7D then break else bx(\"no closing bracket of an object\")end end;if a1>bl then bz()end end end;a7=a7-1;return bp()end;a8={[0]=ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,aC,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ao,ab,ab,aj,an,an,an,an,an,an,an,an,an,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,aH,ab,ab,ab,ab,ab,ab,ab,ab,ab,ab,ad,ab,ab,ab,ab,ab,ab,ab,ac,ab,ab,ab,ab,ab,ae,ab,ab,ab,ab,ab,ab,aK,ab,ab,ab,ab}local function bL()a7=0;bz()a9=a8[V(i,a1)]a1=a1+1;a9()end;local function bM(b2)if b2<0 then error(\"the argument must be non-negative\")end;local bJ=a1-1+b2;local aG=_(i,a1,bJ)while bJ>bl and bl~=0 do bk()bJ=bJ-(bl-(a1-1))aG=aG.._(i,a1,bJ)end;if bl~=0 then a1=bJ+1 end;return aG end;local function bN()return bm+a1 end;return{run=bL,tryc=bw,read=bM,tellpos=bN}end;local function bO(bP,bj)local bQ=bf(bP)local function bR()local ah;if bQ then ah=bQ:read(8192)if not ah then bQ:close()bQ=nil end end;return ah end;return bh(bR,bj)end;return{newparser=bh,newfileparser=bO}end,[\"libs.logger\"]=function()local bS=require(\"logging\")require(\"logging.console\")local bT={}function bT.defaultLogger(e,M)if e~=nil then bS.defaultLogger(bS.console{logLevel=M,destination=\"stderr\",timestampPattern=\"!%Y-%m-%dT%H:%M:%S.%qZ\",logPattern=\"%date %level [\"..e..\"]: %message\\n\"})end;return bS.defaultLogger()end;return bT end,[\"logging\"]=function()local type,table,string,bU,tonumber=type,table,string,tostring,tonumber;local select=select;local error=error;local aS=string.format;local R=math.floor;local pairs=pairs;local ipairs=ipairs;local bV={_COPYRIGHT=\"Copyright (C) 2004-2010 Kepler Project, 2011-2013 Neopallium, 2020-2023 Thijs Schreijer\",_DESCRIPTION=\"A simple API to use logging features in Lua\",_VERSION=\"LuaLogging 1.8.2\"}local bW={\"DEBUG\",\"INFO\",\"WARN\",\"ERROR\",\"FATAL\",\"OFF\"}local bX=#bW;for aJ,M in ipairs(bW)do bW[M]=aJ;bV[M]=M end;local bY=bW[1]local bZ=\"%date %level %message\\n\"local b_=nil;local c0=nil;local c1=nil;local function c2()local c3=''local c4=debug and debug.traceback()or''for c5 in c4:gmatch(\"%s*(.-)\\n\")do if c5:match(\"%:%d+%:\")and not c5:find('logging.lua')then c3=c3 ..' | '..c5 end end;return c3 end;local function c6(self,M,c7,...)local c8=type(c7)if c8=='string'then if select('#',...)>0 then local c9,ca=pcall(aS,c7,...)if c9 then return self:append(M,ca)else return self:append(M,\"Error formatting log message: \"..ca..c2())end else return self:append(M,c7)end elseif c8=='function'then return self:append(M,c7(...))end;return self:append(M,bV.tostring(c7))end;local function cb()end;local function cc(bT,M,...)local B={n=select(\"#\",...),...}for aJ=1,B.n do B[aJ]=bU(B[aJ])end;B=table.concat(B,\" \")..\"\\n\"for cd in B:gmatch(\"(.-)\\n\")do bT:log(M,cd)end end;local function assert(ce,...)if ce then return ce,...end;error(aS(...),2)end;function bV.new(cf,cg)assert(type(cf)==\"function\",\"Appender must be a function, got: %s.\",type(cf))cg=cg or bY;assert(bW[cg],\"startLevel must be a valid log-level constant if given\")local ch={}local bT={}bT.append=cf;bT.setLevel=function(self,M)local ci=bW[M]assert(ci,\"undefined level '%s'\",bU(M))local cj=self.level;self.level=M;self.level_order=ci;for aJ=1,bX do local e=bW[aJ]:lower()if aJ>=ci and aJ~=bX then self[e]=ch[aJ]else self[e]=cb end end;if cj and cj~=M then self:log(bW[1],\"Logger: changing loglevel from %s to %s\",cj,M)end end;bT.log=function(self,M,...)local ci=bW[M]assert(ci,\"undefined level `%s'\",bU(M))if ci<self.level_order then return end;return c6(self,M,...)end;bT.getPrint=function(self,M)local ci=bW[M]assert(ci,\"undefined level `%s'\",bU(M))return function(...)if ci>=self.level_order then cc(self,M,...)end end end;for aJ=1,bX do local M=bW[aJ]if bT[M:lower()]then return nil,\"'\"..M..\"' is not a proper level name since there is already a property '\"..M:lower()..\"'\"end;ch[aJ]=function(self,...)return c6(self,M,...)end end;for aJ=1,bX do bT[bW[aJ]]=bW[aJ]end;bT:setLevel(cg)return bT end;local ck=1;local cl=debug and\"local info = debug.getinfo(%d)\"or\"local info = { short_src = '?', currentline = -1 }\"function bV.compilePattern(cm)cm=string.format(\"%q\",cm)cm=cm:gsub(\"%%source\",\"%%file:%%line in function '%%function'\")local cn={[\"date\"]=false,[\"level\"]=false,[\"message\"]=false,[\"file\"]=\"info.short_src\",[\"line\"]=\"tostring(info.currentline)\",[\"function\"]='(info.name or \"unknown function\")'}local co=false;for cp,cq in pairs(cn)do local E;cm,E=cm:gsub(\"%%\"..cp,'\"..'..(cq or cp)..'..\"')co=co or E>0 and cq end;if cm:sub(1,4)=='\"\"..'then cm=cm:sub(5,-1)end;if cm:sub(-4,-1)=='..\"\"'then cm=cm:sub(1,-5)end;local cr=[[\n  return function(date, level, message)\n      ]]..(co and cl:format(ck)or\"\")..[[\n\n      return ]]..cm..[[\n\n    end]]return(loadstring or load)(cr,\"lualogging_generated_formatter\")()end;local cs;do local ct=setmetatable({},{__index=function(self,cm)self[cm]=bV.compilePattern(cm)return self[cm]end})function cs()for bb in pairs(ct)do ct[bb]=nil end end;function bV.prepareLogMsg(cu,cv,M,cw)return ct[cu](cv,M,cw)end end;do local cx=os.time;local cy,cz=pcall(require,\"socket\")if cy then cx=cz.gettime end;local cA=setmetatable({},{__index=function(self,cB)local cp=cB:match(\"(%%%d*q)\")if not cp then self[cB]=false;return false end;local cC=tonumber(cp:sub(2,-2))or 3;assert(cC>=1 and cC<=6,\"millisecond format %q quantifier range is 1 to 6\")self[cB]=(\"0\"):rep(cC)return self[cB]end})function bV.date(c7,cD)c7=c7 or\"%c\"cD=cD or cx()local cE=cA[c7]local cF;if cE then cF=math.fmod(cD,1)local cG=(tostring(cF)..cE):sub(3,-1)c7=c7:gsub(\"(%%%d*q)\",function(cp)return cG:sub(1,#cE)end)end;local cH,cI=os.date(c7,R(cD))if type(cH)==\"table\"then cH.secf=cF or math.fmod(cD,1)end;return cH,cI end end;local function tostring(s)local aG=''if type(s)~='table'then if type(s)=='string'then aG=string.format(\"%q\",s)else aG=bU(s)end else local cJ={}for v in pairs(s)do if tonumber(v)~=v then table.insert(cJ,v)else table.insert(cJ,tostring(v))end end;table.sort(cJ)aG=aG..'{'local cK=\"\"local c5;for b5,cL in ipairs(cJ)do if tonumber(cL)and tonumber(cL)>0 then c5=tostring(s[tonumber(cL)])else c5=cL..\" = \"..tostring(s[cL])end;aG=aG..cK..c5;cK=\", \"end;aG=aG..'}'end;return aG end;bV.tostring=tostring;function bV.defaultLogPatterns(cB)if cB then if type(cB)==\"string\"then cB=bV.buildLogPatterns({},cB)end;assert(type(cB)==\"table\",\"logPatterns must be a string or a table, got: %s\",type(cB))for b5,M in ipairs(bW)do if M~=\"OFF\"then assert(type(cB[M])==\"string\",\"the patterns contains a '%s' value (instead of a string) for level '%s'\",type(cB[M]),M)end end;b_=cB end;return b_ end;function bV.defaultTimestampPattern(cB)if cB then if type(cB)~=\"string\"then error(\"timestampPattern must be a string\",2)end;c0=cB end;return c0 end;function bV.defaultLevel(M)if M then if not bW[M]then assert(bW[M],\"undefined level '%s'\",bU(M))end;bY=M end;return bY end;function bV.defaultLogger(bT)if bT then if type(bT)~=\"table\"or type(bT.getPrint)~=\"function\"then error(\"expected a logger object\",2)end;c1=bT end;if not c1 then c1=require(\"logging.console\"){destination=\"stderr\"}end;return c1 end;function bV.buildLogPatterns(cM,cN)cM=cM or{}assert(type(cN)==\"string\"or type(cN)==\"nil\",\"expected default logPattern (2nd argument) to be a string or nil, got: %s\",tostring(cN))assert(type(cM)==\"table\",\"expected patterns (1st argument) to be a table or nil, got: %s\",tostring(cM))local bB={}for b5,M in ipairs(bW)do if M~=\"OFF\"then bB[M]=cM[M]or cN or b_[M]end end;return bB end;b_=bV.buildLogPatterns({},bZ)function bV.getDeprecatedParams(cO,...)local B={n=select(\"#\",...),...}if type(B[1])==\"table\"then return B[1]end;local cP={}for aJ,cQ in ipairs(cO)do cP[cQ]=B[aJ]end;return cP end;if debug then local cR,cS;local function cT()cR:debug(\"message\")end;local cU=debug.getinfo(cT)local cV=cU.short_src..\":\"..tostring(cU.linedefined or-999)cR=bV.new(function(self,M,cw)cS=bV.prepareLogMsg(\"%source\",\"\",M,cw)end)while true do if not pcall(cT)then cl=\"local info = setmetatable({}, { __index = function() return 'na' end })\"break end;if cS:find(cV,1,true)then break end;ck=ck+1;cs()end end;if _VERSION<'Lua 5.2'then _G.logging=bV end;return bV end,[\"logging.console\"]=function()local io=require\"io\"local bV=require\"logging\"local cW=bV.prepareLogMsg;local cX=setmetatable({stdout=\"stdout\",stderr=\"stderr\"},{__index=function(self,v)if not v then return\"stdout\"end;error(\"destination parameter must be either 'stderr' or 'stdout', got: \"..tostring(v),3)end})local cY=setmetatable({},{__call=function(self,...)return self.new(...)end})function cY.new(cP,...)cP=bV.getDeprecatedParams({\"logPattern\"},cP,...)local cg=cP.logLevel or bV.defaultLevel()local cZ=cP.timestampPattern or bV.defaultTimestampPattern()local c_=cX[cP.destination]local d0=bV.buildLogPatterns(cP.logPatterns,cP.logPattern)return bV.new(function(self,M,cw)io[c_]:write(cW(d0[M],bV.date(cZ),M,cw))return true end,cg)end;bV.console=cY;return cY end,[\"i18n.init\"]=function()local j={}local d1;local d2={}local x;local d3;local d4='en'local d5=d4;local d6='i18n'local d7=require(d6 ..'.plural')local d8=require(d6 ..'.interpolate')local d9=require(d6 ..'.variants')local da=require(d6 ..'.version')j.plural,j.interpolate,j.variants,j.version,j._VERSION=d7,d8,d9,da,da;local function db(aG)local dc,dd={},0;aG:gsub(\"[^%.]+\",function(am)dd=dd+1;dc[dd]=am end)return dc,dd end;local function de(cD)return type(cD)=='table'and type(cD.other)=='string'end;local function df(aG)return type(aG)=='string'and#aG>0 end;local function dg(dh,di,s)if df(s)then return end;local ca=\"i18n.%s requires a non-empty string on its %s. Got %s (a %s value).\"error(ca:format(dh,di,tostring(s),type(s)))end;local function dj(dh,di,s)if df(s)or de(s)then return end;local ca=\"i18n.%s requires a non-empty string or plural-form table on its %s. Got %s (a %s value).\"error(ca:format(dh,di,tostring(s),type(s)))end;local function dk(dh,di,s)if df(s)or type(s)=='table'then return end;local ca=\"i18n.%s requires a non-empty string or table on its %s. Got %s (a %s value).\"error(ca:format(dh,di,tostring(s),type(s)))end;local function dl(dh,di,s)if s==nil or type(s)=='function'then return end;local ca=\"i18n.%s requires a function (or nil) on param %s. Got %s (a %s value).\"error(ca:format(dh,di,tostring(s),type(s)))end;local function dm(E)return d7.get(d9.root(j.getLocale()),E)end;local function dn(cD,y)dj('interpolatePluralTable','t',cD)y=y or{}local E=y.count or 1;local dp=d3(E)return cD[dp]end;local function dq(dr,y)if type(dr)=='string'then return d8(dr,y)elseif de(dr)then return d8(dn(dr,y),y)end;return dr end;local function ds(dt,y)local du;for bb,aR in pairs(y)do du=(dt and dt..'.'or\"\")..tostring(bb)dg('load',du,bb)dk('load',du,aR)if type(aR)=='string'then j.set(du,aR)else ds(du,aR)end end end;local function dv(v,dw,y)local c,dd=db(dw..\".\"..v)local dr=d1;for aJ=1,dd do dr=dr[c[aJ]]if not dr then return nil end end;return dq(dr,y)end;local function dx(v)local s=string.gsub(v,\"[%w_%-]+%.(.*)\",\"%1\")return s end;local function dy(v)local s=string.gsub(v,\"(.*)%..*\",\"%1\")return s end;function j.set(v,s)dg('set','key',v)dj('set','value',s)local dz=dx(v)local c,dd=db(v)local dr=d1;for aJ=1,dd-1 do v=c[aJ]dr[v]=dr[v]or{}dr=dr[v]end;local dA=c[dd]dr[dA]=s;if de(dr)then d2[dy(dz)]=true end;d2[dz]=true end;function j.translate(v,y)dg('translate','key',v)y=y or{}local dB=y.locale or x;local dC=d9.fallbacks(dB,d5)for aJ=1,#dC do local s=dv(v,dC[aJ],y)if s then return s end end;return y.default end;function j.setLocale(dD,dE)dg('setLocale','newLocale',dD)dl('setLocale','newPluralizeFunction',dE)x=dD;d3=dE or dm end;function j.setFallbackLocale(dF)dg('setFallbackLocale','newFallbackLocale',dF)d5=dF end;function j.getFallbackLocale()return d5 end;function j.getLocale()return x end;function j.reset()d1={}d2={}d7.reset()j.setLocale(d4)j.setFallbackLocale(d4)end;function j.load(y)ds(nil,y)end;function j.loadFile(c)local dG=assert(loadfile(c))local y=dG()j.load(y)end;function j.getKeys()local dH={}for bb,b5 in pairs(d2)do table.insert(dH,bb)end;return dH end;setmetatable(j,{__call=function(b5,...)return j.translate(...)end})j.reset()return j end,[\"i18n.plural\"]=function()local d7={}local dI=nil;local function dJ(dh,di,s)if type(s)~='string'or#s==0 then local ca=\"Expected param %s of function %s to be a string, but got %s (a value of type %s) instead\"error(ca:format(di,dh,tostring(s),type(s)))end end;local function dK(dh,di,s)if type(s)~='number'then local ca=\"Expected param %s of function %s to be a number, but got %s (a value of type %s) instead\"error(ca:format(di,dh,tostring(s),type(s)))end end;local function dL(aG)local c3,dd={},0;aG:gsub(\"%S+\",function(dM)dd=dd+1;c3[dd]=dM end)return c3 end;local function dN(b2)return b2==math.floor(b2)end;local function dO(s,dP,dQ)return s>=dP and s<=dQ end;local function dR(aR,dS)for aJ=1,#dS do if aR==dS[aJ]then return true end end;return false end;local dT={}local dU=function(b2)return b2==1 and\"one\"or\"other\"end;dT[dU]=dL([[\n  af asa bem bez bg bn brx ca cgg chr da de dv ee el\n  en eo es et eu fi fo fur fy gl gsw gu ha haw he is\n  it jmc kaj kcg kk kl ksb ku lb lg mas ml mn mr nah\n  nb nd ne nl nn no nr ny nyn om or pa pap ps pt rm\n  rof rwk saq seh sn so sq ss ssy st sv sw syr ta te\n  teo tig tk tn ts ur ve vun wae xh xog zu\n]])local dV=function(b2)return(b2==0 or b2==1)and\"one\"or\"other\"end;dT[dV]=dL(\"ak am bh fil guw hi ln mg nso ti tl wa\")local dW=function(b2)if not dN(b2)then return'other'end;return b2==0 and\"zero\"or b2==1 and\"one\"or b2==2 and\"two\"or dO(b2%100,3,10)and\"few\"or dO(b2%100,11,99)and\"many\"or\"other\"end;dT[dW]={'ar'}local dX=function()return\"other\"end;dT[dX]=dL([[\n  az bm bo dz fa hu id ig ii ja jv ka kde kea km kn\n  ko lo ms my root sah ses sg th to tr vi wo yo zh\n]])local dY=function(b2)if not dN(b2)then return'other'end;local dZ,d_=b2%10,b2%100;return dZ==1 and d_~=11 and'one'or dO(dZ,2,4)and not dO(d_,12,14)and'few'or(dZ==0 or dO(dZ,5,9)or dO(d_,11,14))and'many'or'other'end;dT[dY]=dL('be bs hr ru sh sr uk')local e0=function(b2)if not dN(b2)then return'other'end;local dZ,d_=b2%10,b2%100;return dZ==1 and not dR(d_,{11,71,91})and'one'or dZ==2 and not dR(d_,{12,72,92})and'two'or dR(dZ,{3,4,9})and not dO(d_,10,19)and not dO(d_,70,79)and not dO(d_,90,99)and'few'or b2~=0 and b2%1000000==0 and'many'or'other'end;dT[e0]={'br'}local e1=function(b2)return b2==1 and'one'or(b2==2 or b2==3 or b2==4)and'few'or'other'end;dT[e1]={'cz','sk'}local e2=function(b2)return b2==0 and'zero'or b2==1 and'one'or b2==2 and'two'or b2==3 and'few'or b2==6 and'many'or'other'end;dT[e2]={'cy'}local e3=function(b2)return b2>=0 and b2<2 and'one'or'other'end;dT[e3]={'ff','fr','kab'}local e4=function(b2)return b2==1 and'one'or b2==2 and'two'or(b2==3 or b2==4 or b2==5 or b2==6)and'few'or(b2==7 or b2==8 or b2==9 or b2==10)and'many'or'other'end;dT[e4]={'ga'}local e5=function(b2)return(b2==1 or b2==11)and'one'or(b2==2 or b2==12)and'two'or dN(b2)and(dO(b2,3,10)or dO(b2,13,19))and'few'or'other'end;dT[e5]={'gd'}local e6=function(b2)local dZ=b2%10;return(dZ==1 or dZ==2 or b2%20==0)and'one'or'other'end;dT[e6]={'gv'}local e7=function(b2)return b2==1 and'one'or b2==2 and'two'or'other'end;dT[e7]=dL('iu kw naq se sma smi smj smn sms')local e8=function(b2)return b2==0 and'zero'or b2==1 and'one'or'other'end;dT[e8]={'ksh'}local e9=function(b2)return b2==0 and'zero'or b2>0 and b2<2 and'one'or'other'end;dT[e9]={'lag'}local ea=function(b2)if not dN(b2)then return'other'end;if dO(b2%100,11,19)then return'other'end;local dZ=b2%10;return dZ==1 and'one'or dO(dZ,2,9)and'few'or'other'end;dT[ea]={'lt'}local eb=function(b2)return b2==0 and'zero'or b2%10==1 and b2%100~=11 and'one'or'other'end;dT[eb]={'lv'}local ec=function(b2)return b2%10==1 and b2~=11 and'one'or'other'end;dT[ec]={'mk'}local ed=function(b2)return b2==1 and'one'or(b2==0 or b2~=1 and dN(b2)and dO(b2%100,1,19))and'few'or'other'end;dT[ed]={'mo','ro'}local ee=function(b2)if b2==1 then return'one'end;if not dN(b2)then return'other'end;local d_=b2%100;return(b2==0 or dO(d_,2,10))and'few'or dO(d_,11,19)and'many'or'other'end;dT[ee]={'mt'}local ef=function(b2)if b2==1 then return'one'end;if not dN(b2)then return'other'end;local dZ,d_=b2%10,b2%100;return dO(dZ,2,4)and not dO(d_,12,14)and'few'or(dZ==0 or dZ==1 or dO(dZ,5,9)or dO(d_,12,14))and'many'or'other'end;dT[ef]={'pl'}local eg=function(b2)return(b2==0 or b2==1)and'one'or'other'end;dT[eg]={'shi'}local eh=function(b2)local d_=b2%100;return d_==1 and'one'or d_==2 and'two'or(d_==3 or d_==4)and'few'or'other'end;dT[eh]={'sl'}local ei=function(b2)return dN(b2)and(b2==0 or b2==1 or dO(b2,11,99))and'one'or'other'end;dT[ei]={'tzm'}local ej={}for a9,ek in pairs(dT)do for b5,x in ipairs(ek)do ej[x]=a9 end end;function d7.get(x,b2)dJ('i18n.plural.get','locale',x)dK('i18n.plural.get','n',b2)local a9=ej[x]or dI;return a9(math.abs(b2))end;function d7.setDefaultFunction(a9)dI=a9 end;function d7.reset()dI=ej['en']end;d7.reset()return d7 end,[\"i18n.interpolate\"]=function()local unpack=unpack or table.unpack;local el={c=1,d=1,E=1,e=1,f=1,g=1,G=1,i=1,o=1,u=1,X=1,x=1,s=1,q=1,['%']=1}local function em(string,en)return string:gsub(\"(.?)%%{%s*(.-)%s*}\",function(eo,v)if eo==\"%\"then return else return eo..tostring(en[v])end end)end;local function ep(string,en)return string:gsub(\"(.?)%%<%s*(.-)%s*>%.([cdEefgGiouXxsq])\",function(eo,v,aS)if eo==\"%\"then return else return eo..string.format(\"%\"..aS,en[v]or\"nil\")end end)end;local function eq(string)return string:gsub(\"(%%)(.?)\",function(b5,W)if el[W]then return\"%\"..W else return\"%%\"..W end end)end;local function er(string)return string:gsub(\"(%%%%)(.?)\",function(b5,W)if el[W]then return\"%\"..W else return\"%%\"..W end end)end;local function d8(cm,en)en=en or{}local c3=cm;c3=em(c3,en)c3=ep(c3,en)c3=eq(c3)c3=string.format(c3,unpack(en))c3=er(c3)return c3 end;return d8 end,[\"i18n.variants\"]=function()local d9={}local function es(et,dd)local c3={}for aJ=1,dd do c3[aJ]=et[dd-aJ+1]end;return c3,dd end;local function aT(eu,ev,ew,ex)for aJ=1,ex do eu[ev+aJ]=ew[aJ]end;return eu,ev+ex end;function d9.ancestry(x)local c3,dd,ey={},0,nil;x:gsub(\"[^%-]+\",function(am)dd=dd+1;ey=ey and ey..'-'..am or am;c3[dd]=ey end)return es(c3,dd)end;function d9.isParent(ez,eA)return not not eA:match(\"^\"..ez..\"%-\")end;function d9.root(x)return x:match(\"[^%-]+\")end;function d9.fallbacks(x,d5)if x==d5 or d9.isParent(d5,x)then return d9.ancestry(x)end;if d9.isParent(x,d5)then return d9.ancestry(d5)end;local eB,eC=d9.ancestry(x)local eD,eE=d9.ancestry(d5)return aT(eB,eC,eD,eE)end;return d9 end,[\"i18n.version\"]=function()return'0.9.2'end,[\"device_driver.driver\"]=function()local h=require(\"libs.functional\")local k=require(\"device_driver.state\")local eF=require(\"device_driver.command\")local eG={}local eH={}local eI={}local eJ={}local eK;function eG.initialize(eL,eM,eN,eO)eH=eL or{}eI=eM or{}eJ=eN or{}eK=eO end;function eG.get_macros()return h.as_array(eJ)end;function eG.get_state_keys(eP)return h.as_array(k.keys(eH,eP))end;function eG.get_state_value(eP,eQ)local ah=k.find_first(eH,eP,eQ)or{}return ah.state_value,ah.state_normalized_value end;function eG.get_execution_result(eR,eS,B,eT)local eU=eF.find(eI,eR,eS)if eU==nil then return nil end;local eV=eF.find_first_comm_type(eU,eT)local eW=eU.codes and eU.codes(B)or{}local eX=eU.state_changes and eU.state_changes(B)or{}return eV,h.as_array(eW),h.as_array(eX),eU.linked_feedback_id,h.as_array(eU.macros)end;function eG.apply_state_change(eY)eY=k.copy(eY)local eZ=k.find_first(eH,eY.state_id,eY.state_key)if eZ==nil then eH=k.insert(eH,eY)else eH=k.update(eH,eY)end;local e_=k.find_first(eH,eY.state_id,eY.state_key)local f0=not k.equals(e_,eZ)if f0 and eK then eK(eZ,e_)end;return f0 end;function eG.process_feedback()end;function eG.get_states()return h.totable(h.map(function(ah)return ah end,eH))end;return eG end,[\"libs.functional\"]=function()local h=require(\"fun\")function h.unique(bR)return h.iter(h.reduce(function(bm,s)if h.index(s,bm)==nil then table.insert(bm,s)end;return bm end,{},bR))end;function h.first(bR)return h.nth(1,bR)end;function h.as_array(f1)local dH=h.totable(h.map(function(f2)return f2 end,f1 or{}))if dH[1]==nil then dH[0]=0 end;return dH end;function h.withShallowCopy(cr,f1)return h.map(function(f2)return cr(f2)end,f1)end;return h end,[\"fun\"]=function()local f3={}local f4={}local unpack=rawget(table,\"unpack\")or unpack;local f5=function(f6,...)if f6==nil then return nil end;return...end;local f7=function(h,f6,...)if f6==nil then return nil end;return f6,h(...)end;local function f8(f9)local fa=type(f9)local dH;if fa=='table'then dH={}for fb,fc in next,f9,nil do dH[f8(fb)]=f8(fc)end else dH=f9 end;return dH end;local fd={__call=function(self,fe,k)return self.gen(fe,k)end,__tostring=function(self)return'<generator>'end,__index=f4}local ff=function(bR,fe,k)return setmetatable({gen=bR,param=fe,state=k},fd),fe,k end;f3.wrap=ff;local fg=function(self)return self.gen,self.param,self.state end;f4.unwrap=fg;local fh=function(fi,fj)return nil end;local fk=function(fe,k)local k=k+1;if k>#fe then return nil end;local fl=string.sub(fe,k,k)return k,fl end;local fm=pairs({a=0})local fn=function(fo,v)local s;local v,s=fm(fo,v)return v,v,s end;local fp=function(aL,fe,k)assert(aL~=nil,\"invalid iterator\")if type(aL)==\"table\"then local fq=getmetatable(aL)if fq~=nil then if fq==fd then return aL.gen,aL.param,aL.state elseif fq.__ipairs~=nil then return fq.__ipairs(aL)elseif fq.__pairs~=nil then return fq.__pairs(aL)end end;if#aL>0 then return ipairs(aL)else return fn,aL,nil end elseif type(aL)==\"function\"then return aL,fe,k elseif type(aL)==\"string\"then if#aL==0 then return fh,nil,nil end;return fk,aL,0 end;error(string.format('object %s of type \"%s\" is not iterable',aL,type(aL)))end;local fr=function(aL,fe,k)return ff(fp(aL,fe,k))end;f3.iter=fr;local fs=function(h)return function(self)return h(self.gen,self.param,self.state)end end;local ft=function(h)return function(self,fu)return h(fu,self.gen,self.param,self.state)end end;local fv=function(h)return function(self,fu,fw)return h(fu,fw,self.gen,self.param,self.state)end end;local fx=function(h)return function(bR,fe,k)return h(fp(bR,fe,k))end end;local fy=function(h)return function(fu,bR,fe,k)return h(fu,fp(bR,fe,k))end end;local fz=function(h)return function(fu,fw,bR,fe,k)return h(fu,fw,fp(bR,fe,k))end end;local fA=function(h,bR,fe,k)repeat k=f7(h,bR(fe,k))until k==nil end;f4.each=ft(fA)f3.each=fy(fA)f4.for_each=f4.each;f3.for_each=f3.each;f4.foreach=f4.each;f3.foreach=f3.each;local fB=function(fe,k)local fC,fD=fe[1],fe[2]local k=k+fD;if k>fC then return nil end;return k,k end;local fE=function(fe,k)local fC,fD=fe[1],fe[2]local k=k+fD;if k<fC then return nil end;return k,k end;local fF=function(fG,fC,fD)if fD==nil then if fC==nil then if fG==0 then return fh,nil,nil end;fC=fG;fG=fC>0 and 1 or-1 end;fD=fG<=fC and 1 or-1 end;assert(type(fG)==\"number\",\"start must be a number\")assert(type(fC)==\"number\",\"stop must be a number\")assert(type(fD)==\"number\",\"step must be a number\")assert(fD~=0,\"step must not be zero\")if fD>0 then return ff(fB,{fC,fD},fG-fD)elseif fD<0 then return ff(fE,{fC,fD},fG-fD)end end;f3.range=fF;local fH=function(fI,f6)return f6+1,unpack(fI)end;local fJ=function(fI,f6)return f6+1,fI(f6)end;local fK=function(fI,f6)return f6+1,fI end;local fL=function(...)if select('#',...)<=1 then return ff(fK,select(1,...),0)else return ff(fH,{...},0)end end;f3.duplicate=fL;f3.replicate=fL;f3.xrepeat=fL;local fM=function(h)assert(type(h)==\"function\")return ff(fJ,h,0)end;f3.tabulate=fM;local fN=function()return ff(fK,0,0)end;f3.zeros=fN;local fO=function()return ff(fK,1,0)end;f3.ones=fO;local fP=function(fI,fQ)return 0,math.random(fI[1],fI[2])end;local fR=function(fS,fQ)return 0,math.random()end;local fT=function(b2,fU)if b2==nil and fU==nil then return ff(fR,0,0)end;assert(type(b2)==\"number\",\"invalid first arg to rands\")if fU==nil then fU=b2;b2=0 else assert(type(fU)==\"number\",\"invalid second arg to rands\")end;assert(b2<fU,\"empty interval\")return ff(fP,{b2,fU-1},0)end;f3.rands=fT;local fV=function(b2,fW,fI,f6)assert(b2>0,\"invalid first argument to nth\")if fW==ipairs then return fI[b2]elseif fW==fk then if b2<=#fI then return string.sub(fI,b2,b2)else return nil end end;for aJ=1,b2-1,1 do f6=fW(fI,f6)if f6==nil then return nil end end;return f5(fW(fI,f6))end;f4.nth=ft(fV)f3.nth=fy(fV)local fX=function(k,...)if k==nil then error(\"head: iterator is empty\")end;return...end;local fY=function(bR,fe,k)return fX(bR(fe,k))end;f4.head=fs(fY)f3.head=fx(fY)f3.car=f3.head;f4.car=f4.head;local fZ=function(bR,fe,k)k=bR(fe,k)if k==nil then return ff(fh,nil,nil)end;return ff(bR,fe,k)end;f4.tail=fs(fZ)f3.tail=fx(fZ)f3.cdr=f3.tail;f4.cdr=f4.tail;local f_=function(aJ,f6,...)if f6==nil then return nil end;return{aJ,f6},...end;local g0=function(fe,k)local b2,fW,fI=fe[1],fe[2],fe[3]local aJ,f6=k[1],k[2]if aJ>=b2 then return nil end;return f_(aJ+1,fW(fI,f6))end;local g1=function(b2,bR,fe,k)assert(b2>=0,\"invalid first argument to take_n\")return ff(g0,{b2,bR,fe},{0,k})end;f4.take_n=ft(g1)f3.take_n=fy(g1)local g2=function(h,f6,...)if f6==nil or not h(...)then return nil end;return f6,...end;local g3=function(fe,f6)local h,fW,fI=fe[1],fe[2],fe[3]return g2(h,fW(fI,f6))end;local g4=function(h,bR,fe,k)assert(type(h)==\"function\",\"invalid first argument to take_while\")return ff(g3,{h,bR,fe},k)end;f4.take_while=ft(g4)f3.take_while=fy(g4)local g5=function(g6,bR,fe,k)if type(g6)==\"number\"then return g1(g6,bR,fe,k)else return g4(g6,bR,fe,k)end end;f4.take=ft(g5)f3.take=fy(g5)local g7=function(b2,bR,fe,k)assert(b2>=0,\"invalid first argument to drop_n\")local aJ;for aJ=1,b2,1 do k=bR(fe,k)if k==nil then return ff(fh,nil,nil)end end;return ff(bR,fe,k)end;f4.drop_n=ft(g7)f3.drop_n=fy(g7)local g8=function(h,f6,...)if f6==nil or not h(...)then return f6,false end;return f6,true,...end;local g9=function(h,fW,fI,f6)assert(type(h)==\"function\",\"invalid first argument to drop_while\")local ga,gb;repeat gb=f8(f6)f6,ga=g8(h,fW(fI,f6))until not ga;if f6==nil then return ff(fh,nil,nil)end;return ff(fW,fI,gb)end;f4.drop_while=ft(g9)f3.drop_while=fy(g9)local gc=function(g6,fW,fI,f6)if type(g6)==\"number\"then return g7(g6,fW,fI,f6)else return g9(g6,fW,fI,f6)end end;f4.drop=ft(gc)f3.drop=fy(gc)local gd=function(g6,fW,fI,f6)return g5(g6,fW,fI,f6),gc(g6,fW,fI,f6)end;f4.split=ft(gd)f3.split=fy(gd)f4.split_at=f4.split;f3.split_at=f3.split;f4.span=f4.split;f3.span=f3.split;local ge=function(gf,bR,fe,k)local aJ=1;for gg,fl in bR,fe,k do if fl==gf then return aJ end;aJ=aJ+1 end;return nil end;f4.index=ft(ge)f3.index=fy(ge)f4.index_of=f4.index;f3.index_of=f3.index;f4.elem_index=f4.index;f3.elem_index=f3.index;local gh=function(fe,k)local gf,fW,fI=fe[1],fe[2],fe[3]local aJ,f6=k[1],k[2]local fl;while true do f6,fl=fW(fI,f6)if f6==nil then return nil end;aJ=aJ+1;if fl==gf then return{aJ,f6},aJ end end end;local gi=function(gf,bR,fe,k)return ff(gh,{gf,bR,fe},{0,k})end;f4.indexes=ft(gi)f3.indexes=fy(gi)f4.elem_indexes=f4.indexes;f3.elem_indexes=f3.indexes;f4.indices=f4.indexes;f3.indices=f3.indexes;f4.elem_indices=f4.indexes;f3.elem_indices=f3.indexes;local gj=function(h,fW,fI,f6,gk)while true do if f6==nil or h(gk)then break end;f6,gk=fW(fI,f6)end;return f6,gk end;local gl;local gm=function(h,fW,fI,f6)return gl(h,fW,fI,fW(fI,f6))end;gl=function(h,fW,fI,f6,...)if f6==nil then return nil end;if h(...)then return f6,...end;return gm(h,fW,fI,f6)end;local gn=function(h,fW,fI,f6,...)if select('#',...)<2 then return gj(h,fW,fI,f6,...)else return gl(h,fW,fI,f6,...)end end;local go=function(fe,f6)local h,fW,fI=fe[1],fe[2],fe[3]return gn(h,fW,fI,fW(fI,f6))end;local gp=function(h,bR,fe,k)return ff(go,{h,bR,fe},k)end;f4.filter=ft(gp)f3.filter=fy(gp)f4.remove_if=f4.filter;f3.remove_if=f3.filter;local gq=function(gr,bR,fe,k)local h=gr;if type(gr)==\"string\"then h=function(gf)return string.find(gf,gr)~=nil end end;return gp(h,bR,fe,k)end;f4.grep=ft(gq)f3.grep=fy(gq)local gs=function(h,bR,fe,k)local gt=function(...)return not h(...)end;return gp(h,bR,fe,k),gp(gt,bR,fe,k)end;f4.partition=ft(gs)f3.partition=fy(gs)local gu=function(h,fG,k,...)if k==nil then return nil,fG end;return k,h(fG,...)end;local gv=function(h,fG,fW,fI,f6)while true do f6,fG=gu(h,fG,fW(fI,f6))if f6==nil then break end end;return fG end;f4.foldl=fv(gv)f3.foldl=fz(gv)f4.reduce=f4.foldl;f3.reduce=f3.foldl;local dd=function(bR,fe,k)if bR==ipairs or bR==fk then return#fe end;local gw=0;repeat k=bR(fe,k)gw=gw+1 until k==nil;return gw-1 end;f4.length=fs(dd)f3.length=fx(dd)local gx=function(bR,fe,k)return bR(fe,f8(k))==nil end;f4.is_null=fs(gx)f3.is_null=fx(gx)local gy=function(gz,gA)local fW,fI,f6=fr(gz)local gB,gC,gD=fr(gA)local gE,gF;for aJ=1,10,1 do f6,gE=fW(fI,f6)gD,gF=gB(gC,gD)if f6==nil then return true end;if gD==nil or gE~=gF then return false end end end;f4.is_prefix_of=gy;f3.is_prefix_of=gy;local gG=function(h,fW,fI,f6)local fl;repeat f6,fl=f7(h,fW(fI,f6))until f6==nil or not fl;return f6==nil end;f4.all=ft(gG)f3.all=fy(gG)f4.every=f4.all;f3.every=f3.all;local gH=function(h,fW,fI,f6)local fl;repeat f6,fl=f7(h,fW(fI,f6))until f6==nil or fl;return not not fl end;f4.any=ft(gH)f3.any=fy(gH)f4.some=f4.any;f3.some=f3.any;local gI=function(bR,fe,k)local ah=0;local fl=0;repeat ah=ah+fl;k,fl=bR(fe,k)until k==nil;return ah end;f4.sum=fs(gI)f3.sum=fx(gI)local gJ=function(bR,fe,k)local gK=1;local fl=1;repeat gK=gK*fl;k,fl=bR(fe,k)until k==nil;return gK end;f4.product=fs(gJ)f3.product=fx(gJ)local gL=function(fU,b2)if b2<fU then return b2 else return fU end end;local gM=function(fU,b2)if b2>fU then return b2 else return fU end end;local dP=function(bR,fe,k)local k,fU=bR(fe,k)if k==nil then error(\"min: iterator is empty\")end;local gN;if type(fU)==\"number\"then gN=math.min else gN=gL end;for b5,fl in bR,fe,k do fU=gN(fU,fl)end;return fU end;f4.min=fs(dP)f3.min=fx(dP)f4.minimum=f4.min;f3.minimum=f3.min;local gO=function(gN,fW,fI,f6)local f6,fU=fW(fI,f6)if f6==nil then error(\"min: iterator is empty\")end;for b5,fl in fW,fI,f6 do fU=gN(fU,fl)end;return fU end;f4.min_by=ft(gO)f3.min_by=fy(gO)f4.minimum_by=f4.min_by;f3.minimum_by=f3.min_by;local dQ=function(fW,fI,f6)local f6,fU=fW(fI,f6)if f6==nil then error(\"max: iterator is empty\")end;local gN;if type(fU)==\"number\"then gN=math.max else gN=gM end;for b5,fl in fW,fI,f6 do fU=gN(fU,fl)end;return fU end;f4.max=fs(dQ)f3.max=fx(dQ)f4.maximum=f4.max;f3.maximum=f3.max;local gP=function(gN,fW,fI,f6)local f6,fU=fW(fI,f6)if f6==nil then error(\"max: iterator is empty\")end;for b5,fl in fW,fI,f6 do fU=gN(fU,fl)end;return fU end;f4.max_by=ft(gP)f3.max_by=fy(gP)f4.maximum_by=f4.maximum_by;f3.maximum_by=f3.maximum_by;local gQ=function(fW,fI,f6)local fo,v,gR={}while true do f6,gR=fW(fI,f6)if f6==nil then break end;table.insert(fo,gR)end;return fo end;f4.totable=fs(gQ)f3.totable=fx(gQ)local gS=function(fW,fI,f6)local fo,v,gR={}while true do f6,v,gR=fW(fI,f6)if f6==nil then break end;fo[v]=gR end;return fo end;f4.tomap=fs(gS)f3.tomap=fx(gS)local fn=function(fe,k)local fW,fI,h=fe[1],fe[2],fe[3]return f7(h,fW(fI,k))end;local gT=function(h,bR,fe,k)return ff(fn,{bR,fe,h},k)end;f4.map=ft(gT)f3.map=fy(gT)local gU=function(k,aJ,f6,...)if f6==nil then return nil end;return{aJ+1,f6},aJ,...end;local gV=function(fe,k)local fW,fI=fe[1],fe[2]local aJ,f6=k[1],k[2]return gU(k,aJ,fW(fI,f6))end;local gW=function(bR,fe,k)return ff(gV,{bR,fe},{1,k})end;f4.enumerate=fs(gW)f3.enumerate=fx(gW)local gX=function(aJ,f6,...)if f6==nil then return nil end;return{aJ+1,f6},...end;local gY=function(fe,k)local gf,fW,fI=fe[1],fe[2],fe[3]local aJ,f6=k[1],k[2]if aJ%2==1 then return{aJ+1,f6},gf else return gX(aJ,fW(fI,f6))end end;local gZ=function(gf,bR,fe,k)return ff(gY,{gf,bR,fe},{0,k})end;f4.intersperse=ft(gZ)f3.intersperse=fy(gZ)local function g_(fe,k,h0,...)if#h0==#fe/2 then return h0,...end;local aJ=#h0+1;local fW,fI=fe[2*aJ-1],fe[2*aJ]local f6,fl=fW(fI,k[aJ])if f6==nil then return nil end;table.insert(h0,f6)return g_(fe,k,h0,fl,...)end;local h1=function(fe,k)return g_(fe,k,{})end;local h2=function(...)local b2=select('#',...)if b2>=3 then local h3=select(b2-2,...)if type(h3)=='table'and getmetatable(h3)==fd and h3.param==select(b2-1,...)and h3.state==select(b2,...)then return b2-2 end end;return b2 end;local h4=function(...)local b2=h2(...)if b2==0 then return ff(fh,nil,nil)end;local fe={[2*b2]=0}local k={[b2]=0}local aJ,fW,fI,f6;for aJ=1,b2,1 do local h3=select(b2-aJ+1,...)fW,fI,f6=fp(h3)fe[2*aJ-1]=fW;fe[2*aJ]=fI;k[aJ]=f6 end;return ff(h1,fe,k)end;f4.zip=h4;f3.zip=h4;local h5=function(fe,f6,...)if f6==nil then local fW,fI,h6=fe[1],fe[2],fe[3]return fW(fI,f8(h6))end;return f6,...end;local h7=function(fe,f6)local fW,fI,h6=fe[1],fe[2],fe[3]return h5(fe,fW(fI,f6))end;local h8=function(bR,fe,k)return ff(h7,{bR,fe,k},f8(k))end;f4.cycle=fs(h8)f3.cycle=fx(h8)local h9;local ha=function(fe,k,f6,...)if f6==nil then local aJ=k[1]aJ=aJ+1;if aJ>#fe/3 then return nil end;local f6=fe[3*aJ]return h9(fe,{aJ,f6})end;return{k[1],f6},...end;h9=function(fe,k)local aJ,f6=k[1],k[2]local fW,fI=fe[3*aJ-2],fe[3*aJ-1]return ha(fe,k,fW(fI,k[2]))end;local hb=function(...)local b2=h2(...)if b2==0 then return ff(fh,nil,nil)end;local fe={[3*b2]=0}local aJ,fW,fI,f6;for aJ=1,b2,1 do local hc=select(aJ,...)fW,fI,f6=fr(hc)fe[3*aJ-2]=fW;fe[3*aJ-1]=fI;fe[3*aJ]=f6 end;return ff(h9,fe,{1,fe[3]})end;f4.chain=hb;f3.chain=hb;local hd={lt=function(gk,he)return gk<he end,le=function(gk,he)return gk<=he end,eq=function(gk,he)return gk==he end,ne=function(gk,he)return gk~=he end,ge=function(gk,he)return gk>=he end,gt=function(gk,he)return gk>he end,add=function(gk,he)return gk+he end,div=function(gk,he)return gk/he end,floordiv=function(gk,he)return math.floor(gk/he)end,intdiv=function(gk,he)local hf=gk/he;if gk>=0 then return math.floor(hf)else return math.ceil(hf)end end,mod=function(gk,he)return gk%he end,mul=function(gk,he)return gk*he end,neq=function(gk)return-gk end,unm=function(gk)return-gk end,pow=function(gk,he)return gk^he end,sub=function(gk,he)return gk-he end,truediv=function(gk,he)return gk/he end,concat=function(gk,he)return gk..he end,len=function(gk)return#gk end,length=function(gk)return#gk end,land=function(gk,he)return gk and he end,lor=function(gk,he)return gk or he end,lnot=function(gk)return not gk end,truth=function(gk)return not not gk end}f3.operator=hd;f4.operator=hd;f3.op=hd;f4.op=hd;setmetatable(f3,{__call=function(cD,hg)for bb,aR in pairs(cD)do if _G[bb]~=nil then local ca='function '..bb..' already exists in global scope.'if hg then _G[bb]=aR;print('WARNING: '..ca..' Overwritten.')else print('NOTICE: '..ca..' Skipped.')end else _G[bb]=aR end end end})return f3 end,[\"device_driver.state\"]=function()local k={}local h=require(\"libs.functional\")local hh={['ON']=true,['OFF']=false,['true']=true,['false']=false,['']=false}function k.to_boolean(s)return hh[s]end;local function hi(eQ)return eQ~=\"\"and eQ or nil end;function k.init(hj)return function(eP,eQ)return function(hk,hl)return{category_id=hj,state_id=eP,state_key=eQ,state_value=hk,state_normalized_value=hl}end end end;function k.keys(eH,eP)return h.totable(h.map(function(ah)return ah.state_key end,h.filter(function(ah)return ah.state_id==eP end,eH)))end;local function hm(eY,eP,eQ)return eY.state_id==eP and eY.state_key==hi(eQ)end;local function X(eH,eP,eQ)return h.filter(function(ah)return hm(ah,eP,hi(eQ))end,eH)end;function k.find_all(eH,eP)return h.totable(h.filter(function(ah)return ah.state_id==eP end,eH))end;function k.find_first(eH,eP,eQ)return h.first(X(eH,eP,hi(eQ)))end;function k.copy(eY)return eY and{category_id=eY.category_id,state_id=eY.state_id,state_key=hi(eY.state_key),state_value=eY.state_value,state_normalized_value=eY.state_normalized_value~=\"\"and eY.state_normalized_value or nil}or{}end;function k.insert(eH,eY)return h.totable(h.chain(eH,{eY}))end;function k.update(eH,eY)return h.totable(h.withShallowCopy(function(ah)return hm(ah,eY.state_id,eY.state_key)and eY or ah end,eH))end;function k.merge(eH,e_)return h.totable(h.chain(h.filter(function(ah)return not k.find_first(e_,ah.state_id,ah.state_key)end,eH),e_))end;function k.equals(hn,ho)return hn~=nil and ho~=nil and hn.category_id==ho.category_id and hn.state_id==ho.state_id and hn.state_key==ho.state_key and hn.state_value==ho.state_value and hn.state_normalized_value==ho.state_normalized_value end;function k.get_value(eH,eP,eQ)return(k.find_first(eH,eP,eQ)or{}).state_value end;return k end,[\"device_driver.command\"]=function()local h=require(\"libs.functional\")local hp=require(\"device_driver.comm_types\")local eF={}local function hq(eT)return h.unique(hp.get_generic_comm_types(eT))end;local function hr(hs,hp)return h.any(function(am)return am==hs end,hp)end;local function ht(q,eT)local hu=hq(eT)return h.filter(function(hs)return hr(hs,hu)end,q)end;function eF.find_first_comm_type(eU,eT)return h.first(ht(eU.generic_comm_types,eT))end;function eF.find(eI,eR,eS)local hv=eI[eR]return hv and hv[eS]end;return eF end,[\"device_driver.comm_types\"]=function()local hp={}local h=require(\"libs.functional\")local eV={[\"IR_EMITTER\"]=\"IR\",[\"RS232\"]=\"SERIAL\",[\"RS422\"]=\"SERIAL\",[\"RS485\"]=\"SERIAL\",[\"TCP\"]=\"TCP_UDP\",[\"TELNET\"]=\"TCP_UDP\",[\"SSH\"]=\"TCP_UDP\",[\"UDP_UNICAST\"]=\"TCP_UDP\",[\"UDP_MULTICAST\"]=\"TCP_UDP\",[\"UDP_BROADCAST\"]=\"TCP_UDP\",[\"UDP\"]=\"TCP_UDP\",[\"KNX_TUNNELING\"]=\"TCP_UDP\",[\"KNX_ROUTING\"]=\"TCP_UDP\",[\"KNX\"]=\"TCP_UDP\",[\"HTTP\"]=\"HTTP\",[\"RELAY\"]=\"RELAY\",[\"GPIO\"]=\"GPIO\",[\"USB\"]=\"SERIAL\"}function hp.get_generic_comm_types(eT)return h.map(function(hw)return eV[hw]end,eT)end;return hp end,[\"libs.system\"]=function()local f=require(\"libs.logger\").defaultLogger()local hx=require(\"libs.string_utils\")local m={}local hy=\" >/dev/null 2>&1\"function m.exec(eU)local b5,b5,hz=os.execute(eU..hy)return hz==0 end;function m.mkdir(c)return m.exec(\"mkdir -p \"..c)end;function m.init(...)for b5,c in ipairs({...})do if not m.mkdir(c)then f:warn(\"Failed to create \"..c)end end end;function m.read(eU)local hA=io.popen(eU)local cH=hA and string.gsub(hA:read(\"a\"),\"\\n\",\"\")return cH~=\"\"and cH or nil end;function m.move(hB,c_)local z,cI=os.rename(hB,c_)if not z then f:warn(string.format(\"Unable to copy %s to %s: %s\",hB,c_,cI))end;return z end;function m.copy(hB,c_)local z=m.exec(\"cp -r \"..hB..\" \"..c_)if not z then f:warn(string.format(\"Unable to copy %s to %s\",hB,c_))end;return z end;function m.file_exists(hC)return m.exec(\"test -f \"..hC)end;function m.directory_exists(c)return m.exec(\"test -d \"..c)end;function m.sleep(hD)m.exec(\"sleep \"..tostring(hD))end;function m.is_running(hE)return m.exec(\"kill -0 \"..tostring(hE))end;function m.try_kill(hE)local hF=false;if not hx.is_empty(hE)then hF=m.exec(\"kill \"..hE)if not hF then f:error(\"Unable to stop process \"..hE)end end;return hF end;function m.fork(eU,hG,hH)if not eU then f:warn(\"Unable to start empty command\")return nil end;local hI=hH and\"nohup \"or\"\"local hE;if hx.is_empty(hG)then hE=m.read(hI..eU..hy..\" & printf $!\")else local hJ=\" >>\"..hG..\" 2>&1\"hE=m.read(hI..eU..hJ..\" & printf $!\")end;if m.is_running(hE)then return hE else f:error(\"Failed to start \"..eU)return nil end end;function m.get_kernel_name()return m.read(\"uname -s\")end;function m.get_kernel_release()return m.read(\"uname -r\")end;function m.get_kernel_version()return m.read(\"uname -v\")end;function m.get_machine_name()return m.read(\"uname -m\")end;function m.get_os()return m.read(\"uname -o\")end;function m.get_hostname()return m.read(\"uname -n\")end;function m.get_pwd()return m.read(\"pwd\")end;function m.get_whoami()return m.read(\"whoami\")end;function m.backup(c,y,hK)local eo=c..\"previous.json\"local eZ=c..\"current.json\"m.move(eZ,eo)local a9,cI=io.open(eZ,\"w\")if not a9 then f:warn(\"Unable to open file to save current \"..c..\": \"..cI)return false end;if not a9:write(hK(y),'\\n')then f:warn(\"Failed to save current \"..c..\".\")return false end;return a9:close()end;function m.load(hC,hL)local a9,cI=io.open(hC,\"r\")if not a9 then f:warn(\"Unable to open file to load \"..hC..\": \"..cI)return nil end;local hM=a9:read(\"a\")if not hM then f:warn(\"Failed to read \"..hC..\".\")return nil end;a9:close()local z,y=pcall(function()return hL(hM)end)return z and y or nil end;function m.restore(c,hL)local hN=m.load(c..\"current.json\",hL)if not hN then hN=m.load(c..\"previous.json\",hL)or{}end;return hN end;function m.clear(hC)io.open(hC,\"w\"):close()end;function m.remove_backups(c)m.clear(c..\"previous.json\")m.clear(c..\"current.json\")end;function m.load_saved_state(hO)local hN=m.load(hO..\"current.json\")if not hN then hN=m.load(hO..\"previous.json\")or{}end;return hN end;return m end,[\"libs.string_utils\"]=function()local hx={}function hx.trim(aG)local hP=aG and string.gsub(aG,\"^%s*(.-)%s*$\",\"%1\")or\"\"return hP end;function hx.is_empty(aG)return aG==nil or aG==\"\"end;function hx.append_if(aG,cf,hQ)return string.format(\"%s%s\",aG,hQ(aG)and cf or\"\")end;function hx.replace_special_chars(aG,hR)local hS=aG and string.gsub(aG,\"[%p%c%s]\",hR)or\"\"return hS end;return hx end,[\"libs.brain_api\"]=function()local m=require(\"libs.system\")local i=require(\"lunajson\")local l={}local hT=\"resources/data/\"function l.get_brain_data()local hU=m.load(hT..\"settings/brain.settings.json\",i.decode)or{}local hV=m.load(hT..\"Brain.json\",i.decode)or{}hV.tcp_port=hU.brain_tcp_port or 8000;hV.udp_port=hU.brain_udp_port or 54345;return hV end;function l.get_project_data()return m.load(hT..\"Project.json\",i.decode)or{}end;function l.get_space_data()return m.load(hT..\"Space.json\",i.decode)or{}end;return l end}if d[c]then return d[c]else return b(c)end end end;local i=require(\"lunajson\")local f=require(\"libs.logger\").defaultLogger()local eG=require(\"device_driver.driver\")function initialize(o)if not o then o=require(\"config\")f=require(\"libs.logger\").defaultLogger()end;o.initialize()eG.initialize(o.initial_states,o.capabilities,o.macros,o.on_state_change)end;function getMacros()return i.encode({macros=eG.get_macros()})end;function queryAllKeys(eP)return i.encode({keys=eG.get_state_keys(eP)})end;function queryStateValue(eP,eQ)return eG.get_state_value(eP,eQ)end;function getExecutionResult(eT,eR,eS,B)local eV,eW,eX,hW,eJ=eG.get_execution_result(eR,eS,B,eT)local eX=i.encode({state_changes=eX})return eV,i.encode({codes=eW}),eX,hW,i.encode(eJ)end;function applyStateChange(eY,hX)return hX and eG.apply_state_change(eY)end;function processFeedback(hY,hw,hZ)local h_=i.encode({matches={}})local eX=i.encode({state_changes={}})local eJ=nil;return h_,eX,eJ end;function GetStates()return eG.get_states()end\n",
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "System Mode",
+      "commands" : [ {
+        "name" : "Set Translation",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "JSON",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          }, {
+            "name" : "LOCALE",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SET_TRANSLATION"
+      }, {
+        "name" : "Set Locale",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "LOCALE",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SET_LOCALE"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "SYSTEM_MODE"
+    }, {
+      "name" : "System",
+      "commands" : [ {
+        "name" : "Initialize",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "INITIALIZE"
+      }, {
+        "name" : "Save State",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SAVE_STATE"
+      }, {
+        "name" : "Set Auto Save State",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "AUTO_SAVE_STATE",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "OFF",
+              "possible_values" : [ ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "boolean"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SET_AUTO_SAVE_STATE"
+      }, {
+        "name" : "Clear State Backups",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "CLEAR_STATE_BACKUPS"
+      }, {
+        "name" : "Set Log Level",
+        "codes" : [ {
+          "data" : "noop",
+          "attributes" : [ ],
+          "parameters" : [ {
+            "name" : "LOG_LEVEL",
+            "dynamic" : false,
+            "attributes" : [ ],
+            "constraints" : {
+              "regex" : "",
+              "value_default" : "",
+              "possible_values" : [ {
+                "user_value" : "DEBUG",
+                "device_value" : "DEBUG"
+              }, {
+                "user_value" : "INFO",
+                "device_value" : "INFO"
+              }, {
+                "user_value" : "WARN",
+                "device_value" : "WARN"
+              }, {
+                "user_value" : "ERROR",
+                "device_value" : "ERROR"
+              } ],
+              "show_decimal_point" : true,
+              "number_of_characters" : 0
+            },
+            "parameter_type" : "string"
+          } ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "SET_LOG_LEVEL"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "SYSTEM"
+    } ],
+    "reference_id" : "CONFIGURATION"
+  } ],
+  "parameters" : [ ],
+  "project_id" : "db51c9d7-d10a-4a57-984b-b1159d751f78",
+  "device_type" : "Other",
+  "device_manufacturer" : "Machinemode",
+  "version_code" : 0,
+  "version_description" : "Initial version",
+  "created_by" : "cesar@machinemode.com",
+  "created_date" : "2023-12-29T12:05:11.670454Z",
+  "modified_by" : "cesar@machinemode.com",
+  "modified_date" : "2024-01-03T17:41:51.700177Z",
+  "device_interface" : [ {
+    "login" : {
+      "password" : "",
+      "username" : "",
+      "name_prompt" : "",
+      "ready_prompt" : "",
+      "requires_login" : false,
+      "password_prompt" : ""
+    },
+    "comm_type" : "HTTP",
+    "transmission" : {
+      "max_retries" : 0,
+      "require_ack" : false,
+      "use_heartbeat" : false,
+      "acknowledgement" : {
+        "error" : [ ],
+        "success" : [ {
+          "data" : "",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ ],
+          "trigger_state_update" : [ ],
+          "process_state_updates_first" : false
+        } ],
+        "ack_type" : "error_only"
+      },
+      "time_between_retries" : 0,
+      "heartbeat_command_ref" : {
+        "command_id" : "SLEEP_TIMER_TOGGLE",
+        "parameters" : [ ],
+        "category_id" : "POWER",
+        "command_name" : "SLEEP TIMER TOGGLE",
+        "capability_id" : "POWER_TOGGLE"
+      },
+      "min_time_between_messages" : 0.05
+    },
+    "http_settings" : {
+      "path" : "/",
+      "port" : 8000,
+      "default_verb" : "GET",
+      "http_headers" : [ ],
+      "http_version" : "1.1",
+      "protocols_supported" : 1,
+      "default_data_location" : "Default"
+    },
+    "feedback_parser" : {
+      "prefix" : "",
+      "suffix" : ""
+    },
+    "connection_notes" : "",
+    "global_protocol_details" : {
+      "prefix" : "",
+      "suffix" : "",
+      "checksum_type" : "Not Used"
+    },
+    "communication_loss_parameters" : {
+      "timeout_before_disconnect" : 0
+    }
+  } ],
+  "device_models" : [ "i18n" ],
+  "device_model_codes" : [ "Generic" ],
+  "interface_allowed" : [ "HTTP" ],
+  "lua_code" : "",
+  "import_id" : null,
+  "modified_date_RFC_1123" : "Wed, 3 Jan 2024 17:41:51 GMT"
+}

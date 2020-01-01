@@ -1,0 +1,15 @@
+{
+    "Lua.diagnostics.globals": [
+        "initialize",
+        "getMacros",
+        "queryStateValue",
+        "queryAllKeys",
+        "getExecutionResult",
+        "applyStateChange",
+        "processFeedback"
+    ],
+    "editor.codeLens": false,
+    "Lua.diagnostics.disable": [
+        "missing-parameter"
+    ]
+}

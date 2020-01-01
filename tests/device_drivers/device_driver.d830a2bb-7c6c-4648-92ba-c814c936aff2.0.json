@@ -1,0 +1,217 @@
+{
+  "id" : "d830a2bb-7c6c-4648-92ba-c814c936aff2",
+  "description" : "",
+  "template" : false,
+  "version" : "1.0.0",
+  "status" : "Production",
+  "attributes" : [ {
+    "key" : "ENABLE_VIRTUAL_STATE",
+    "value" : "true"
+  } ],
+  "categories" : [ {
+    "name" : "Custom",
+    "macros" : [ ],
+    "states" : [ {
+      "name" : "Random Value",
+      "dynamic" : false,
+      "attributes" : [ ],
+      "constraints" : {
+        "value_default" : "",
+        "possible_values" : [ ]
+      },
+      "log_changes" : false,
+      "reference_id" : "RANDOM_VALUE",
+      "primitive_type" : "number_array"
+    } ],
+    "lua_code" : "state = {}\n\nfunction initialize()\n    print(\"initialize()\")\nend\n\nfunction getMacros()\n    print(\"getMacros()\")\n\n    return [[{\n        \"macros\": [\n          {\n               \"name\": \"Lua Macro\",\n               \"reference_id\": \"LUA_MACRO\",\n               \"elements\": [\n                    {\n                        \"delay\": 2\n                    },\n                    {\n                        \"trigger_command\": {\n                            \"parameters\": [],\n                            \"category_id\": \"CUSTOM\",\n                            \"capability_id\": \"SYSTEM\",\n                            \"command_id\": \"DO_SOMETHING_DELAY\",\n                            \"command_name\": \"Do Something with delay\"\n                        }\n                    }\n               ]\n          }\n     ]\n    }]]\nend\n\nfunction queryAllKeys(state_id)\n    print(\"queryAllKeys()\")\n\n    if state_id == \"RANDOM_VALUE\" then\n        return [[\n            \"keys\": [ \"A\", \"B\" ]\n        ]]\n    else\n        return [[ {\n            \"keys\": []\n        }]]\n    end\nend\n\nfunction queryStateValue(state_id, state_key)\n    print(string.format(\n            \"queryStateValue(%s, %s)\",\n            state_id,\n            state_key or \"nil\"\n        )\n    )\n\n    for _, v in ipairs(state) do\n        if v.state_id == state_id\n            and v.state_key == state_key then\n                return v.state_value, v.state_normalized_value\n        end\n    end\nend\n\nfunction getExecutionResult(available_protocols, capability_id, command_id, command_args)\n    print(\"getExecutionResult()\")\n\n    for _, protocol in pairs(available_protocols) do\n        if protocol == \"HTTP\" then\n            local state_changes = string.format([[{\n                    \"state_changes\": [\n                        {\n                            \"category_id\": \"CUSTOM\",\n                            \"state_id\": \"RANDOM_VALUE\",\n                            \"state_key\": \"A\",\n                            \"state_value\": %q,\n                            \"state_normalized_value\": null\n                        },\n                        {\n                            \"category_id\": \"CUSTOM\",\n                            \"state_id\": \"RANDOM_VALUE\",\n                            \"state_key\": \"B\",\n                            \"state_value\": %q,\n                            \"state_normalized_value\": null\n                        }\n                    ]\n                }]],\n                tostring(math.random(1, 100)),\n                tostring(math.random(1, 100))\n            )\n\n            if command_id == \"DO_SOMETHING\" then\n                return \"HTTP\",\n                    [[{\n                        \"codes\": [ \"/log/level\" ]\n                    }]],\n                    state_changes,\n                    \"DO_SOMETHING_FEEDBACK\",\n                    [[{\n                        \"name\": \"Lua Macro\",\n                        \"reference_id\": \"LUA_MACRO\",\n                        \"elements\": [\n                            {\n                                \"delay\": 5\n                            },\n                            {\n                                \"trigger_command\": {\n                                    \"parameters\": [],\n                                    \"category_id\": \"CUSTOM\",\n                                    \"capability_id\": \"SYSTEM\",\n                                    \"command_id\": \"DO_SOMETHING_DELAY\",\n                                    \"command_name\": \"Do Something with delay\"\n                                }\n                            }\n                        ]\n                    }]]\n            elseif command_id == \"DO_SOMETHING_DELAY\" then\n                print(\"Did something after a delay\")\n            end\n            break\n        end\n    end\nend\n\nfunction applyStateChange(state_change, virtual)\n    print(\"applyStateChange()\")\n\n    local found = false\n    for _, v in ipairs(state) do\n        if v.state_id == state_change.state_id\n            and v.state_key == state_change.state_key then\n                found = true\n                v.state_value = state_change.state_value\n                v.state_normalized_value = state_change.state_normalized_value\n                break\n        end\n    end\n\n    if not found then\n        table.insert(state, state_change)\n    end\n\n    return true\nend\n\nfunction processFeedback(feedbacks, protocol, linkedFeedback)\n    print(\"processFeedback()\")\n\n    if linkedFeedback.feedback_id == \"DO_SOMETHING_FEEDBACK\" then\n        local state_changes = string.format([[{\n                \"state_changes\": [\n                    {\n                        \"category_id\": \"CUSTOM\",\n                        \"state_id\": \"RANDOM_VALUE\",\n                        \"state_key\": \"C\",\n                        \"state_value\": %q\n                    }\n                ]\n            }]],\n            tostring(math.random(1, 100))\n        )\n        return [[{ \"matches\": [true] }]], state_changes, nil\n    end\n\n    return [[{ \"matches\": [] }]], [[{ \"state_changes\": [] }]], nil\nend\n",
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "System",
+      "commands" : [ {
+        "name" : "Do Something",
+        "codes" : [ {
+          "data" : "test",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : true,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "DO_SOMETHING"
+      } ],
+      "feedbacks" : [ ],
+      "attributes" : [ ],
+      "reference_id" : "SYSTEM"
+    } ],
+    "reference_id" : "CUSTOM"
+  }, {
+    "name" : "Configuration",
+    "macros" : [ ],
+    "states" : [ ],
+    "attributes" : [ ],
+    "capabilities" : [ {
+      "name" : "Custom",
+      "commands" : [ {
+        "name" : "Override command code with Lua",
+        "codes" : [ {
+          "data" : "test",
+          "lua_code" : "function processCode(clientArgs, singleValueStates, multiValueStates)\n    import foo; return \"log/level\"\nend",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_2"
+      }, {
+        "name" : "Do Something with Checksum",
+        "codes" : [ {
+          "data" : "This is my $__CHECKSUM__$",
+          "lua_code" : "print('foo')",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "is_query" : false,
+        "log_cloud" : false,
+        "attributes" : [ ],
+        "reference_id" : "COMMAND_1"
+      } ],
+      "feedbacks" : [ {
+        "name" : "Override feedback code with Lua",
+        "codes" : [ {
+          "data" : "{\"message\":\"\",\"result\":{\"brain_log_level\":\"debug\"},\"status\":\"success\"}",
+          "lua_code" : "---Returns true or false as to whether or not the feedbackCode is a match for this Code\n---@param feedbackMessage string represeting the feedback code\n---@return boolean match representing if this feedback code is a match\nfunction matchFeedback(feedbackMessage)\n    print(string.format(\"matchFeedback(%s)\", feedbackMessage))\n    return true\nend\n\n---Converts the feedbackCode into a table of arguments that have a name and a string value\n---@param feedbackMessage string represeting the feedback code\nfunction processFeedback(feedbackMessage)\n    print(string.format(\"processFeedback(%s)\", feedbackMessage))\n    -- mutate global parameters and/or state_references\nend",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ "HTTP" ],
+          "trigger_state_update" : [ ]
+        } ],
+        "attributes" : [ ],
+        "reference_id" : "FEEDBACK_1",
+        "feedback_type" : "regex",
+        "token_delimiter" : "",
+        "key_value_separator" : "",
+        "number_of_tokens_expected" : 0
+      } ],
+      "attributes" : [ ],
+      "reference_id" : "CUSTOM"
+    } ],
+    "reference_id" : "CONFIGURATION"
+  } ],
+  "parameters" : [ ],
+  "project_id" : "6c286d96-d44b-419a-b35c-64fc1b0ddead",
+  "device_type" : "Other",
+  "device_manufacturer" : "Kramer",
+  "version_code" : 0,
+  "version_description" : "",
+  "created_by" : "cesar@machinemode.com",
+  "created_date" : "2024-01-05T19:19:01.100983Z",
+  "modified_by" : "cesar@machinemode.com",
+  "modified_date" : "2024-01-05T19:19:34.358427Z",
+  "device_interface" : [ {
+    "login" : {
+      "password" : "",
+      "username" : "",
+      "name_prompt" : "",
+      "ready_prompt" : "",
+      "requires_login" : false,
+      "password_prompt" : ""
+    },
+    "comm_type" : "HTTP",
+    "transmission" : {
+      "max_retries" : 0,
+      "require_ack" : false,
+      "use_heartbeat" : false,
+      "acknowledgement" : {
+        "error" : [ ],
+        "success" : [ {
+          "data" : "",
+          "attributes" : [ ],
+          "parameters" : [ ],
+          "trigger_action" : {
+            "name" : "Trigger Actions",
+            "elements" : [ ],
+            "reference_id" : "TRIGGER_ACTIONS"
+          },
+          "state_references" : [ ],
+          "interface_allowed" : [ ],
+          "trigger_state_update" : [ ],
+          "process_state_updates_first" : false
+        } ],
+        "ack_type" : "error_only"
+      },
+      "time_between_retries" : 0,
+      "heartbeat_command_ref" : {
+        "command_id" : "SLEEP_TIMER_TOGGLE",
+        "parameters" : [ ],
+        "category_id" : "POWER",
+        "command_name" : "SLEEP TIMER TOGGLE",
+        "capability_id" : "POWER_TOGGLE"
+      },
+      "min_time_between_messages" : 0.05
+    },
+    "http_settings" : {
+      "path" : "/api/v1",
+      "port" : 8000,
+      "default_verb" : "GET",
+      "http_headers" : [ {
+        "key" : "Accept",
+        "value" : "application/json"
+      } ],
+      "http_version" : "1.1",
+      "protocols_supported" : 1,
+      "default_data_location" : "Default"
+    },
+    "feedback_parser" : {
+      "prefix" : "",
+      "suffix" : ""
+    },
+    "connection_notes" : "",
+    "global_protocol_details" : {
+      "prefix" : "",
+      "suffix" : "",
+      "checksum_type" : "Not Used",
+      "lua_checksum_code" : "function createChecksum(code)\n    print(\n        string.format(\n            \"createChecksum(%s)\",\n            code\n        )\n    )\n    return return \"foo\"\nend",
+      "lua_postprocess_code" : "function postprocess(code)\n    print(\n        string.forma t(\n            \"postprocess(%s)\",\n            code\n        )\n    )\n    return code\nend"
+    },
+    "communication_loss_parameters" : {
+      "timeout_before_disconnect" : 0
+    }
+  } ],
+  "device_models" : [ "Brain" ],
+  "device_model_codes" : [ "Generic" ],
+  "interface_allowed" : [ "HTTP" ],
+  "lua_code" : "",
+  "import_id" : null,
+  "modified_date_RFC_1123" : "Fri, 5 Jan 2024 19:19:34 GMT"
+}

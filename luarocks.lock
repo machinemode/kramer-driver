@@ -1,0 +1,16 @@
+return {
+   dependencies = {
+      argparse = "0.7.1-1",
+      fun = "0.1.3-1",
+      inspect = "3.1.3-0",
+      lua = "5.3-1",
+      luacc = "0.9-5",
+      luacheck = "1.2.0-1",
+      luafilesystem = "1.8.0-1",
+      lualogging = "1.8.2-1",
+      luasocket = "3.1.0-1",
+      luaunit = "3.4-1",
+      lunajson = "1.2.3-1",
+      penlight = "1.14.0-2"
+   },
+}
